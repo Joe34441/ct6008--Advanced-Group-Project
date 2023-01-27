@@ -48,8 +48,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		get
 		{
-			if (_instance == null)
-				_instance = FindObjectOfType<App>();
+			if (_instance == null) _instance = FindObjectOfType<App>();
 			return _instance;
 		}
 	}
@@ -186,7 +185,8 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		_players[playerRef] = player;
 		player.transform.SetParent(_runner.transform);
 		if (Session.Map != null)
-		{ // Late join
+		{
+			// Late join
 			Session.Map.SpawnAvatar(player, true);
 		}
 	}

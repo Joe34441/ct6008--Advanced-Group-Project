@@ -61,6 +61,12 @@ public class NewRoomPanel : MonoBehaviour
 
 	public void OnCreateSession()
 	{
+		if (App.Instance.ConnectionStatus != ConnectionStatus.InLobby)
+        {
+			//some text for user - "please wait a moment and try again" etc, client is not connected to server lobby
+			return;
+        }
+
 		SessionProps props = new SessionProps();
 		//props.StartMap = _toggleMap1.isOn ? MapIndex.Map0 : MapIndex.Map1;
 		if (_playMode == PlayMode.Mode1) props.StartMap = MapIndex.Map0;
@@ -69,5 +75,7 @@ public class NewRoomPanel : MonoBehaviour
 		props.PlayerLimit = _maxPly;
 		props.RoomName = _inputName.text;
 		App.Instance.CreateSession(props);
+
+		transform.parent.gameObject.SetActive(false);
 	}
 }
