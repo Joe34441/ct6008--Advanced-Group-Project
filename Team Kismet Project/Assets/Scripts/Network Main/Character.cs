@@ -97,6 +97,7 @@ public class Character : NetworkBehaviour
 				transform.position += Runner.DeltaTime * -_moveSpeed * transform.right;
 				//Vector3 newScale = new Vector3(1.0f, 1.0f, 1.0f);
 				//transform.localScale = newScale;
+				GetComponent<CharacterController>().Move(Runner.DeltaTime * -_moveSpeed * transform.right);
 			}
 
 			if (data.GetButton(ButtonFlag.RIGHT))
@@ -104,30 +105,33 @@ public class Character : NetworkBehaviour
 				transform.position += Runner.DeltaTime * _moveSpeed * transform.right;
 				//Vector3 newScale = new Vector3(-1.0f, 1.0f, 1.0f);
 				//transform.localScale = newScale;
+				GetComponent<CharacterController>().Move(Runner.DeltaTime * _moveSpeed * transform.right);
 			}
 
 			if (data.GetButton(ButtonFlag.FORWARD))
 			{
 				transform.position += Runner.DeltaTime * _moveSpeed * transform.forward;
+				GetComponent<CharacterController>().Move(Runner.DeltaTime * _moveSpeed * transform.forward);
 			}
 
 			if (data.GetButton(ButtonFlag.BACKWARD))
 			{
 				transform.position += Runner.DeltaTime * -_moveSpeed * transform.forward;
+				GetComponent<CharacterController>().Move(Runner.DeltaTime * -_moveSpeed * transform.forward);
 			}
 
 			if (data.GetButton(ButtonFlag.JUMP))
 			{
 				Debug.Log("PRESSED JUMP");
-				if (_grounded )//&& _jumpTimePassed >= _jumpCooldown)
+				if (_grounded)//&& _jumpTimePassed >= _jumpCooldown)
 				{
-
-					if (_rigidbody.velocity.y <= 0)
-					{
-						_rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0.0f);
+					Debug.Log("JUMP ALLOWED");
+					//.if (_rigidbody.velocity.y <= 0)
+					//.{
+						//._rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0.0f);
 						//_rigidbody.velocity += Vector2.up * Physics2D.gravity.y /* * (fallMultiplier - 1) */ * Runner.DeltaTime;
-						_rigidbody.velocity += Vector3.up * /* * gravityScale */ 9.81f * _jumpForce * Runner.DeltaTime; //Runner.Simulation.Config.TickRate;
-					}
+						//._rigidbody.velocity += Vector3.up * /* * gravityScale */ 9.81f * _jumpForce * Runner.DeltaTime; //Runner.Simulation.Config.TickRate;
+					//.}
 
 					//else if (_rb.Rigidbody.velocity.y > 0 && !input.GetButton(InputButton.JUMP))
 					//{
@@ -145,14 +149,14 @@ public class Character : NetworkBehaviour
 					*/
 				}
 			}
-            
-			if (_rigidbody.velocity.y > 0)
-            {
-				//_rigidbody.velocity += Vector2.up * Physics2D.gravity.y /* * (lowJumpMultiplier - 1) */ * Runner.DeltaTime;
-				_rigidbody.velocity += Vector3.up * /* gravityScale */ (9.81f / 1.5f) * Runner.DeltaTime; //Runner.Simulation.Config.TickRate;
-			}
 
-			if (_rigidbody.velocity.y < -18.0f) _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, -18.0f, _rigidbody.velocity.z);
+			//.if (_rigidbody.velocity.y > 0)
+			//.{
+			//_rigidbody.velocity += Vector2.up * Physics2D.gravity.y /* * (lowJumpMultiplier - 1) */ * Runner.DeltaTime;
+			//._rigidbody.velocity += Vector3.up * /* gravityScale */ (9.81f / 1.5f) * Runner.DeltaTime; //Runner.Simulation.Config.TickRate;
+			//.}
+
+			//.if (_rigidbody.velocity.y < -18.0f) _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, -18.0f, _rigidbody.velocity.z);
 
 
 			if (data.GetButton(ButtonFlag.NUM1))
@@ -223,6 +227,26 @@ public class Character : NetworkBehaviour
     private void OnCollisionExit(Collision collision)
     {
 		if (collision.gameObject.CompareTag(groundTag)) _grounded = false;
+	}
+
+
+	private void OnTriggerStay(Collider collision)
+	{
+		if (collision.gameObject.CompareTag(groundTag))
+		{
+			_grounded = true;
+		}
+	}
+
+	private void OnTriggerExit(Collider collision)
+	{
+		if (collision.gameObject.CompareTag(groundTag)) _grounded = false;
+	}
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+		//only called when move is used - i.e. standing still will "dodge" everything..
+		if (hit.gameObject.CompareTag(groundTag)) _grounded = true;
 	}
 
 }
