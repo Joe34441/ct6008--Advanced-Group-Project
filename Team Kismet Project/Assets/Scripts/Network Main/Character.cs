@@ -9,28 +9,34 @@ using UnityEngine.Tilemaps;
 // This class handles camera tracking and player movement and is destroyed when the map is unloaded.
 // (I.e. the player gets a new avatar in each map)
 
-public class Character : NetworkBehaviour
+public class Character : NetworkCharacterControllerPrototype
 {
 	[SerializeField] private Text _name;
 	[SerializeField] private SpriteRenderer _spriteRenderer;
 	//[SerializeField] private Rigidbody2D _rigidbody;
 	[SerializeField] private Rigidbody _rigidbody;
 
+	private CharacterController _characterController;
+	//private NetworkCharacterControllerPrototype _characterController;
+
 	private Transform _camera;
 	private Player _player;
 
 	[SerializeField] private float _moveSpeed = 10.0f;
-	[SerializeField] private float _jumpForce = 11.0f;
+	[SerializeField] private float _jumpForce = 10.0f;
 	[SerializeField] private float _jumpCooldown = 0.1f;
 	private float _jumpTimePassed;
 
 	[SerializeField] private float _cameraSmoothInterval = 0.01f;
+	private float _otherCameraSmoothInterval = 0.05f;
+
+	private float _smoothVelocity;
 
 	//**
 	[SerializeField] private Ball _prefabBall;
 	[SerializeField] private PhysxBall _prefabPhysxBall;
 
-	[Networked] private TickTimer delay { get; set; }
+	[Networked] private TickTimer ballSpawnDelay { get; set; }
 
 	//private Vector3 _forward = Vector3.zero;
 
@@ -39,7 +45,12 @@ public class Character : NetworkBehaviour
 	private Vector2 _v2MousePos;
 	private Vector2Int _v2IMousePos;
 
+	private float _turnSpeed = 45.0f;
+
 	private bool _grounded;
+
+	private bool _jumping;
+	private float _jumpTime = 0.35f;
 
 	//private float cameraZPos = -20.0f;
 
@@ -57,22 +68,38 @@ public class Character : NetworkBehaviour
 		//_spriteRenderer.color = _player.Color;
 
 		_mainTilemap = FindObjectOfType<Tilemap>();
+
+
+		_characterController = GetComponent<CharacterController>();
+		//_characterController = GetComponent<NetworkCharacterControllerPrototype>();
 	}
 
     private void Update()
     {
-		Vector3 point = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z);// + cameraZPos);
-		_v2MousePos = Camera.main.ScreenToWorldPoint(point);
-
-		_v2IMousePos.x = Mathf.RoundToInt(_v2MousePos.x - 0.5f);
-		_v2IMousePos.y = Mathf.RoundToInt(_v2MousePos.y - 0.5f);
+		//stuff for tilemap **
+		//Vector3 point = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z);// + cameraZPos);
+		//_v2MousePos = Camera.main.ScreenToWorldPoint(point);
+		//
+		//_v2IMousePos.x = Mathf.RoundToInt(_v2MousePos.x - 0.5f);
+		//_v2IMousePos.y = Mathf.RoundToInt(_v2MousePos.y - 0.5f);
+		//**
     }
 
     public void LateUpdate()
 	{
 		if (Object.HasInputAuthority)
 		{
-			if (_camera == null) _camera = Camera.main.transform;
+			if (_camera == null)
+			{
+				_camera = Camera.main.transform;
+
+				Vector3 camPos = _characterController.transform.position;
+				camPos.z -= 7;
+				camPos.y += 7;
+				_camera.position = camPos;
+			}
+
+			return;
 
 			Vector3 velocity = Vector3.zero;
 			//Vector3 newPos = new Vector3(_spriteRenderer.transform.position.x, _spriteRenderer.transform.position.y, -20.0f);
@@ -92,45 +119,115 @@ public class Character : NetworkBehaviour
 
 		if (_player && _player.InputEnabled && GetInput(out InputData data))
 		{
+			//float horizontal = Input.GetAxisRaw("Horizontal");
+			//float vertical = Input.GetAxisRaw("Vertical");
+			//Vector3 lookDirection = new Vector3(horizontal, 0.0f, vertical);
+
+			//if (lookDirection.magnitude >= 0.15f && lookDirection != new Vector3(0.0f, 0.0f, -1.0f))
+			//{
+			//	float targetAngle = Mathf.Atan2(lookDirection.x, lookDirection.z) * Mathf.Rad2Deg + transform.eulerAngles.y;
+			//	float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _smoothVelocity, _otherCameraSmoothInterval);
+
+			//	transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
+			//}
+
+
+			if (_camera == null) _camera = Camera.main.transform;
+
+			_camera.LookAt(_characterController.transform);
+
+			Vector3 movement = Vector3.zero;
+			Vector3 rotation = Vector3.zero;
+
+			Vector3 oldPos = transform.position;
+
 			if (data.GetButton(ButtonFlag.LEFT))
 			{
-				transform.position += Runner.DeltaTime * -_moveSpeed * transform.right;
+				//transform.position += Runner.DeltaTime * -_moveSpeed * transform.right;
 				//Vector3 newScale = new Vector3(1.0f, 1.0f, 1.0f);
 				//transform.localScale = newScale;
-				GetComponent<CharacterController>().Move(Runner.DeltaTime * -_moveSpeed * transform.right);
+				movement += _moveSpeed * -transform.right;
+				rotation.y = -_turnSpeed;
+				//_characterController.Move(movement);
 			}
 
 			if (data.GetButton(ButtonFlag.RIGHT))
 			{
-				transform.position += Runner.DeltaTime * _moveSpeed * transform.right;
+				//transform.position += Runner.DeltaTime * _moveSpeed * transform.right;
 				//Vector3 newScale = new Vector3(-1.0f, 1.0f, 1.0f);
 				//transform.localScale = newScale;
-				GetComponent<CharacterController>().Move(Runner.DeltaTime * _moveSpeed * transform.right);
+				movement += _moveSpeed * transform.right;
+				rotation.y = _turnSpeed;
+				//_characterController.Move(movement);
 			}
 
 			if (data.GetButton(ButtonFlag.FORWARD))
 			{
-				transform.position += Runner.DeltaTime * _moveSpeed * transform.forward;
-				GetComponent<CharacterController>().Move(Runner.DeltaTime * _moveSpeed * transform.forward);
+				//transform.position += Runner.DeltaTime * _moveSpeed * transform.forward;
+				movement += _moveSpeed * transform.forward;
+				//_characterController.Move(movement);
 			}
 
 			if (data.GetButton(ButtonFlag.BACKWARD))
 			{
-				transform.position += Runner.DeltaTime * -_moveSpeed * transform.forward;
-				GetComponent<CharacterController>().Move(Runner.DeltaTime * -_moveSpeed * transform.forward);
+				//transform.position += Runner.DeltaTime * -_moveSpeed * transform.forward;
+				movement += -_moveSpeed * transform.forward;
+				//_characterController.Move(movement);
+			}
+
+			if (_jumping)
+			{
+				Debug.Log("jumping");
+				movement += new Vector3(0.0f, _jumpForce, 0.0f);
+				//_characterController.Move(new Vector3(0.0f, _jumpForce * Runner.DeltaTime, 0.0f));
+			}
+			else
+			{
+				Debug.Log("not jumping");
+				movement += new Vector3(0.0f, -9.81f, 0.0f);
+			}
+
+
+			_characterController.Move(movement * Time.deltaTime); //time.deltatime OR runner.deltatime (whichever works best)
+
+			if (movement != Vector3.zero)
+            {
+				//_camera.position += movement;
+				if ((transform.position - oldPos).magnitude >= movement.magnitude) _camera.position += movement;
+			}
+
+			if (rotation != Vector3.zero)
+            {
+				//float targetAngle = Mathf.Atan2(lookDirection.x, lookDirection.z) * Mathf.Rad2Deg + transform.eulerAngles.y;
+				float targetAngle = transform.eulerAngles.y + rotation.y;
+				float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _smoothVelocity, _otherCameraSmoothInterval);
+
+				transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
 			}
 
 			if (data.GetButton(ButtonFlag.JUMP))
 			{
 				Debug.Log("PRESSED JUMP");
+				if (_characterController.isGrounded)
+                {
+					Debug.Log("JUMP ALLOWED - auto check");
+					//_characterController.SimpleMove(new Vector3(0.0f, _jumpForce, 0.0f));
+					//_characterController.Move(new Vector3(0.0f, _jumpForce, 0.0f));
+					_jumping = true;
+					Invoke("StopJumping", _jumpTime);
+				}
+
 				if (_grounded)//&& _jumpTimePassed >= _jumpCooldown)
 				{
-					Debug.Log("JUMP ALLOWED");
+					Debug.Log("JUMP ALLOWED - manual check");
+					//_jumping = true;
+					//Invoke("StopJumping", 1.0f);
+
 					//.if (_rigidbody.velocity.y <= 0)
 					//.{
-						//._rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0.0f);
-						//_rigidbody.velocity += Vector2.up * Physics2D.gravity.y /* * (fallMultiplier - 1) */ * Runner.DeltaTime;
-						//._rigidbody.velocity += Vector3.up * /* * gravityScale */ 9.81f * _jumpForce * Runner.DeltaTime; //Runner.Simulation.Config.TickRate;
+					//._rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0.0f);
+					//_rigidbody.velocity += Vector2.up * Physics2D.gravity.y /* * (fallMultiplier - 1) */ * Runner.DeltaTime;
+					//._rigidbody.velocity += Vector3.up * /* * gravityScale */ 9.81f * _jumpForce * Runner.DeltaTime; //Runner.Simulation.Config.TickRate;
 					//.}
 
 					//else if (_rb.Rigidbody.velocity.y > 0 && !input.GetButton(InputButton.JUMP))
@@ -176,7 +273,7 @@ public class Character : NetworkBehaviour
 
 
 			//**
-			if (delay.ExpiredOrNotRunning(Runner))
+			if (ballSpawnDelay.ExpiredOrNotRunning(Runner))
 			{
 				if (data.GetButton(ButtonFlag.LMB))
 				{
@@ -192,11 +289,11 @@ public class Character : NetworkBehaviour
 
 					Vector3 forward = transform.forward;
 
-					delay = TickTimer.CreateFromSeconds(Runner, 0.5f);
-					Runner.Spawn(_prefabPhysxBall,
-					  transform.position + forward,
-					  Quaternion.LookRotation(forward),
-					  Object.InputAuthority,
+					Vector3 spawnPos = transform.position;
+					spawnPos.y += 2;
+
+					ballSpawnDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+					Runner.Spawn(_prefabPhysxBall, spawnPos + forward, Quaternion.LookRotation(forward), Object.InputAuthority,
 					  (runner, o) =>
 					  {
 						  o.GetComponent<PhysxBall>().Init(10 * forward);
@@ -219,23 +316,14 @@ public class Character : NetworkBehaviour
 		}
 	}
 
-    private void OnCollisionStay(Collision collision)
+	private void StopJumping()
     {
-		if (collision.gameObject.CompareTag(groundTag)) _grounded = true;
-	}
-
-    private void OnCollisionExit(Collision collision)
-    {
-		if (collision.gameObject.CompareTag(groundTag)) _grounded = false;
-	}
-
+		_jumping = false;
+    }
 
 	private void OnTriggerStay(Collider collision)
 	{
-		if (collision.gameObject.CompareTag(groundTag))
-		{
-			_grounded = true;
-		}
+		if (collision.gameObject.CompareTag(groundTag)) _grounded = true;
 	}
 
 	private void OnTriggerExit(Collider collision)
@@ -245,7 +333,6 @@ public class Character : NetworkBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-		//only called when move is used - i.e. standing still will "dodge" everything..
 		if (hit.gameObject.CompareTag(groundTag)) _grounded = true;
 	}
 
