@@ -12,6 +12,8 @@ public class ThirdPersonMovement : BaseCharacterMovement
     public float walkSpeed = 5.0f, sprintSpeed = 12.0f;
     public float accelerationRate = 20.0f;
 
+    public float slideSpeed = 30.0f;
+
     private Vector3 lastMoveDirection;
 
     [HideInInspector] public bool lockSpeed;
@@ -22,11 +24,14 @@ public class ThirdPersonMovement : BaseCharacterMovement
     private float turnSmoothVelocity;
 
     [HideInInspector] public bool movementEnabled = true;
+    private bool sliding = false;
+
+    //temp to show sliding
+    public GameObject playerBody;
 
     protected override void Setup()
     {
         playerController = GetComponent<CharacterController>();
-          
     }
 
     // Start is called before the first frame update
@@ -146,7 +151,36 @@ public class ThirdPersonMovement : BaseCharacterMovement
 
     protected override void HandleCrouch()
     {
-        
+        if(sprintButtonDown && !sliding)
+        {
+            targetSpeed = slideSpeed;
+            accelerationRate *= 15;
+            playerBody.transform.localScale += new Vector3(0, -0.5f, 0);
+            playerBody.transform.position += new Vector3(0, -0.5f, 0);
+            sliding = true;
+            Invoke("ResetSlideVel", 0.5f);
+        }
+    }
+
+    private void ResetSlideVel()
+    {
+        if(sprintButtonDown)
+        {
+            targetSpeed = sprintSpeed;
+        }
+        else
+        {
+            targetSpeed = walkSpeed;
+        }
+        playerBody.transform.localScale += new Vector3(0, 0.5f, 0);
+        playerBody.transform.position += new Vector3(0, 0.5f, 0);
+        accelerationRate /= 15;
+        Invoke("ResetSlideCooldown", 1);
+    }
+
+    private void ResetSlideCooldown()
+    {
+        sliding = false;
     }
 
     protected override void HandleUnCrouch()
@@ -164,7 +198,7 @@ public class ThirdPersonMovement : BaseCharacterMovement
 
     protected override void HandleUnSprint()
     {
-        if(movementInputDown)
+        if(movementInputDown && !sliding)
         {
             targetSpeed = walkSpeed;
         }

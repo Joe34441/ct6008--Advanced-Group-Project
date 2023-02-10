@@ -171,6 +171,17 @@
                 },
                 {
                     "name": "",
+                    "id": "509fc4e4-4b18-4ca7-91d6-7c12c82c8bdf",
+                    "path": "<Mouse>/backButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "521c0f25-9839-486e-bd1f-4edca0f943b3",
                     "path": "<Mouse>/delta",
                     "interactions": "",

@@ -1207,10 +1207,13 @@ MonoBehaviour:
   walkSpeed: 5
   sprintSpeed: 12
   accelerationRate: 20
+  slideSpeed: 30
   lockSpeed: 0
   playerCamera: {fileID: 7933047891860880807}
   meshTransform: {fileID: 7933047890912397461}
   meshRotationSpeed: 5
+  movementEnabled: 1
+  playerBody: {fileID: 7933047890912397462}
 --- !u!114 &7933047891737751895
 MonoBehaviour:
   m_ObjectHideFlags: 0
