@@ -24,11 +24,13 @@ public class PlayerAbilities : MonoBehaviour
     void Update()
     {
         abilityOne.Update();
+        abilityTwo.Update();
     }
 
     private void InitializeAbilities()
     {
         abilityOne.Initialize(gameObject, gameObject.GetComponent<ThirdPersonMovement>().playerCamera);
+        abilityTwo.Initialize(gameObject, gameObject.GetComponent<ThirdPersonMovement>().playerCamera);
     }
 
     //input functions

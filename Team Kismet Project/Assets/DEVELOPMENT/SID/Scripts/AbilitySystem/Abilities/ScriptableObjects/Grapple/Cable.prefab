@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endPoint: {fileID: 5196090717733185034}
-  cableMaterial: {fileID: 2100000, guid: 002db72054162e04b917e86a395e0a0f, type: 2}
+  cableMaterial: {fileID: 2100000, guid: 6af20d21fdb3e9846be9fcc5368045e6, type: 2}
   cableLength: 0.5
   totalSegments: 5
   segmentsPerUnit: 2
