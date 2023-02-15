@@ -19,4 +19,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 119
   cablePrefab: {fileID: 5196090717385268637, guid: 59b62ef315149a14a9d2a761f2c4850f, type: 3}
-  grappleSpeed: 50
+  grappleSpeed: 30
