@@ -23,7 +23,7 @@ public class Character : NetworkCharacterControllerPrototype
 	private Player _player;
 
 	[SerializeField] private float _moveSpeed = 10.0f;
-	[SerializeField] private float _jumpForce = 10.0f;
+	[SerializeField] private float _jumpForce = 30.0f;
 	[SerializeField] private float _jumpCooldown = 0.1f;
 	private float _jumpTimePassed;
 
@@ -51,6 +51,9 @@ public class Character : NetworkCharacterControllerPrototype
 
 	private bool _jumping;
 	private float _jumpTime = 0.35f;
+
+	private void StopJumping() { _jumping = false; }
+
 
 	//private float cameraZPos = -20.0f;
 
@@ -93,10 +96,19 @@ public class Character : NetworkCharacterControllerPrototype
 			{
 				_camera = Camera.main.transform;
 
-				Vector3 camPos = _characterController.transform.position;
-				camPos.z -= 7;
-				camPos.y += 7;
-				_camera.position = camPos;
+				//Vector3 camPos = _characterController.transform.position;
+				//camPos.z -= 7;
+				//camPos.y += 7;
+				//_camera.position = camPos;
+			}
+
+			Vector3 newCameraPos = transform.position - transform.forward * 7;
+			newCameraPos.y = transform.position.y + 5;
+
+			float camMoveDistance = Vector3.Distance(_camera.position, newCameraPos);
+			if (camMoveDistance > 0.01f)
+			{
+				_camera.position = Vector3.Lerp(_camera.position, newCameraPos, camMoveDistance - Mathf.Abs(Vector3.Magnitude(_camera.position) - Vector3.Magnitude(newCameraPos)));
 			}
 
 			return;
@@ -146,7 +158,7 @@ public class Character : NetworkCharacterControllerPrototype
 				//transform.position += Runner.DeltaTime * -_moveSpeed * transform.right;
 				//Vector3 newScale = new Vector3(1.0f, 1.0f, 1.0f);
 				//transform.localScale = newScale;
-				movement += _moveSpeed * -transform.right;
+				//movement += _moveSpeed * -transform.right;
 				rotation.y = -_turnSpeed;
 				//_characterController.Move(movement);
 			}
@@ -156,7 +168,7 @@ public class Character : NetworkCharacterControllerPrototype
 				//transform.position += Runner.DeltaTime * _moveSpeed * transform.right;
 				//Vector3 newScale = new Vector3(-1.0f, 1.0f, 1.0f);
 				//transform.localScale = newScale;
-				movement += _moveSpeed * transform.right;
+				//movement += _moveSpeed * transform.right;
 				rotation.y = _turnSpeed;
 				//_characterController.Move(movement);
 			}
@@ -187,14 +199,27 @@ public class Character : NetworkCharacterControllerPrototype
 				movement += new Vector3(0.0f, -9.81f, 0.0f);
 			}
 
+			//time.deltatime OR runner.deltatime (whichever works best) *********
+			//maybe different for host/client
+			//_characterController.Move(movement * Time.deltaTime);
+			_characterController.Move(movement * Runner.DeltaTime);
 
-			_characterController.Move(movement * Time.deltaTime); //time.deltatime OR runner.deltatime (whichever works best)
-
-			if (movement != Vector3.zero)
+			if (movement != Vector3.zero && false)
             {
 				//_camera.position += movement;
 				if ((transform.position - oldPos).magnitude >= movement.magnitude) _camera.position += movement;
 			}
+
+			/*
+			Vector3 newCameraPos = transform.position - transform.forward * 8;
+			newCameraPos.y = transform.position.y + 5;
+
+			float camMoveDistance = Vector3.Distance(_camera.position, newCameraPos);
+			if (camMoveDistance > 0.01f)
+            {
+				_camera.position = Vector3.Lerp(_camera.position, newCameraPos, camMoveDistance - Mathf.Abs(Vector3.Magnitude(_camera.position) - Vector3.Magnitude(newCameraPos)));
+			}
+			*/
 
 			if (rotation != Vector3.zero)
             {
@@ -315,11 +340,6 @@ public class Character : NetworkCharacterControllerPrototype
 			//**
 		}
 	}
-
-	private void StopJumping()
-    {
-		_jumping = false;
-    }
 
 	private void OnTriggerStay(Collider collision)
 	{
