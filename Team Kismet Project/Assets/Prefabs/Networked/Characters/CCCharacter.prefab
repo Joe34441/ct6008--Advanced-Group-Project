@@ -159,8 +159,6 @@ GameObject:
   - component: {fileID: 6270122601569038558}
   - component: {fileID: 1433703955198663636}
   - component: {fileID: 4610285444781331943}
-  - component: {fileID: 1797172743888089921}
-  - component: {fileID: 4701896167978567262}
   m_Layer: 0
   m_Name: CCCharacter
   m_TagString: Player
@@ -215,37 +213,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  InterpolationSpace: 0
-  InterpolationTarget: {fileID: 4568515329382100830}
-  InterpolateErrorCorrection: 1
-  InterpolatedErrorCorrectionSettings:
-    MinRate: 3.3
-    MaxRate: 10
-    PosBlendStart: 0.25
-    PosBlendEnd: 1
-    PosMinCorrection: 0.025
-    PosTeleportDistance: 2
-    RotBlendStart: 0.1
-    RotBlendEnd: 0.5
-    RotTeleportRadians: 1.5
-  gravity: -20
-  jumpImpulse: 8
-  acceleration: 10
-  braking: 10
-  maxSpeed: 2
-  rotationSpeed: 15
-  _IsGrounded: 0
-  _Velocity: {x: 0, y: 0, z: 0}
   _name: {fileID: 4610285446266597328}
-  _spriteRenderer: {fileID: 0}
-  _rigidbody: {fileID: 0}
   _moveSpeed: 10
   _jumpForce: 10
   _jumpCooldown: 0.1
-  _cameraSmoothInterval: 0.01
-  _prefabBall: {fileID: 4428168942751681463, guid: e066aedd601f71d43abdc164498d6a85, type: 3}
   _prefabPhysxBall: {fileID: 1710859803498140592, guid: a77c49d25c08e6a47be93900c2e93440, type: 3}
-  _placeableTile: {fileID: 0}
 --- !u!114 &4610285444781331943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,55 +241,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1433703955198663636}
-  - {fileID: 1797172743888089921}
   SimulationBehaviours: []
---- !u!114 &1797172743888089921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4610285444781331945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  InterpolationSpace: 0
-  InterpolationTarget: {fileID: 4568515329382100830}
-  InterpolateErrorCorrection: 1
-  InterpolatedErrorCorrectionSettings:
-    MinRate: 3.3
-    MaxRate: 10
-    PosBlendStart: 0.25
-    PosBlendEnd: 1
-    PosMinCorrection: 0.025
-    PosTeleportDistance: 2
-    RotBlendStart: 0.1
-    RotBlendEnd: 0.5
-    RotTeleportRadians: 1.5
-  gravity: -20
-  jumpImpulse: 8
-  acceleration: 10
-  braking: 10
-  maxSpeed: 2
-  rotationSpeed: 15
-  _IsGrounded: 0
-  _Velocity: {x: 0, y: 0, z: 0}
---- !u!65 &4701896167978567262
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4610285444781331945}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.5, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4610285446266597330
 GameObject:
   m_ObjectHideFlags: 0
