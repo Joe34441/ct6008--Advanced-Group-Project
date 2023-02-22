@@ -55,12 +55,6 @@ public class CameraDistanceRaycaster : MonoBehaviour
 			Debug.LogWarning("No camera target transform has been assigned.", this);
 		}
 
-		if (cameraTransform == null || cameraTargetTransform == null)
-		{
-			this.enabled = false;
-			return;
-		}
-
 		//set intial starting distance
 		currentDistance = (cameraTargetTransform.position - currentTransform.position).magnitude;
 	}

@@ -27,13 +27,14 @@ public class SmokeBomb : Ability
 
     public override void ActivateAbility()
     {
-        renderer = playerRef.GetComponent<ThirdPersonMovement>().playerBody.GetComponent<MeshRenderer>();
+        renderer = playerRef.GetComponent<PlayerController>().playerBody.GetComponent<MeshRenderer>();
         returnMat = renderer.material;
         renderer.material = disappearMat;
         currentTime = 0;
         GameObject smoke = Instantiate(smokePrefab, playerRef.transform.position, playerRef.transform.rotation);
         Destroy(smoke, 3);
         matSet = true;
+        onCooldown = true;
     }
 
     public override void DeactivateAbility()

@@ -12,7 +12,7 @@ public class Map : SimulationBehaviour, ISpawned
 	[SerializeField] private Text _countdownMessage;
 	[SerializeField] private Transform[] _spawnPoints;
 
-	private Dictionary<Player, Character> _playerCharacters = new Dictionary<Player, Character>();
+	private Dictionary<Player, PlayerController> _playerCharacters = new Dictionary<Player, PlayerController>();
 	
 	public void Spawned()
 	{
@@ -40,7 +40,7 @@ public class Map : SimulationBehaviour, ISpawned
 			// Note: This only works if the number of spawnpoints in the map matches the maximum number of players - otherwise there's a risk of spawning multiple players in the same location.
 			// For example, with 4 spawnpoints and a 5 player limit, the first player will get index 4 (max-1) and the second will get index 0, and both will then use the first spawn point.
 			Transform t = _spawnPoints[((int)player.Object.InputAuthority) % _spawnPoints.Length];
-			Character character = Runner.Spawn(player.CharacterPrefab, t.position, t.rotation, player.Object.InputAuthority);
+			PlayerController character = Runner.Spawn(player.CharacterPrefab, t.position, t.rotation, player.Object.InputAuthority);
 			_playerCharacters[player] = character;
 			player.InputEnabled = lateJoiner;
 		}
@@ -48,7 +48,7 @@ public class Map : SimulationBehaviour, ISpawned
 
 	public void DespawnAvatar(Player ply)
 	{
-		if (_playerCharacters.TryGetValue(ply, out Character c))
+		if (_playerCharacters.TryGetValue(ply, out PlayerController c))
 		{
 			Runner.Despawn(c.Object);
 			_playerCharacters.Remove(ply);

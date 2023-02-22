@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
-	[SerializeField] public Character CharacterPrefab;
+	[SerializeField] public PlayerController CharacterPrefab;
 	[Networked] public NetworkString<_32> Name { get; set; }
 	[Networked] public Color Color { get; set; }
 	[Networked] public NetworkBool Ready { get; set; }
