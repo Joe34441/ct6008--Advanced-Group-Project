@@ -980,7 +980,7 @@ GameObject:
   - component: {fileID: 1115870639}
   - component: {fileID: 1115870638}
   - component: {fileID: 1115870637}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Ground
   m_Icon: {fileID: 0}

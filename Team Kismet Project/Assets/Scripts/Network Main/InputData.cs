@@ -11,14 +11,16 @@ public enum ButtonFlag
 	LEFT = 1 << 2,
 	RIGHT = 1 << 3,
 
-	JUMP = 1 << 4,
+	CROUCH = 1 << 4,
 
-	LMB = 1 << 5,
-	RMB = 1 << 6,
+	JUMP = 1 << 5,
 
-	NUM1 = 1 << 7,
-	NUM2 = 1 << 8,
-	NUM3 = 1 << 9,
+	LMB = 1 << 6,
+	RMB = 1 << 7,
+
+	NUM1 = 1 << 8,
+	NUM2 = 1 << 9,
+	NUM3 = 1 << 10
 }
 
 public struct InputData : INetworkInput

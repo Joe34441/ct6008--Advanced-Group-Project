@@ -29,8 +29,52 @@ public class PlayerAbilities : MonoBehaviour
 
     private void InitializeAbilities()
     {
-        abilityOne.Initialize(gameObject, gameObject.GetComponent<ThirdPersonMovement>().playerCamera);
-        abilityTwo.Initialize(gameObject, gameObject.GetComponent<ThirdPersonMovement>().playerCamera);
+        abilityOne.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
+        abilityTwo.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
+    }
+
+    public void ActivateOne()
+    {
+        if(!abilityOne.onCooldown)
+        {
+            abilityOne.ActivateAbility();
+            Invoke("ResetOne", abilityOne.cooldown);
+        }
+    }
+
+    public void ActivateTwo()
+    {
+        if(!abilityTwo.onCooldown)
+        {
+            abilityTwo.ActivateAbility();
+            Invoke("ResetTwo", abilityTwo.cooldown);
+        }
+        
+    }
+
+    public void ActivateThree()
+    {
+        if(!abilityThree.onCooldown)
+        {
+            abilityThree.ActivateAbility();
+            Invoke("ResetThree", abilityThree.cooldown);
+        }
+        
+    }
+
+    private void ResetOne()
+    {
+        abilityOne.ResetCooldown();
+    }
+
+    private void ResetTwo()
+    {
+        abilityTwo.ResetCooldown();
+    }
+
+    private void ResetThree()
+    {
+        abilityThree.ResetCooldown();
     }
 
     //input functions

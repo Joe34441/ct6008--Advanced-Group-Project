@@ -12,7 +12,7 @@ public class GrappleHook : Ability
     private Vector3 connectionPoint;
 
     private bool connected = false;
-    private ThirdPersonMovement playerMovement;
+    private PlayerController playerController;
     private CableComponent grappleCable;
     private GameObject currentCable;
 
@@ -36,7 +36,8 @@ public class GrappleHook : Ability
                     DeactivateAbility();
                     return;
                 }
-                playerRef.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
+                playerController.movedPos = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
+                //playerRef.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
             }
         }
     }
@@ -47,6 +48,7 @@ public class GrappleHook : Ability
         if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maxGrappleDistance, hitList))
         {
             connectionPoint = hit.point;
+            //currentCable is a gameobject, grappleCable is the actual cable class itself
             currentCable = Instantiate(cablePrefab);
             currentCable.transform.position = playerRef.transform.position;
             grappleCable = currentCable.GetComponentInChildren<CableComponent>();
@@ -57,7 +59,8 @@ public class GrappleHook : Ability
                 connectionPoint.y = 2f;
             }
 
-            playerRef.GetComponent<ThirdPersonMovement>().movementEnabled = false;
+            playerController.movementEnabled = false;
+            playerController.beingMoved = true;
             startPoint = playerRef.transform.position;
 
             float distanceToGrapple = Vector3.Distance(playerRef.transform.position, connectionPoint);
@@ -66,6 +69,7 @@ public class GrappleHook : Ability
             timeSinceStart = 0;
 
             connected = true;
+            onCooldown = true;
         }
         else
         {
@@ -77,6 +81,7 @@ public class GrappleHook : Ability
     {
         playerCamera = _camera;
         playerRef = _playerRef;
+        playerController = _playerRef.GetComponent<PlayerController>();
     }
 
     public override void DeactivateAbility()
@@ -85,6 +90,7 @@ public class GrappleHook : Ability
         currentCable = null;
         grappleCable = null;
 
-        playerRef.GetComponent<ThirdPersonMovement>().movementEnabled = true;
+        playerController.movementEnabled = true;
+        playerController.beingMoved = false;
     }
 }

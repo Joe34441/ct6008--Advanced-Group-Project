@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: GrappleHook
   m_EditorClassIdentifier: 
   abilityName: Grapple Hook
-  cooldown: 0
+  cooldown: 3
+  onCooldown: 0
   maxGrappleDistance: 50
   hitList:
     serializedVersion: 2

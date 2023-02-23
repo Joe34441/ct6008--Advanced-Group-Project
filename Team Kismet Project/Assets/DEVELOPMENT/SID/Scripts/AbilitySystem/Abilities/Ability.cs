@@ -7,9 +7,15 @@ public abstract class Ability : ScriptableObject
 {
     public string abilityName;
     public float cooldown;
+    public bool onCooldown = false;
 
     protected GameObject playerRef;
     protected Camera playerCamera;
+
+    public void ResetCooldown()
+    {
+        onCooldown = false;
+    }
 
     public abstract void Update();
 

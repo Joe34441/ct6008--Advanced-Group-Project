@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class ThirdPersonCameraController : MonoBehaviour
 {
+
+	public CameraDistanceRaycaster camRaycaster;
+	public Transform camParent;
+
 	float currentXAngle = 0f;
 	float currentYAngle = 0f;
 
@@ -28,8 +32,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 	Vector3 upwardsDirection;
 
 	//transform and camera components
-	protected Transform tr;
-	protected Camera cam;
+	private Transform tr;
+	private Camera cam;
 
 	//input variables
 	protected Vector2 mouseVector;
@@ -49,7 +53,21 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 		//Execute camera rotation code once to calculate facing and upwards direction
 		RotateCamera(0f, 0f);
+
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
 	}
+
+	public void SetupCameras(Camera _camera)
+    {
+		if(cam != _camera)
+        {
+			cam = _camera;
+        }
+		camRaycaster.cameraTransform = _camera.transform;
+		cam.transform.parent = camParent;
+		cam.transform.position = new Vector3(0, 0, 0);
+    }
 
 	void Update()
 	{
