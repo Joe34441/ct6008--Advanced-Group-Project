@@ -40,6 +40,23 @@ public class PlayerController : Controller
 
     private bool camPosReset = false;
 
+
+
+    //temp **
+    [SerializeField] private GameObject cameraHolder;
+    public void LateUpdate()
+    {
+        if (Object.HasInputAuthority)
+        {
+
+            cameraHolder.transform.position = Camera.main.transform.position;
+            cameraHolder.transform.rotation = Camera.main.transform.rotation;
+
+        }
+    }
+    //**
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,6 +96,8 @@ public class PlayerController : Controller
         {
             GetMoved();
         }
+
+
     }
 
     public void GetMoved()
@@ -107,6 +126,8 @@ public class PlayerController : Controller
                 DecelerateSpeed();
             }
 
+
+
             //set the player's rotation to be the direction they are moving in
             meshTransform.rotation = Quaternion.Euler(0f, angle, 0f);
 
@@ -126,7 +147,7 @@ public class PlayerController : Controller
 
     private void AccelerateSpeed()
     {
-        moveSpeed += accelerationRate * Time.deltaTime;
+        moveSpeed += accelerationRate * Runner.DeltaTime;
         if (moveSpeed > targetSpeed)
         {
             moveSpeed = targetSpeed;
@@ -135,7 +156,7 @@ public class PlayerController : Controller
 
     private void DecelerateSpeed()
     {
-        moveSpeed -= accelerationRate * 2 * Time.deltaTime;
+        moveSpeed -= accelerationRate * 2 * Runner.DeltaTime;
         if (moveSpeed < targetSpeed)
         {
             moveSpeed = targetSpeed;

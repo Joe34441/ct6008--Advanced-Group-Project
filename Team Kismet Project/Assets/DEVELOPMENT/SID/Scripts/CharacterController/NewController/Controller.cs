@@ -30,11 +30,11 @@ public class Controller : NetworkTransform
         //_characterController = GetComponent<NetworkCharacterControllerPrototype>();
     }
 
-    protected override void Awake()
-    {
-        base.Awake();
+    //protected override void Awake()
+    //{
+    //    base.Awake();
         //Setup();
-    }
+    //}
 
     protected virtual void Update()
     {
@@ -52,6 +52,8 @@ public class Controller : NetworkTransform
         //ground check
         //grounded = Physics.CheckSphere(groundCheckLocation.position, 0.125f, whatIsGround);
     }
+
+
 
     public override void FixedUpdateNetwork()
     {
