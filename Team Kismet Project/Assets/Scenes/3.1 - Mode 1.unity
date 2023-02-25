@@ -1413,6 +1413,14 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1237308766826089564, guid: b5aeef1d96fb85a44a0723a29a6df9bc, type: 3}
+      propertyPath: _maps.Array.data[0].scenePath
+      value: Assets/Scenes/3.1 - Mode 1.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 1237308766826089564, guid: b5aeef1d96fb85a44a0723a29a6df9bc, type: 3}
+      propertyPath: _maps.Array.data[0].sceneAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: 0dcfaede995503448a21447caee53804, type: 3}
     - target: {fileID: 6274724183888813006, guid: b5aeef1d96fb85a44a0723a29a6df9bc, type: 3}
       propertyPath: m_RootOrder
       value: 5
