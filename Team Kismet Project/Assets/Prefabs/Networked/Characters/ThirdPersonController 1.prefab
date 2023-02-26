@@ -713,11 +713,11 @@ MonoBehaviour:
   playerController: {fileID: 3239135605662188445}
   abilitiesRef: {fileID: 3239135605662188429}
   cameraController: {fileID: 1429470677163009594}
-  walkSpeed: 5
+  walkSpeed: 10
   sprintSpeed: 12
   slideSpeed: 30
   accelerationRate: 20
-  jumpPower: 1
+  jumpPower: 4
   playerCamera: {fileID: 0}
   meshTransform: {fileID: 3239135604341930575}
   meshRotationSpeed: 5
