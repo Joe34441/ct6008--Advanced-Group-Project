@@ -56,7 +56,7 @@ public class PlayerController : Controller
             cameraRef.transform.rotation = Camera.main.transform.rotation;
         }
 
-
+		return;
 
             if (Object.HasInputAuthority)
         {
@@ -73,6 +73,15 @@ public class PlayerController : Controller
             Debug.Log("here 2");
         }
     }
+
+	//*************************************************************************************************************************************************************************************************
+	//Call function here from Controller.cs passing look input
+	//Use inputs to move & rotate camera reference as if it's the camera
+	//If local client, set main camera position and rotation to camera reference
+	
+	//If other processes use Camera functions, they will need to be reworked to work without camera
+
+	//Maybe switch to get input system inputs inside App.cs
 
     //**
 

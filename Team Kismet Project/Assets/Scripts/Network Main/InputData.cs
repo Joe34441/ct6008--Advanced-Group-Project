@@ -21,9 +21,6 @@ public enum ButtonFlag
 	NUM1 = 1 << 8,
 	NUM2 = 1 << 9,
 	NUM3 = 1 << 10,
-
-
-	LOOK = 1 << 11
 }
 
 public struct InputData : INetworkInput
