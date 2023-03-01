@@ -731,7 +731,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   gravity: -9.81
-  cameraHolder: {fileID: 4733830092018408437}
+  _pos: {x: 0, y: 0, z: 0}
+  _rot: {x: 0, y: 0, z: 0}
+  cameraRef: {fileID: 4733830092018408437}
 --- !u!114 &3239135605662188418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,7 +757,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 3239135605662188419}
-  - {fileID: 1253120926863300835}
+  - {fileID: 2710863499921457245}
   SimulationBehaviours: []
 --- !u!114 &3239135605662188447
 MonoBehaviour:
@@ -851,10 +853,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5601341370490557886}
-  - component: {fileID: 1253120926863300835}
+  - component: {fileID: 2710863499921457245}
   m_Layer: 7
   m_Name: camera reference
-  m_TagString: Untagged
+  m_TagString: CameraReference
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -874,7 +876,7 @@ Transform:
   m_Father: {fileID: 3239135605662188444}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1253120926863300835
+--- !u!114 &2710863499921457245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

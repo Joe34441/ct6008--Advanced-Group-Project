@@ -199,6 +199,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 571915887244382812, guid: b5aeef1d96fb85a44a0723a29a6df9bc, type: 3}
+      propertyPath: _sharedMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 571915887244382812, guid: b5aeef1d96fb85a44a0723a29a6df9bc, type: 3}
       propertyPath: _autoConnect
       value: 0
       objectReference: {fileID: 0}

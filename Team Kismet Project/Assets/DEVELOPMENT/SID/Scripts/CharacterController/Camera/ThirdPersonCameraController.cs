@@ -74,8 +74,15 @@ public class ThirdPersonCameraController : MonoBehaviour
 		HandleCameraRotation();
 	}
 
+	public void NetworkedLookInput(Vector2 input)
+    {
+		RotateCamera(input.x, -input.y);
+    }
+
 	protected virtual void HandleCameraRotation()
 	{
+		return; //see above
+
 		//get input values
 		float _inputHorizontal = mouseVector.x;
 		float _inputVertical = -mouseVector.y;

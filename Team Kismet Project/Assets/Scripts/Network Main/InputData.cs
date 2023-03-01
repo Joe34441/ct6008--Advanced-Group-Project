@@ -20,15 +20,30 @@ public enum ButtonFlag
 
 	NUM1 = 1 << 8,
 	NUM2 = 1 << 9,
-	NUM3 = 1 << 10
+	NUM3 = 1 << 10,
+
+
+	LOOK = 1 << 11
 }
 
 public struct InputData : INetworkInput
 {
 	public ButtonFlag ButtonFlags;
 
+	public Vector2 lookRotation;
+
 	public bool GetButton(ButtonFlag button)
 	{
 		return (ButtonFlags & button) == button;
 	}
+
+	public Vector2 GetLookRotation()
+	{
+		return lookRotation;
+	}
+
+	public void SetLookRotation(Vector2 look)
+    {
+		lookRotation = look;
+    }
 }

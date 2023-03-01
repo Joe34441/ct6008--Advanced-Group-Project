@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
 
 public class PlayerController : Controller
 {
@@ -41,19 +42,38 @@ public class PlayerController : Controller
     private bool camPosReset = false;
 
 
-
     //temp **
-    [SerializeField] private GameObject cameraHolder;
-    public void LateUpdate()
+    public Vector3 pos { get; set; }
+    public Vector3 rot { get; set; }
+
+    [SerializeField] private GameObject cameraRef;
+
+    public void stuffthatshouldbeinnetupdate()
     {
         if (Object.HasInputAuthority)
         {
+            cameraRef.transform.position = Camera.main.transform.position;
+            cameraRef.transform.rotation = Camera.main.transform.rotation;
+        }
 
-            cameraHolder.transform.position = Camera.main.transform.position;
-            cameraHolder.transform.rotation = Camera.main.transform.rotation;
 
+
+            if (Object.HasInputAuthority)
+        {
+            cameraRef.transform.position = Camera.main.transform.position;
+            cameraRef.transform.rotation = Camera.main.transform.rotation;
+            pos = cameraRef.transform.position;
+            rot = cameraRef.transform.eulerAngles;
+            Debug.Log("here 1");
+        }
+        else
+        {
+            cameraRef.transform.position = pos;
+            cameraRef.transform.eulerAngles = rot;
+            Debug.Log("here 2");
         }
     }
+
     //**
 
 
@@ -63,9 +83,12 @@ public class PlayerController : Controller
         if(playerCamera == null)
         {
             playerCamera = Camera.main;
-            Vector3 offset = playerCamera.transform.position + playerCamera.transform.parent.position;
-            playerCamera.transform.position += offset;
-            playerCamera.transform.rotation = Quaternion.identity;
+            if (Object.HasInputAuthority)
+            {
+                Vector3 offset = playerCamera.transform.position + playerCamera.transform.parent.position;
+                playerCamera.transform.position += offset;
+                playerCamera.transform.rotation = Quaternion.identity;
+            }
         }
     }
 
@@ -77,6 +100,8 @@ public class PlayerController : Controller
 
     public override void FixedUpdateNetwork()
     {
+        stuffthatshouldbeinnetupdate();
+
         base.FixedUpdateNetwork();
         grounded = Physics.CheckSphere(groundCheckLocation.position, 0.125f, whatIsGround);
         if (movementEnabled)
@@ -108,7 +133,8 @@ public class PlayerController : Controller
     private void HandleWalk()
     {
         //calculate the direction the player should move in based on the camera direction and WASD input
-        float targetAngle = Mathf.Atan2(moveVector.x, moveVector.y) * Mathf.Rad2Deg + playerCamera.transform.eulerAngles.y;
+        //float targetAngle = Mathf.Atan2(moveVector.x, moveVector.y) * Mathf.Rad2Deg + playerCamera.transform.eulerAngles.y;
+        float targetAngle = Mathf.Atan2(moveVector.x, moveVector.y) * Mathf.Rad2Deg + cameraRef.transform.eulerAngles.y;
         Vector3 directionMovement = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
 
         //calculate the angle that the player should rotate to when moving, and smoothly rotate the player over time
