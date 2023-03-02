@@ -440,6 +440,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1429470677440812184}
+  - component: {fileID: 4897065019870127173}
   m_Layer: 7
   m_Name: CameraTarget
   m_TagString: Untagged
@@ -462,6 +463,29 @@ Transform:
   m_Father: {fileID: 1429470677163009595}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4897065019870127173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429470677440812191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 0
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 3073
+  NetworkGuid:
+    RawGuidValue: 00000000000000000000000000000000
+  NestedObjects: []
+  NetworkedBehaviours: []
+  SimulationBehaviours: []
 --- !u!1 &2357758103205202010
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,9 +755,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   gravity: -9.81
-  _pos: {x: 0, y: 0, z: 0}
-  _rot: {x: 0, y: 0, z: 0}
-  cameraRef: {fileID: 4733830092018408437}
+  cameraRef: {fileID: 1429470677440812191}
 --- !u!114 &3239135605662188418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -754,7 +776,8 @@ MonoBehaviour:
   Flags: 2305
   NetworkGuid:
     RawGuidValue: 521b2cab7302fb34eb48cf79d22cf635
-  NestedObjects: []
+  NestedObjects:
+  - {fileID: 4897065019870127173}
   NetworkedBehaviours:
   - {fileID: 3239135605662188419}
   - {fileID: 2710863499921457245}
@@ -883,7 +906,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4733830092018408437}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 

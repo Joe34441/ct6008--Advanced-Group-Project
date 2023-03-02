@@ -64,14 +64,16 @@ public class Controller : NetworkTransform
     }
 
 
-
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
         if (_player && _player.InputEnabled && GetInput(out InputData data))
         {
             Vector2 lookRotation = data.GetLookRotation();
-            cameraController.NetworkedLookInput(lookRotation);
+            //cameraController.NetworkedLookInput(lookRotation);
+            //playerController.NetworkedLookInput(lookRotation);
+            GetComponent<PlayerController>().NetworkedLookInput(lookRotation);
+
 
             #region Walk Inputs
             if (data.GetButton(ButtonFlag.LEFT))

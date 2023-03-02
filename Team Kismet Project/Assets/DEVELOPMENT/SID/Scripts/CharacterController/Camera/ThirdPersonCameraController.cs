@@ -90,7 +90,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 		RotateCamera(_inputHorizontal, _inputVertical);
 	}
 
-	protected void RotateCamera(float _newHorizontalInput, float _newVerticalInput)
+	public void RotateCamera(float _newHorizontalInput, float _newVerticalInput)
 	{
 		//replace old input directly
 		oldHorizontalInput = _newHorizontalInput;

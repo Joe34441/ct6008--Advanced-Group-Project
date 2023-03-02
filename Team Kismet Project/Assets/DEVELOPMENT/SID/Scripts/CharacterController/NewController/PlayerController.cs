@@ -50,15 +50,19 @@ public class PlayerController : Controller
 
     public void stuffthatshouldbeinnetupdate()
     {
+        //update cam reference
+        //cameraRef.transform.parent.eulerAngles;
+
+
         if (Object.HasInputAuthority)
         {
-            cameraRef.transform.position = Camera.main.transform.position;
-            cameraRef.transform.rotation = Camera.main.transform.rotation;
+            //cameraRef.transform.position = Camera.main.transform.position;
+            //cameraRef.transform.rotation = Camera.main.transform.rotation;
         }
 
 		return;
 
-            if (Object.HasInputAuthority)
+        if (Object.HasInputAuthority)
         {
             cameraRef.transform.position = Camera.main.transform.position;
             cameraRef.transform.rotation = Camera.main.transform.rotation;
@@ -74,16 +78,21 @@ public class PlayerController : Controller
         }
     }
 
-	//*************************************************************************************************************************************************************************************************
-	//Call function here from Controller.cs passing look input
-	//Use inputs to move & rotate camera reference as if it's the camera
-	//If local client, set main camera position and rotation to camera reference
-	
-	//If other processes use Camera functions, they will need to be reworked to work without camera
+    //*************************************************************************************************************************************************************************************************
+    //Call function here from Controller.cs passing look input
+    //Use inputs to move & rotate camera reference as if it's the camera
+    //If local client, set main camera position and rotation to camera reference
 
-	//Maybe switch to get input system inputs inside App.cs
+    //If other processes use Camera functions, they will need to be reworked to work without camera
+
+    //Maybe switch to get input system inputs inside App.cs
 
     //**
+
+    public void NetworkedLookInput(Vector2 input)
+    {
+        cameraRef.transform.parent.GetComponent<ThirdPersonCameraController>().RotateCamera(input.x, -input.y);
+    }
 
 
     // Start is called before the first frame update
