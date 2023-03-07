@@ -5,7 +5,11 @@ using UnityEngine;
 
 public abstract class Ability : ScriptableObject
 {
+
+    [HideInInspector] public bool shouldUpdate;
+
     public string abilityName;
+    public AbilityType abilityType;
     public float cooldown;
     public bool onCooldown = false;
 
@@ -22,6 +26,8 @@ public abstract class Ability : ScriptableObject
     public abstract void Initialize(GameObject _playerRef, Camera _camera);
 
     public abstract void ActivateAbility();
+
+    public abstract void Released();
 
     public abstract void DeactivateAbility();
 

@@ -42,6 +42,11 @@ public class SmokeBomb : Ability
         
     }
 
+    public override void Released()
+    {
+        
+    }
+
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         playerRef = _playerRef;

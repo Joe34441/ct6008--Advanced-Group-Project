@@ -7,6 +7,8 @@ using UnityEditor;
 public class PlayerAbilities : MonoBehaviour
 {
 
+    private AbilityHandler abilityHandler;
+
     public Ability abilityOne;
     public Ability abilityTwo;
     public Ability abilityThree;
@@ -17,20 +19,80 @@ public class PlayerAbilities : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        CreateAbilityInstance();
         InitializeAbilities();
+    }
+
+    public void CreateAbilityInstance()
+    {
+        abilityOne = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
+        
+    }
+
+    private void SetAbilityValues(Ability _ability)
+    {
+        switch(_ability.abilityType)
+        {
+            case AbilityType.GrappleHook:
+                {
+
+                    break;
+                }
+            default:
+                {
+                    Debug.LogError("The ability: " + _ability.abilityName + " has no ability type set on the scriptable object");
+                    break;
+                }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        abilityOne.Update();
-        abilityTwo.Update();
+        if(abilityOne.shouldUpdate)
+        {
+            abilityOne.Update();
+        }
+
+        if(abilityTwo.shouldUpdate)
+        {
+            abilityTwo.Update();
+        }
+
+        if(abilityThree.shouldUpdate)
+        {
+            abilityThree.Update();
+        }
     }
 
     private void InitializeAbilities()
     {
-        abilityOne.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
-        abilityTwo.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
+        if(GetComponent<PlayerController>())
+        {
+            abilityOne.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
+            abilityTwo.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
+            abilityThree.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
+        }
+        else if(GetComponent<ThirdPersonMovement>()) //just for testing purposes offline
+        {
+            abilityOne.Initialize(gameObject, gameObject.GetComponent<ThirdPersonMovement>().playerCamera);
+            abilityTwo.Initialize(gameObject, gameObject.GetComponent<ThirdPersonMovement>().playerCamera);
+            abilityThree.Initialize(gameObject, gameObject.GetComponent<ThirdPersonMovement>().playerCamera);
+        }
+
+        if(abilityOne.onCooldown)
+        {
+            ResetOne();
+        }
+        if(abilityTwo.onCooldown)
+        {
+            ResetTwo();
+        }
+        if(abilityThree.onCooldown)
+        {
+            ResetThree();
+        }
+
     }
 
     public void ActivateOne()
@@ -87,6 +149,7 @@ public class PlayerAbilities : MonoBehaviour
         }
         else if (context.ReadValue<float>() == 0)
         {
+            abilityOne.Released();
             abOneDown = false;
         }
     }
@@ -100,6 +163,7 @@ public class PlayerAbilities : MonoBehaviour
         }
         else if (context.ReadValue<float>() == 0)
         {
+            abilityTwo.Released();
             abTwoDown = false;
         }
     }
@@ -113,6 +177,7 @@ public class PlayerAbilities : MonoBehaviour
         }
         else if (context.ReadValue<float>() == 0)
         {
+            abilityThree.Released();
             abThreeDown = false;
         }
     }

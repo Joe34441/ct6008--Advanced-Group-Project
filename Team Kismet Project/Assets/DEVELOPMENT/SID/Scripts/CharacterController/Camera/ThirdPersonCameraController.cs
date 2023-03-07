@@ -38,6 +38,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 	//input variables
 	protected Vector2 mouseVector;
 
+	public bool offline = false;
+
 	void Awake()
 	{
 		tr = transform;
@@ -54,8 +56,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 		//Execute camera rotation code once to calculate facing and upwards direction
 		RotateCamera(0f, 0f);
 
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
+		//Cursor.lockState = CursorLockMode.Locked;
+		//Cursor.visible = false;
 	}
 
 	public void SetupCameras(Camera _camera)
@@ -76,11 +78,26 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 	protected virtual void HandleCameraRotation()
 	{
+<<<<<<< Updated upstream
 		//get input values
 		float _inputHorizontal = mouseVector.x;
 		float _inputVertical = -mouseVector.y;
+=======
 
-		RotateCamera(_inputHorizontal, _inputVertical);
+		if(offline)
+        {
+			//get input values
+			float _inputHorizontal = mouseVector.x;
+			float _inputVertical = -mouseVector.y;
+
+			RotateCamera(_inputHorizontal, _inputVertical);
+		}
+		else
+        {
+			return;
+        }
+>>>>>>> Stashed changes
+
 	}
 
 	protected void RotateCamera(float _newHorizontalInput, float _newVerticalInput)

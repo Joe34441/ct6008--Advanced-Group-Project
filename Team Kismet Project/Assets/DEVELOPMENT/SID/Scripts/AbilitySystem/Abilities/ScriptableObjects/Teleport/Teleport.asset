@@ -9,17 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 729b2fe44ff0a124ba45c7bb7c2eec1b, type: 3}
-  m_Name: GrappleHook
+  m_Script: {fileID: 11500000, guid: 2420632b5ca3eb6429e9b07e89a0bc33, type: 3}
+  m_Name: Teleport
   m_EditorClassIdentifier: 
-  shouldUpdate: 0
-  abilityName: Grapple Hook
-  cooldown: 3
-  onCooldown: 1
-  offline: 0
-  maxGrappleDistance: 50
+  abilityName: 
+  cooldown: 0
+  onCooldown: 0
   hitList:
     serializedVersion: 2
     m_Bits: 119
-  cablePrefab: {fileID: 5196090717385268637, guid: 59b62ef315149a14a9d2a761f2c4850f, type: 3}
-  grappleSpeed: 30
+  maxTeleportRange: 50
+  teleportIndicator: {fileID: 7302076537998978344, guid: 2ff91d5436e27f3429952d7c1b4e08b8, type: 3}
