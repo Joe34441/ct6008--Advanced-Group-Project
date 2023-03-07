@@ -36,6 +36,7 @@ public class PlayerController : Controller
     [SerializeField] protected Transform groundCheckLocation;
     [SerializeField] protected LayerMask whatIsGround;
 
+    public float gravityScale = 1.0f;
     [HideInInspector] public float gravity = -9.81f;
     protected Vector3 velocity;
 
@@ -60,7 +61,7 @@ public class PlayerController : Controller
             //cameraRef.transform.rotation = Camera.main.transform.rotation;
         }
 
-		return;
+        return;
 
         if (Object.HasInputAuthority)
         {
@@ -98,7 +99,7 @@ public class PlayerController : Controller
     // Start is called before the first frame update
     void Start()
     {
-        if(playerCamera == null)
+        if (playerCamera == null)
         {
             playerCamera = Camera.main;
             if (Object.HasInputAuthority)
@@ -135,7 +136,7 @@ public class PlayerController : Controller
             velocity.y += gravity * Runner.DeltaTime;
             playerController.Move(velocity * Runner.DeltaTime);
         }
-        else if(beingMoved)
+        else if (beingMoved)
         {
             GetMoved();
         }
@@ -146,6 +147,16 @@ public class PlayerController : Controller
     public void GetMoved()
     {
         transform.position = movedPos;
+    }
+
+    public float GetVelocity()
+    {
+        return velocity.y;
+    }
+
+    public void SetVelocity(float newVelocity)
+    {
+        velocity.y = newVelocity;
     }
 
     private void HandleWalk()
@@ -177,7 +188,7 @@ public class PlayerController : Controller
 
             //move character along vector
             playerController.Move(directionMovement * moveSpeed * Runner.DeltaTime);
-            lastMoveDirection = directionMovement;      
+            lastMoveDirection = directionMovement;
         }
         else if (!movementInputDown)
         {

@@ -54,20 +54,20 @@ public class ThirdPersonCameraController : MonoBehaviour
 		//Execute camera rotation code once to calculate facing and upwards direction
 		RotateCamera(0f, 0f);
 
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
+		//Cursor.lockState = CursorLockMode.Locked;
+		//Cursor.visible = false;
 	}
 
 	public void SetupCameras(Camera _camera)
-    {
-		if(cam != _camera)
-        {
+	{
+		if (cam != _camera)
+		{
 			cam = _camera;
-        }
+		}
 		camRaycaster.cameraTransform = _camera.transform;
 		cam.transform.parent = camParent;
 		cam.transform.position = new Vector3(0, 0, 0);
-    }
+	}
 
 	void Update()
 	{
@@ -75,13 +75,13 @@ public class ThirdPersonCameraController : MonoBehaviour
 	}
 
 	public void NetworkedLookInput(Vector2 input)
-    {
+	{
 		RotateCamera(input.x, -input.y);
-    }
+	}
 
 	protected virtual void HandleCameraRotation()
 	{
-		return; //see above
+		//return; //see above
 
 		//get input values
 		float _inputHorizontal = mouseVector.x;
@@ -121,7 +121,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	public void SetFOV(float _fov)
 	{
 		if (cam)
-        {
+		{
 			cam.fieldOfView = _fov;
 		}
 	}
@@ -230,8 +230,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 	}
 
 	public void OnMouseMove(InputAction.CallbackContext context)
-    {
+	{
 		mouseVector = context.ReadValue<Vector2>();
-    }
+	}
 
 }

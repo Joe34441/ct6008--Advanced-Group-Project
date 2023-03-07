@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729b2fe44ff0a124ba45c7bb7c2eec1b, type: 3}
   m_Name: GrappleHook
   m_EditorClassIdentifier: 
+  shouldUpdate: 0
   abilityName: Grapple Hook
   cooldown: 3
-  onCooldown: 0
+  onCooldown: 1
+  offline: 0
   maxGrappleDistance: 50
   hitList:
     serializedVersion: 2

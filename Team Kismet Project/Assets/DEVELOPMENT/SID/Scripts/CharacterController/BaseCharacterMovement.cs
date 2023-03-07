@@ -17,6 +17,7 @@ public class BaseCharacterMovement : MonoBehaviour
     [SerializeField] protected LayerMask whatIsGround;
 
     [HideInInspector] public float gravity = -9.81f;
+    public float gravityScale = 1.0f;
     protected Vector3 velocity;
 
     [Header("Input Settings")]
@@ -43,7 +44,7 @@ public class BaseCharacterMovement : MonoBehaviour
             velocity.y = 0;
         }
 
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y += gravity * gravityScale * Time.deltaTime;
         playerController.Move(velocity * Time.deltaTime);
     }
 

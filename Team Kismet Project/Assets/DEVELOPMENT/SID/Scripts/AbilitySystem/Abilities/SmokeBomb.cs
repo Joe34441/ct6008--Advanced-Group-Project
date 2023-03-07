@@ -42,10 +42,26 @@ public class SmokeBomb : Ability
         
     }
 
+    public override void Released()
+    {
+        
+    }
+
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         playerRef = _playerRef;
         playerCamera = _camera;
         matSet = false;
+    }
+
+    public void Initialize(GameObject _playerRef, Camera _camera, GameObject _smokePrefab, Material _disMat, float _renderTime)
+    {
+        playerRef = _playerRef;
+        playerCamera = _camera;
+        matSet = false;
+        renderTimeScale = _renderTime;
+        smokePrefab = _smokePrefab;
+        disappearMat = _disMat;
+        renderTimeScale = _renderTime;
     }
 }

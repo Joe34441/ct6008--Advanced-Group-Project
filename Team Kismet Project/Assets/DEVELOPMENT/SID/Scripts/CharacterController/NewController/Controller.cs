@@ -23,16 +23,6 @@ public class Controller : NetworkTransform
 
     public override void Spawned()
     {
-        if (Object.HasInputAuthority)
-        {
-            //do any other setup for local client
-        }
-        else
-        {
-            //do any other stuff for non local client
-            if (GetComponentInChildren<AudioListener>()) GetComponentInChildren<AudioListener>().enabled = false;
-        }
-
         _player = App.Instance.GetPlayer(Object.InputAuthority);
         abilitiesRef = GetComponent<PlayerAbilities>();
         Setup();
@@ -64,17 +54,12 @@ public class Controller : NetworkTransform
     }
 
 
+
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
         if (_player && _player.InputEnabled && GetInput(out InputData data))
         {
-            Vector2 lookRotation = data.GetLookRotation();
-            //cameraController.NetworkedLookInput(lookRotation);
-            //playerController.NetworkedLookInput(lookRotation);
-            GetComponent<PlayerController>().NetworkedLookInput(lookRotation);
-
-
             #region Walk Inputs
             if (data.GetButton(ButtonFlag.LEFT))
             {
@@ -145,7 +130,7 @@ public class Controller : NetworkTransform
 
             if (data.GetButton(ButtonFlag.NUM3) && !abilityThreeDown)
             {
-                //abilitiesRef.ActivateThree();
+                abilitiesRef.ActivateThree();
                 abilityThreeDown = true;
             }
             else if (!data.GetButton(ButtonFlag.NUM3) && abilityThreeDown)
@@ -162,7 +147,7 @@ public class Controller : NetworkTransform
     {
         playerController = GetComponent<CharacterController>();
 
-        if(Object.HasInputAuthority) //_player
+        if(Object.HasInputAuthority)
         {
             Camera _camera = Camera.main;
             cameraController.SetupCameras(_camera);

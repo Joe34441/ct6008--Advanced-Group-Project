@@ -8,7 +8,7 @@ public class ThirdPersonMovement : BaseCharacterMovement
 
     //movement values
     //move speed is the current speed the player is moving at, target speed is what the script will accelerate/decelerate to
-    private float targetSpeed;
+    [HideInInspector] public float targetSpeed;
     public float walkSpeed = 5.0f, sprintSpeed = 12.0f;
     public float accelerationRate = 20.0f;
 
@@ -52,6 +52,21 @@ public class ThirdPersonMovement : BaseCharacterMovement
         }
     }
 
+    public void SetVelocity(float newVelocity)
+    {
+        velocity.y = newVelocity;
+    }
+
+    public float GetVelocity()
+    {
+        return velocity.y;
+    }
+
+    public void SetGravityScale(float newScale)
+    {
+        gravityScale = newScale;
+    }
+
     private void HandleWalk()
     {
         //calculate the direction the player should move in based on the camera direction and WASD input
@@ -89,6 +104,12 @@ public class ThirdPersonMovement : BaseCharacterMovement
             }
         }
     }
+
+    public void SetPlayerPosition(Vector3 newPosition)
+    {
+        transform.position = newPosition;
+    }
+
 
     private void RecordLastDirection(Vector3 direction)
     {
@@ -159,6 +180,22 @@ public class ThirdPersonMovement : BaseCharacterMovement
             playerBody.transform.position += new Vector3(0, -0.5f, 0);
             sliding = true;
             Invoke("ResetSlideVel", 0.5f);
+        }
+    }
+
+    public void ResetVelocity()
+    {
+        if(!movementInputDown)
+        {
+            targetSpeed = 0;
+        }
+        else if(movementInputDown && !sprintButtonDown)
+        {
+            targetSpeed = walkSpeed;
+        }
+        else if(movementInputDown && sprintButtonDown)
+        {
+            targetSpeed = sprintSpeed;
         }
     }
 

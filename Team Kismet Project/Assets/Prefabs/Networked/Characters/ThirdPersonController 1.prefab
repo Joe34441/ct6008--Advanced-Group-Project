@@ -667,7 +667,7 @@ GameObject:
   - component: {fileID: 3239135605662188429}
   m_Layer: 7
   m_Name: ThirdPersonController 1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -754,6 +754,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  gravityScale: 1
   gravity: -9.81
   cameraRef: {fileID: 1429470677440812191}
 --- !u!114 &3239135605662188418

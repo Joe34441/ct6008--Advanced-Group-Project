@@ -81,7 +81,7 @@ public class CameraDistanceRaycaster : MonoBehaviour
 		currentDistance = Mathf.Lerp(currentDistance, _distance, Time.deltaTime * smoothingFactor);
 
 		//set new position of cameraTransform
-		if (cameraTransform) cameraTransform.position = currentTransform.position + (cameraTargetTransform.position - currentTransform.position).normalized * currentDistance;
+		cameraTransform.position = currentTransform.position + (cameraTargetTransform.position - currentTransform.position).normalized * currentDistance;
 
 	}
 
