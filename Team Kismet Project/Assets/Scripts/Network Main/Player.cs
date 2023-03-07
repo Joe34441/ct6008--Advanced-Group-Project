@@ -5,10 +5,11 @@ using UnityEngine;
 // for each player when the game session starts and it lives until the session ends.
 // This is not the visual representation of the player. See Character.cs
 
-
 public class Player : NetworkBehaviour
 {
-	[SerializeField] public PlayerController CharacterPrefab;
+	[SerializeField] public Character CharacterPrefab;
+	//[SerializeField] public PlayerController CharacterPrefab;
+
 	[Networked] public NetworkString<_32> Name { get; set; }
 	[Networked] public Color Color { get; set; }
 	[Networked] public NetworkBool Ready { get; set; }
@@ -35,5 +36,24 @@ public class Player : NetworkBehaviour
 	public void RPC_SetColor(Color color)
 	{
 		Color = color;
+	}
+
+	[Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+	public void RPC_Tag(PlayerRef tagged, PlayerRef tagger)
+    {
+		//get Player from PlayerRefs
+		Player taggedPlayer = App.Instance.GetPlayer(tagged);
+		Player taggerPlayer = App.Instance.GetPlayer(tagger);
+		//set IsTagged on Player Character
+		App.Instance.Session.Map.GetCharacter(taggedPlayer).IsTagged = true;
+		App.Instance.Session.Map.GetCharacter(taggerPlayer).IsTagged = false;
+	}
+
+	//called from any client, sent to all clients
+	[Rpc]
+	public static void RPC_StaticTag(NetworkRunner runner, PlayerRef tagged, PlayerRef tagger)
+    {
+		runner.GetPlayerObject(tagged).GetComponent<Character>().Tagged();
+		runner.GetPlayerObject(tagger).GetComponent<Character>().UnTagged();
 	}
 }

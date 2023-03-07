@@ -5,16 +5,70 @@ using UnityEngine.UI;
 using Fusion;
 
 // Visual representation of a Player - the Character is instantiated by the map once it's loaded.
-// This class handles camera tracking and player movement and is destroyed when the map is unloaded.
-// (I.e. the player gets a new avatar in each map)
+// Movement is handled in PlayerCharacterController.cs
 
-public class Character : NetworkBehaviour
+public class Character : NetworkTransform
 {
 	[SerializeField] private Text _name;
-	private CharacterController _characterController;
-	private Transform _camera;
-	private Player _player;
 
+	[SerializeField] private Transform _cameraReference;
+	[SerializeField] private Transform _groundCheckReference;
+
+	[SerializeField] private float _moveAcceleration;
+	[SerializeField] private float _moveDeceleration;
+
+	[SerializeField] private float _mouseLookSpeed;
+	[SerializeField] private float _xMouseLookUpperClamp;
+	[SerializeField] private float _xMouseLookLowerClamp;
+
+	[SerializeField] private float _cameraPositionOffset;
+	[SerializeField] private float _cameraPositionLerpRate;
+	[SerializeField] private float _cameraRotationLerpRate;
+
+	public static Character LocalCharacter { get; protected set; }
+
+	private Player _player;
+	private PlayerCharacterController _playerCharacterController;
+
+	private CharacterController _characterController;
+
+
+	#region OnChanged Events
+
+	[Networked(OnChanged = nameof(OnTagged))]
+	public bool IsTagged { get; set; }
+	static void OnTagged(Changed<Character> changed)
+	{
+		Character self = changed.Behaviour;
+		//do stuff for tagging mechanic
+	}
+
+
+
+	#endregion OnChanged Events
+
+
+	public void TaggedNotStatic()
+	{
+		Debug.Log(_player.Name + ": ive been tagged!");
+	}
+
+	public void Tagged()
+    {
+		Debug.Log(_player.Name + ": ive been tagged!");
+		IsTagged = true;
+    }
+
+	public void UnTagged()
+    {
+		Debug.Log(_player.Name + ": ive been untagged!");
+		IsTagged = false;
+    }
+
+
+
+
+	[Header("\nOLD")]
 	//variables to calculate player movement goes here
 	[SerializeField] private float _moveSpeed = 10.0f;
 	[SerializeField] private float _jumpForce = 30.0f;
@@ -38,37 +92,46 @@ public class Character : NetworkBehaviour
 	private Vector2 _v2MousePos;
 	private Vector2Int _v2IMousePos;
 
-
 	public override void Spawned()
 	{
 		_player = App.Instance.GetPlayer(Object.InputAuthority);
 		_name.text = _player.Name.Value;
 		_characterController = GetComponent<CharacterController>();
+		_playerCharacterController = GetComponent<PlayerCharacterController>();
+
+		if (Object.HasInputAuthority)
+		{
+			LocalCharacter = this;
+			//Camera.main.transform.position = _cameraReference.transform.position;
+			//Camera.main.transform.parent = _cameraReference;
+			Camera.main.transform.position = _cameraReference.position;
+			Camera.main.transform.rotation = _cameraReference.rotation;
+			//Camera.main.transform.localPosition = Vector3.zero;
+			//Camera.main.transform.position = transform.position;// + -transform.forward * 8;
+			//Camera.main.transform.position += new Vector3(0, 6, -8);
+			//Camera.main.transform.LookAt(transform);
+
+			Cursor.visible = false;
+			Cursor.lockState = CursorLockMode.Locked;
+
+			IsTagged = true;
+		}
+
 	}
 
     private void Update()
     {
-		//get mouse movement here? input.getaxis / get from inputSystem **********
-		//probably split to perform inside CharacterController.cs **
-    }
+		//raw local inputs
 
-    public void LateUpdate()
-	{
+		if (IsTagged) _name.text = "tagged";
+		else _name.text = "not tagged";
+	}
+
+    private void LateUpdate()
+    {
 		if (Object.HasInputAuthority)
-		{
-			if (_camera == null) _camera = Camera.main.transform;
-
-			Vector3 newCameraPos = transform.position - transform.forward * 7;
-			newCameraPos.y = transform.position.y + 5;
-
-			float camMoveDistance = Vector3.Distance(_camera.position, newCameraPos);
-			if (camMoveDistance > 0.01f)
-			{
-				//jittery lerp movement, needs proper implementation
-				_camera.position = Vector3.Lerp(_camera.position, newCameraPos, camMoveDistance - Mathf.Abs(Vector3.Magnitude(_camera.position) - Vector3.Magnitude(newCameraPos)));
-			}
-
-			_camera.LookAt(_characterController.transform);
+        {
+			_playerCharacterController.UpdateCamera(_cameraReference, _cameraPositionLerpRate, _cameraRotationLerpRate);
 		}
 	}
 
@@ -76,104 +139,112 @@ public class Character : NetworkBehaviour
 	{
 		if (_jumpTimePassed < _jumpCooldown) _jumpTimePassed += Runner.DeltaTime;
 
-		if (_player && _player.InputEnabled && GetInput(out InputData data))
+		if (Object.HasStateAuthority)
 		{
-			Vector3 movement = Vector3.zero;
-			Vector3 rotation = Vector3.zero;
+			//host only stuff
+		}
 
-			Vector3 oldPos = transform.position;
-
-			if (data.GetButton(ButtonFlag.LEFT))
+		Vector3 movementDirection = Vector3.zero;
+		if (GetInput(out InputData inputData))
+		{
+			if (Object.HasStateAuthority)
 			{
-				//call function in CharacterController.cs using Character.cs variables to get rotation amount
-				rotation.y = -_turnSpeed;
+				Vector2 lookRotation = inputData.GetLookRotation();
+				_playerCharacterController.NetworkedLookRotation(_cameraReference, lookRotation, _cameraPositionOffset, _xMouseLookUpperClamp, _xMouseLookLowerClamp, _mouseLookSpeed, Runner.DeltaTime);
 			}
 
-			if (data.GetButton(ButtonFlag.RIGHT))
+			if (inputData.GetButton(ButtonFlag.LEFT))
 			{
-				//call function in CharacterController.cs using Character.cs variables to get rotation amount
-				rotation.y = _turnSpeed;
+				movementDirection += Vector3.left;
 			}
 
-			if (data.GetButton(ButtonFlag.FORWARD))
+			if (inputData.GetButton(ButtonFlag.RIGHT))
 			{
-				//call function in CharacterController.cs using Character.cs variables to get move amount
-				movement += _moveSpeed * transform.forward;
+				movementDirection += Vector3.right;
 			}
 
-			if (data.GetButton(ButtonFlag.BACKWARD))
+			if (inputData.GetButton(ButtonFlag.FORWARD))
 			{
-				//call function in CharacterController.cs using Character.cs variables to get move amount
-				movement += -_moveSpeed * transform.forward;
+				movementDirection += Vector3.forward;
 			}
 
-			if (_jumping) movement += new Vector3(0.0f, _jumpForce, 0.0f);
-			else movement += new Vector3(0.0f, -9.81f, 0.0f);
-
-			//may be more suitable to use Time.deltaTime for some stuff on client side only
-			_characterController.Move(movement * Runner.DeltaTime);
-
-
-			/*  remove  or navigate to lateupdate --> inputauthority
-			if (movement != Vector3.zero && false)
-            {
-				if ((transform.position - oldPos).magnitude >= movement.magnitude) _camera.position += movement;
-			}
-			*/
-
-			if (rotation != Vector3.zero)
-            {
-				float targetAngle = transform.eulerAngles.y + rotation.y;
-				float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _turnSmoothInterval);
-
-				transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
-			}
-
-			if (data.GetButton(ButtonFlag.JUMP))
+			if (inputData.GetButton(ButtonFlag.BACKWARD))
 			{
-				if (_characterController.isGrounded)
-                {
-					_jumping = true;
-					Invoke("StopJumping", _jumpTime);
-				}
+				movementDirection += Vector3.back;
 			}
 
-			if (data.GetButton(ButtonFlag.NUM1))
-            {
+			movementDirection = movementDirection.normalized;
+
+			if (inputData.GetButton(ButtonFlag.JUMP))
+			{
+				_playerCharacterController.TryJump();
+			}
+
+			if (inputData.GetButton(ButtonFlag.P))
+			{
+				Tag();
+			}
+
+			if (inputData.GetButton(ButtonFlag.NUM1))
+			{
 				Debug.Log("number 1 pressed");
-				//inform CharacterController.cs that player has tried to use ability 1
-            }
+				//call abilitymanager
+			}
 
-			if (data.GetButton(ButtonFlag.NUM2))
+			if (inputData.GetButton(ButtonFlag.NUM2))
 			{
 				Debug.Log("number 2 pressed");
-				//inform CharacterController.cs that player has tried to use ability 1
+				//call abilitymanager
 			}
 
-			if (data.GetButton(ButtonFlag.NUM3))
+			if (inputData.GetButton(ButtonFlag.NUM3))
 			{
 				Debug.Log("number 3 pressed");
-				//inform CharacterController.cs that player has tried to use ability 1
+				//call abilitymanager
 			}
 
-			if (ballSpawnDelay.ExpiredOrNotRunning(Runner))
+			//if (ballSpawnDelay.ExpiredOrNotRunning(Runner))
+			//{
+			//	if (dataOld.GetButton(ButtonFlag.LMB))
+			//	{
+			//		Vector3 forward = transform.forward;
+			//		Vector3 spawnPos = transform.position;
+			//		spawnPos.y += 2;
+
+			//		ballSpawnDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+			//		Runner.Spawn(_prefabPhysxBall, spawnPos + forward, Quaternion.LookRotation(forward), Object.InputAuthority,
+			//		  (runner, o) =>
+			//		  {
+			//			  o.GetComponent<PhysxBall>().Init(10 * forward);
+			//		  });
+			//		spawned = !spawned;
+			//	}
+			//	else if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
+			//}
+		}
+
+		if (Object.HasInputAuthority)
+		{
+			//other local only stuff
+		}
+
+		//perform movement for this tick
+		_playerCharacterController.PerformMove(_characterController, _cameraReference, _groundCheckReference, movementDirection, _moveAcceleration, _moveDeceleration, Runner.DeltaTime);
+	}
+
+	private void Tag()
+    {
+		//do checks to see who should be tagged, and if it's valid
+		if (IsTagged)
+		{
+			PlayerRef tagged = PlayerRef.None;
+			PlayerRef tagger = Runner.LocalPlayer;
+			foreach (PlayerRef pr in Runner.ActivePlayers)
 			{
-				if (data.GetButton(ButtonFlag.LMB))
-				{
-					Vector3 forward = transform.forward;
-					Vector3 spawnPos = transform.position;
-					spawnPos.y += 2;
-
-					ballSpawnDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
-					Runner.Spawn(_prefabPhysxBall, spawnPos + forward, Quaternion.LookRotation(forward), Object.InputAuthority,
-					  (runner, o) =>
-					  {
-						  o.GetComponent<PhysxBall>().Init(10 * forward);
-					  });
-					spawned = !spawned;
-				}
-				else if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
+				if (pr.PlayerId != Runner.LocalPlayer.PlayerId) tagged = pr;
 			}
+
+			_player.RPC_Tag(tagged, tagger);
 		}
 	}
 }

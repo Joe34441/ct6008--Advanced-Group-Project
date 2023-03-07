@@ -318,7 +318,9 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		_data.ButtonFlags |= Input.GetKey(KeyCode.Alpha2) ? ButtonFlag.NUM2 : 0;
 		_data.ButtonFlags |= Input.GetKey(KeyCode.Alpha3) ? ButtonFlag.NUM3 : 0;
 
-		_data.SetLookRotation(new Vector2(Input.GetAxis("Mouse X") * 7, Input.GetAxis("Mouse Y") * 7));
+		_data.ButtonFlags |= Input.GetKey(KeyCode.P) ? ButtonFlag.P : 0;
+
+		_data.SetLookRotation(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")));
 
 		input.Set( _data );
 

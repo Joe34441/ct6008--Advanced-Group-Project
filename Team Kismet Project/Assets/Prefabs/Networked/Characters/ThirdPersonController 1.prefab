@@ -665,6 +665,7 @@ GameObject:
   - component: {fileID: 3239135605662188418}
   - component: {fileID: 3239135605662188447}
   - component: {fileID: 3239135605662188429}
+  - component: {fileID: 2682091375523605779}
   m_Layer: 7
   m_Name: ThirdPersonController 1
   m_TagString: Untagged
@@ -780,6 +781,7 @@ MonoBehaviour:
   - {fileID: 4897065019870127173}
   NetworkedBehaviours:
   - {fileID: 3239135605662188419}
+  - {fileID: 2682091375523605779}
   - {fileID: 2710863499921457245}
   SimulationBehaviours: []
 --- !u!114 &3239135605662188447
@@ -867,6 +869,40 @@ MonoBehaviour:
   abilityOne: {fileID: 11400000, guid: 381e104b990e9d545946cc5b2c8c2ea3, type: 2}
   abilityTwo: {fileID: 11400000, guid: b74863805847e2d4b906bd02c860378a, type: 2}
   abilityThree: {fileID: 11400000, guid: b74863805847e2d4b906bd02c860378a, type: 2}
+--- !u!114 &2682091375523605779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3239135605662188435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 3
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 0}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  gravity: -20
+  jumpImpulse: 8
+  acceleration: 10
+  braking: 10
+  maxSpeed: 2
+  rotationSpeed: 15
+  _IsGrounded: 0
+  _Velocity: {x: 0, y: 0, z: 0}
 --- !u!1 &4733830092018408437
 GameObject:
   m_ObjectHideFlags: 0

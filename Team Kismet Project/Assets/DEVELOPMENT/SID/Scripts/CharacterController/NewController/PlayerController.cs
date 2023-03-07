@@ -94,7 +94,6 @@ public class PlayerController : Controller
         cameraRef.transform.parent.GetComponent<ThirdPersonCameraController>().RotateCamera(input.x, -input.y);
     }
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -103,6 +102,7 @@ public class PlayerController : Controller
             playerCamera = Camera.main;
             if (Object.HasInputAuthority)
             {
+                playerCamera.transform.parent = cameraRef.transform;
                 Vector3 offset = playerCamera.transform.position + playerCamera.transform.parent.position;
                 playerCamera.transform.position += offset;
                 playerCamera.transform.rotation = Quaternion.identity;
@@ -154,9 +154,12 @@ public class PlayerController : Controller
         //float targetAngle = Mathf.Atan2(moveVector.x, moveVector.y) * Mathf.Rad2Deg + playerCamera.transform.eulerAngles.y;
         float targetAngle = Mathf.Atan2(moveVector.x, moveVector.y) * Mathf.Rad2Deg + cameraRef.transform.eulerAngles.y;
         Vector3 directionMovement = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
-
+        
         //calculate the angle that the player should rotate to when moving, and smoothly rotate the player over time
         float angle = Mathf.SmoothDampAngle(meshTransform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
+
+        if (!Object.HasInputAuthority) Debug.Log(moveVector);
+
 
         //check if any movement keys are down before trying to add input direction
         if (movementInputDown)

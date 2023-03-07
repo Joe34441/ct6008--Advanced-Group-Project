@@ -12,8 +12,14 @@ public class Map : SimulationBehaviour, ISpawned
 	[SerializeField] private Text _countdownMessage;
 	[SerializeField] private Transform[] _spawnPoints;
 
-	private Dictionary<Player, PlayerController> _playerCharacters = new Dictionary<Player, PlayerController>();
-	
+	private Dictionary<Player, Character> _playerCharacters = new Dictionary<Player, Character>();
+	//private Dictionary<Player, Controller> _playerCharacters = new Dictionary<Player, Controller>();
+
+	public Character GetCharacter(Player player)
+    {
+		return _playerCharacters[player];
+    }
+
 	public void Spawned()
 	{
 		Debug.Log("Map spawned");
@@ -32,15 +38,14 @@ public class Map : SimulationBehaviour, ISpawned
 	
 	public void SpawnAvatar(Player player, bool lateJoiner)
 	{
-		if (_playerCharacters.ContainsKey(player))
-			return;
+		if (_playerCharacters.ContainsKey(player)) return;
 		if (player.Object.HasStateAuthority) // We have StateAuth over the player if we are the host or if we're the player self in shared mode
 		{
 			Debug.Log($"Spawning avatar for player {player.Name} with input auth {player.Object.InputAuthority}");
-			// Note: This only works if the number of spawnpoints in the map matches the maximum number of players - otherwise there's a risk of spawning multiple players in the same location.
-			// For example, with 4 spawnpoints and a 5 player limit, the first player will get index 4 (max-1) and the second will get index 0, and both will then use the first spawn point.
-			Transform t = _spawnPoints[((int)player.Object.InputAuthority) % _spawnPoints.Length];
-			PlayerController character = Runner.Spawn(player.CharacterPrefab, t.position, t.rotation, player.Object.InputAuthority);
+			Transform trans = _spawnPoints[((int)player.Object.InputAuthority) % _spawnPoints.Length];
+			Character character = Runner.Spawn(player.CharacterPrefab, trans.position / 2, trans.rotation, player.Object.InputAuthority); //position is doubled on spawn.....................
+			//Controller character = Runner.Spawn(player.CharacterPrefab, trans.position, trans.rotation, player.Object.InputAuthority);
+			Debug.Log($"Spawned avatar for player {player.Name} at {trans.position}");
 			_playerCharacters[player] = character;
 			player.InputEnabled = lateJoiner;
 		}
@@ -48,7 +53,8 @@ public class Map : SimulationBehaviour, ISpawned
 
 	public void DespawnAvatar(Player ply)
 	{
-		if (_playerCharacters.TryGetValue(ply, out PlayerController c))
+		//if (_playerCharacters.TryGetValue(ply, out Character c))
+		if (_playerCharacters.TryGetValue(ply, out Character c))
 		{
 			Runner.Despawn(c.Object);
 			_playerCharacters.Remove(ply);

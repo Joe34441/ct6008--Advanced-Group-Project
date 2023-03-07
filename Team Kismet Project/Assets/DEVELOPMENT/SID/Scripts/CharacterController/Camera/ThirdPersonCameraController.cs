@@ -36,7 +36,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 	private Camera cam;
 
 	//input variables
-	protected Vector2 mouseVector;
+	//protected Vector2 mouseVector;
 
 	void Awake()
 	{
@@ -84,10 +84,10 @@ public class ThirdPersonCameraController : MonoBehaviour
 		return; //see above
 
 		//get input values
-		float _inputHorizontal = mouseVector.x;
-		float _inputVertical = -mouseVector.y;
+		//float _inputHorizontal = mouseVector.x;
+		//float _inputVertical = -mouseVector.y;
 
-		RotateCamera(_inputHorizontal, _inputVertical);
+		//RotateCamera(_inputHorizontal, _inputVertical);
 	}
 
 	public void RotateCamera(float _newHorizontalInput, float _newVerticalInput)
@@ -231,7 +231,7 @@ public class ThirdPersonCameraController : MonoBehaviour
 
 	public void OnMouseMove(InputAction.CallbackContext context)
     {
-		mouseVector = context.ReadValue<Vector2>();
+		//mouseVector = context.ReadValue<Vector2>();
     }
 
 }

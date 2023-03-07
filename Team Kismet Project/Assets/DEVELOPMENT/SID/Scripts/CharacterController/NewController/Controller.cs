@@ -67,34 +67,43 @@ public class Controller : NetworkTransform
     public override void FixedUpdateNetwork()
     {
         base.FixedUpdateNetwork();
+        Debug.Log(_player.Name + " - 1");
         if (_player && _player.InputEnabled && GetInput(out InputData data))
         {
             Vector2 lookRotation = data.GetLookRotation();
             //cameraController.NetworkedLookInput(lookRotation);
             //playerController.NetworkedLookInput(lookRotation);
             GetComponent<PlayerController>().NetworkedLookInput(lookRotation);
-
+            Debug.Log(_player.Name + " look rot: " + lookRotation);
+            Debug.Log(_player.Name + " - 2");
 
             #region Walk Inputs
+            Vector2 newMoveVector = Vector2.zero;
             if (data.GetButton(ButtonFlag.LEFT))
             {
-                moveVector.x = -1;
+                newMoveVector.x += -1;
+                //moveVector.x = -1;
+                Debug.Log(_player.Name + " - 3");
             }
             else if (data.GetButton(ButtonFlag.RIGHT))
             {
-                moveVector.x = 1;
+                newMoveVector.x += 1;
+                //moveVector.x = 1;
             }
-            else moveVector.x = 0;
+            //else moveVector.x = 0;
 
             if (data.GetButton(ButtonFlag.FORWARD))
             {
-                moveVector.y = 1;
+                newMoveVector.y += 1;
+                //moveVector.y = 1;
             }
             else if (data.GetButton(ButtonFlag.BACKWARD))
             {
-                moveVector.y = -1;
+                newMoveVector.y += -1;
+                //moveVector.y = -1;
             }
-            else moveVector.y = 0;
+            //else moveVector.y = 0;
+            moveVector = newMoveVector;
 
             if (moveVector.x != 0 || moveVector.y != 0)
             {
@@ -162,7 +171,7 @@ public class Controller : NetworkTransform
     {
         playerController = GetComponent<CharacterController>();
 
-        if(Object.HasInputAuthority) //_player
+        if(Object.HasInputAuthority)
         {
             Camera _camera = Camera.main;
             cameraController.SetupCameras(_camera);
