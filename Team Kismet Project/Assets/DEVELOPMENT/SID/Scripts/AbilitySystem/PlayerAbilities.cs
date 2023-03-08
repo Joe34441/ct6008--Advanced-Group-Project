@@ -129,7 +129,7 @@ public class PlayerAbilities : MonoBehaviour
 
     }
 
-    public void Setup(int playerID)
+    public void Setup(int playerID, PlayerCharacterController playerCharacter)
     {
         abilityManager = GameObject.FindGameObjectWithTag("AbilityManager").GetComponent<AbilityManager>();
         abilityManager.Setup(this, playerID);

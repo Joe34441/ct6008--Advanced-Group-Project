@@ -110,7 +110,7 @@ public class Character : NetworkTransform
 		_playerCharacterController = GetComponent<PlayerCharacterController>();
 		_playerAbilities = GetComponent<PlayerAbilities>();
 
-		_playerAbilities.Setup(Object.InputAuthority);
+		_playerAbilities.Setup(Object.InputAuthority, _playerCharacterController);
 
 		if (Object.HasInputAuthority)
 		{
