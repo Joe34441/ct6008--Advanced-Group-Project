@@ -253,7 +253,7 @@ public class Character : NetworkTransform
 
 		if (_playerTagTrigger.tryTag)
         {
-			if (_playerTagTrigger.otherCharacter == Runner.LocalPlayer) _playerTagTrigger.tryTag = false;
+			if (_playerTagTrigger.otherCharacter.myPlayerRef == Runner.LocalPlayer) _playerTagTrigger.tryTag = false;
 			else Tag(_playerTagTrigger.otherCharacter);
         }
 

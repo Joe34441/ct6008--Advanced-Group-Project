@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerTagTrigger : MonoBehaviour
 {
-    public bool tryTag;
+    public bool tryTag = false;
     public Character otherCharacter;
 
     private void OnTriggerEnter(Collider other)
