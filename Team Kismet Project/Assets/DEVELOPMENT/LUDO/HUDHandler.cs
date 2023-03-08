@@ -20,6 +20,15 @@ public class HUDHandler : MonoBehaviour
 
     private Image tempImage;
     private float goalTime = 150.0f;
+    private int taggedPlayer = 0;
+    private int localPlayer;
+
+    private List<KeyValuePair<int,string>> playerIDs = new List<KeyValuePair<int,string>>();
+    private List<KeyValuePair<int, float>> playerScores = new List<KeyValuePair<int, float>>();
+
+    public List<int> playerIDtry2 = new List<int>();
+    public List<float> playerScoretry2 = new List<float>();
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +43,17 @@ public class HUDHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
 
+    public void AddPlayer(int ID, string name, bool local)
+    {
+        playerIDs.Add(new KeyValuePair<int,string>(ID, name));
+        playerScores.Add(new KeyValuePair<int, float>(ID, 0));
+        if (local)
+        {
+            localPlayer = ID;
+        }
     }
 
     public void EngageClocks(int clientNumber,string clockName1,string clockName2, string clockName3, string clockName4, float newGoalTime)
@@ -69,11 +88,41 @@ public class HUDHandler : MonoBehaviour
         clock4.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = clockName4;
     }
 
-    public void UpdateClocks(float clock1Time, float clock2Time, float clock3Time, float clock4Time)
+    public void UpdateClocks(float clock1Time, float clock2Time, float clock3Time, float clock4Time, float deltaTime)
     {
+        
+        
+        
         clock1.fillAmount = Mathf.Lerp(clock1.fillAmount, clock1Time / goalTime, Time.deltaTime * 1.5f);
         clock2.fillAmount = Mathf.Lerp(clock2.fillAmount, clock2Time / goalTime, Time.deltaTime * 1.5f);
         clock3.fillAmount = Mathf.Lerp(clock3.fillAmount, clock3Time / goalTime, Time.deltaTime * 1.5f);
         clock4.fillAmount = Mathf.Lerp(clock4.fillAmount, clock4Time / goalTime, Time.deltaTime * 1.5f);
+    }
+
+    public void TagPlayer(int playerID)
+    {
+        
+    }
+
+    public void thisway(int playerID, bool tagged, float deltaTime)
+    {
+        if (tagged) return;
+
+        for (int i = 0; i < playerIDs.Count; i++)
+        {
+            if (playerIDtry2[i] == playerID)
+            {
+                playerScoretry2[i] += deltaTime;
+            }
+        }
+
+        //foreach(KeyValuePair<int, float> item in playerScores)
+        //{
+        //    if (item.Key == playerID)
+        //    {
+        //        KeyValuePair newValue = new KeyValuePair<int, float>();
+        //        playerScores;
+        //    }
+        //}
     }
 }
