@@ -72,6 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 216815459087141602}
+  - component: {fileID: 4552367000486142423}
   - component: {fileID: 7917109685055155631}
   - component: {fileID: 7629907159768164466}
   m_Layer: 7
@@ -96,6 +97,20 @@ Transform:
   m_Father: {fileID: 4610285444781331941}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
+--- !u!114 &4552367000486142423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867169257333378828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86bedbe623f4c5946a1a00cd9b4bb7a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tryTag: 0
+  otherCharacter: {fileID: 0}
 --- !u!65 &7917109685055155631
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -329,6 +344,7 @@ MonoBehaviour:
   _name: {fileID: 4610285446266597328}
   _cameraReference: {fileID: 7189883988655106797}
   _groundCheckReference: {fileID: 2992024692704480762}
+  _playerTagTrigger: {fileID: 4552367000486142423}
   _moveAcceleration: 5
   _moveDeceleration: -6
   _mouseLookSpeed: 140
