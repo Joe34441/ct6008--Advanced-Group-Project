@@ -14,8 +14,8 @@ public class GrappleHook : Ability
     private Vector3 connectionPoint;
 
     private bool connected = false;
-    //private PlayerController playerController;
-    //private ThirdPersonMovement _playerController;
+    private PlayerController playerController;
+    private ThirdPersonMovement _playerController;
     private CableComponent grappleCable;
     private GameObject currentCable;
 
@@ -41,7 +41,7 @@ public class GrappleHook : Ability
                         DeactivateAbility();
                         return;
                     }
-                    //playerController.movedPos = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
+                    playerController.movedPos = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
                     //playerRef.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
                 }
             }
@@ -62,7 +62,6 @@ public class GrappleHook : Ability
                         return;
                     }
                     //playerController.movedPos = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
-                    //playerRef.GetComponent<PlayerCharacterController>()
                     playerRef.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
                 }
             }
@@ -89,14 +88,14 @@ public class GrappleHook : Ability
 
             if(offline)
             {
-                //_playerController.movementEnabled = false;
+                _playerController.movementEnabled = false;
                 
             }
             else
             {
                 Debug.Log("here");
-                //playerController.movementEnabled = false;
-                //playerController.beingMoved = true;
+                playerController.movementEnabled = false;
+                playerController.beingMoved = true;
             }
 
             startPoint = playerRef.transform.position;
@@ -123,11 +122,11 @@ public class GrappleHook : Ability
         playerRef = _playerRef;
         if(offline)
         {
-            //_playerController = _playerRef.GetComponent<ThirdPersonMovement>();
+            _playerController = _playerRef.GetComponent<ThirdPersonMovement>();
         }
         else
         {
-            //playerController = _playerRef.GetComponent<PlayerController>();
+            playerController = _playerRef.GetComponent<PlayerController>();
         }
     }
 
@@ -146,11 +145,11 @@ public class GrappleHook : Ability
         maxGrappleDistance = _grappleDistance;
         if (offline)
         {
-            //_playerController = _playerRef.GetComponent<ThirdPersonMovement>();
+            _playerController = _playerRef.GetComponent<ThirdPersonMovement>();
         }
         else
         {
-           //playerController = _playerRef.GetComponent<PlayerController>();
+            playerController = _playerRef.GetComponent<PlayerController>();
         }
 
         onCooldown = false;
@@ -169,15 +168,16 @@ public class GrappleHook : Ability
 
         if(offline)
         {
-            //_playerController.movementEnabled = true;
+            _playerController.movementEnabled = true;
         }
         else
         {
-           //playerController.movementEnabled = true;
-           //playerController.beingMoved = false;
+            playerController.movementEnabled = true;
+            playerController.beingMoved = false;
         }
 
         shouldUpdate = false;
         activated = false;
+
     }
 }

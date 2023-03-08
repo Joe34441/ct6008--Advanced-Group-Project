@@ -14,6 +14,8 @@ public class Character : NetworkTransform
 	[SerializeField] private Transform _cameraReference;
 	[SerializeField] private Transform _groundCheckReference;
 
+	[SerializeField] private PlayerTagTrigger _playerTagTrigger;
+
 	[SerializeField] private float _moveAcceleration;
 	[SerializeField] private float _moveDeceleration;
 
@@ -35,6 +37,8 @@ public class Character : NetworkTransform
 	private PlayerAbilities _playerAbilities;
 
 	public GameObject camRaycastReference;
+
+	private PlayerRef myPlayerRef;
 
 
 	#region OnChanged Events
@@ -99,6 +103,7 @@ public class Character : NetworkTransform
 
 	public override void Spawned()
 	{
+		myPlayerRef = Object.InputAuthority;
 		_player = App.Instance.GetPlayer(Object.InputAuthority);
 		_name.text = _player.Name.Value;
 		_characterController = GetComponent<CharacterController>();
@@ -190,7 +195,7 @@ public class Character : NetworkTransform
 
 			if (inputData.GetButton(ButtonFlag.P))
 			{
-				Tag();
+				//Tag();
 			}
 
 			if (inputData.GetButton(ButtonFlag.NUM1))
@@ -246,6 +251,12 @@ public class Character : NetworkTransform
 			//}
 		}
 
+		if (_playerTagTrigger.tryTag)
+        {
+			if (_playerTagTrigger.otherCharacter == Runner.LocalPlayer) _playerTagTrigger.tryTag = false;
+			else Tag(_playerTagTrigger.otherCharacter);
+        }
+
 		if (Object.HasInputAuthority)
 		{
 			//other local only stuff
@@ -255,19 +266,40 @@ public class Character : NetworkTransform
 		_playerCharacterController.PerformMove(_characterController, _cameraReference, _groundCheckReference, movementDirection, _moveAcceleration, _moveDeceleration, Runner.DeltaTime);
 	}
 
-	private void Tag()
+	private void Tag(Character character)
     {
-		//do checks to see who should be tagged, and if it's valid
-		if (IsTagged)
-		{
-			PlayerRef tagged = PlayerRef.None;
-			PlayerRef tagger = Runner.LocalPlayer;
-			foreach (PlayerRef pr in Runner.ActivePlayers)
-			{
-				if (pr.PlayerId != Runner.LocalPlayer.PlayerId) tagged = pr;
-			}
+		PlayerRef tagged = PlayerRef.None;
+		PlayerRef tagger = PlayerRef.None;
 
-			_player.RPC_Tag(tagged, tagger);
+
+		if (IsTagged)
+        {
+			tagged = character.myPlayerRef;
+			tagger = Runner.LocalPlayer;
 		}
+		else
+        {
+			tagger = character.myPlayerRef;
+			tagged = Runner.LocalPlayer;
+		}
+
+		if (tagged != PlayerRef.None && tagger != PlayerRef.None)
+        {
+			_player.RPC_Tag(tagged, tagger);
+
+		}
+
+		////do checks to see who should be tagged, and if it's valid
+		//if (IsTagged)
+		//{
+		//	PlayerRef tagged = PlayerRef.None;
+		//	PlayerRef tagger = Runner.LocalPlayer;
+		//	foreach (PlayerRef pr in Runner.ActivePlayers)
+		//	{
+		//		if (pr.PlayerId != Runner.LocalPlayer.PlayerId) tagged = pr;
+		//	}
+
+		//	_player.RPC_Tag(tagged, tagger);
+		//}
 	}
 }
