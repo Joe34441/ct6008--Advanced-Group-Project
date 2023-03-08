@@ -32,6 +32,10 @@ public class Character : NetworkTransform
 
 	private CharacterController _characterController;
 
+	private PlayerAbilities _playerAbilities;
+
+	public GameObject camRaycastReference;
+
 
 	#region OnChanged Events
 
@@ -67,7 +71,7 @@ public class Character : NetworkTransform
 
 
 
-
+	//****************************************************************************************************************************************
 	[Header("\nOLD")]
 	//variables to calculate player movement goes here
 	[SerializeField] private float _moveSpeed = 10.0f;
@@ -91,6 +95,7 @@ public class Character : NetworkTransform
 	//should be depreciated but keeping here temporarily
 	private Vector2 _v2MousePos;
 	private Vector2Int _v2IMousePos;
+	//****************************************************************************************************************************************
 
 	public override void Spawned()
 	{
@@ -98,6 +103,9 @@ public class Character : NetworkTransform
 		_name.text = _player.Name.Value;
 		_characterController = GetComponent<CharacterController>();
 		_playerCharacterController = GetComponent<PlayerCharacterController>();
+		_playerAbilities = GetComponent<PlayerAbilities>();
+
+		_playerAbilities.Setup(Object.InputAuthority);
 
 		if (Object.HasInputAuthority)
 		{
@@ -187,21 +195,36 @@ public class Character : NetworkTransform
 
 			if (inputData.GetButton(ButtonFlag.NUM1))
 			{
-				Debug.Log("number 1 pressed");
+				_playerAbilities.ActivateOne();
+				//Debug.Log("number 1 pressed");
 				//call abilitymanager
 			}
+            else
+            {
+				_playerAbilities.ReleaseOne();
+            }
 
 			if (inputData.GetButton(ButtonFlag.NUM2))
 			{
-				Debug.Log("number 2 pressed");
+				_playerAbilities.ActivateTwo();
+				//Debug.Log("number 2 pressed");
 				//call abilitymanager
 			}
+            else
+            {
+				_playerAbilities.ReleaseTwo();
+            }
 
 			if (inputData.GetButton(ButtonFlag.NUM3))
 			{
-				Debug.Log("number 3 pressed");
+				_playerAbilities.ActivateThree();
+				//Debug.Log("number 3 pressed");
 				//call abilitymanager
 			}
+            else
+            {
+				_playerAbilities.ReleaseThree();
+            }
 
 			//if (ballSpawnDelay.ExpiredOrNotRunning(Runner))
 			//{

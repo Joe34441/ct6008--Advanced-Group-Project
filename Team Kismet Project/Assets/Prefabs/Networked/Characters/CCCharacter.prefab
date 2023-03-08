@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &26631113310054572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5377607679126063381}
+  m_Layer: 7
+  m_Name: RaycastRef
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5377607679126063381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 26631113310054572}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4610285444781331941}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &790066048969275364
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5891389467485958631}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4568515329382100830}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +107,7 @@ GameObject:
   - component: {fileID: 4610285444736294249}
   - component: {fileID: 4610285444736294246}
   - component: {fileID: 4610285444736294247}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,9 +191,10 @@ GameObject:
   - component: {fileID: 6270122601569038558}
   - component: {fileID: 1433703955198663636}
   - component: {fileID: 5161583762825246717}
+  - component: {fileID: 397597289601070434}
   - component: {fileID: 4610285444781331943}
   - component: {fileID: 6188410901271086014}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CCCharacter
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -183,6 +215,7 @@ Transform:
   m_Children:
   - {fileID: 4568515329382100830}
   - {fileID: 2992024692704480762}
+  - {fileID: 5377607679126063381}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -241,6 +274,7 @@ MonoBehaviour:
   _cameraPositionOffset: 10
   _cameraPositionLerpRate: 0.1
   _cameraRotationLerpRate: 0.05
+  camRaycastReference: {fileID: 26631113310054572}
   _IsTagged: 0
   _moveSpeed: 10
   _jumpForce: 10
@@ -258,6 +292,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d277d169fe7eeb94c997118732c37dba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &397597289601070434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4610285444781331945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521a6d0be4735114d99a011bbd44fba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityManager: {fileID: 0}
+  abilityOne: {fileID: 0}
+  abilityTwo: {fileID: 0}
+  abilityThree: {fileID: 0}
 --- !u!114 &4610285444781331943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,7 +379,7 @@ GameObject:
   - component: {fileID: 4610285446266597329}
   - component: {fileID: 4610285446266596911}
   - component: {fileID: 4610285446266597328}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +460,7 @@ GameObject:
   - component: {fileID: 4610285446578239582}
   - component: {fileID: 4610285446578239583}
   - component: {fileID: 4610285446578239552}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +561,7 @@ GameObject:
   - component: {fileID: 4610285446649690709}
   - component: {fileID: 4610285446649690710}
   - component: {fileID: 1691434959503807562}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -622,7 +672,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2992024692704480762}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ground Check Reference
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -655,7 +705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7189883988655106797}
   - component: {fileID: 2272743811261907378}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Camera Reference
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -714,7 +764,7 @@ GameObject:
   - component: {fileID: 3040861849616415570}
   - component: {fileID: 4804554813938956684}
   - component: {fileID: 8991305819172096800}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

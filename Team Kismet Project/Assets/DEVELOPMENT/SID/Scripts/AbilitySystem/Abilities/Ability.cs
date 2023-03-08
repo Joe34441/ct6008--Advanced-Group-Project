@@ -5,6 +5,12 @@ using UnityEngine;
 
 public abstract class Ability : ScriptableObject
 {
+    public AbilityTypes abilityType;
+
+    public bool activated = false;
+
+    public bool shouldUpdate = false;
+
     public string abilityName;
     public float cooldown;
     public bool onCooldown = false;
@@ -24,5 +30,7 @@ public abstract class Ability : ScriptableObject
     public abstract void ActivateAbility();
 
     public abstract void DeactivateAbility();
+
+    public abstract void Released();
 
 }

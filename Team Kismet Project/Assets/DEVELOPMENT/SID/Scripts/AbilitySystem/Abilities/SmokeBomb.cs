@@ -27,7 +27,7 @@ public class SmokeBomb : Ability
 
     public override void ActivateAbility()
     {
-        renderer = playerRef.GetComponent<PlayerController>().playerBody.GetComponent<MeshRenderer>();
+        renderer = playerRef.GetComponentInChildren<MeshRenderer>();
         returnMat = renderer.material;
         renderer.material = disappearMat;
         currentTime = 0;
@@ -35,9 +35,17 @@ public class SmokeBomb : Ability
         Destroy(smoke, 3);
         matSet = true;
         onCooldown = true;
+        shouldUpdate = true;
+        activated = true;
     }
 
     public override void DeactivateAbility()
+    {
+        shouldUpdate = false;
+        activated = false;
+    }
+
+    public override void Released()
     {
         
     }
@@ -47,5 +55,16 @@ public class SmokeBomb : Ability
         playerRef = _playerRef;
         playerCamera = _camera;
         matSet = false;
+    }
+
+    public void Initialize(GameObject _playerRef, Camera _camera, GameObject _smokePrefab, Material _disMat, float _renderTime)
+    {
+        playerRef = _playerRef;
+        playerCamera = _camera;
+        matSet = false;
+        renderTimeScale = _renderTime;
+        smokePrefab = _smokePrefab;
+        disappearMat = _disMat;
+        renderTimeScale = _renderTime;
     }
 }
