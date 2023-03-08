@@ -9,6 +9,7 @@ public enum AbilityType
     SmokeBomb,
     Teleport,
     SuperJump,
+    BearTrap,
 }
 
 public class AbilityHandler : MonoBehaviour
@@ -18,6 +19,7 @@ public class AbilityHandler : MonoBehaviour
     public SmokeBomb smokeBomb;
     public Teleport teleport;
     public SuperJump superJump;
+    public BearTrap bearTrap;
 
     private List<GameObject> players;
     private GameObject[] _players;
@@ -44,7 +46,7 @@ public class AbilityHandler : MonoBehaviour
             for (int j = 1; j <= 3; j++)
             {
                 int randomChoice = Random.Range(0, currentList.Count);
-                _players[i].GetComponent<PlayerAbilities>().SetAbility(j, currentList[randomChoice]);
+                _players[i].GetComponent<PlayerAbilities>().AssignAbility(currentList[randomChoice], j);
                 currentList.RemoveAt(randomChoice);
             }
             _players[i].GetComponent<PlayerAbilities>().CreateAbilityInstance();
@@ -57,6 +59,7 @@ public class AbilityHandler : MonoBehaviour
         abilitiesList.Add(smokeBomb);
         abilitiesList.Add(teleport);
         abilitiesList.Add(superJump);
+        abilitiesList.Add(bearTrap);
     }
 
 }

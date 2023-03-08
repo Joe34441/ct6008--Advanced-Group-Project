@@ -111,9 +111,10 @@ public class Controller : NetworkTransform
                 abilitiesRef.ActivateOne();
                 abilityOneDown = true;
             }
-            else if(!data.GetButton(ButtonFlag.NUM1) && !abilityTwoDown)
+            else if(!data.GetButton(ButtonFlag.NUM1) && abilityOneDown)
             {
                 //abilitiesRef.DeactivateOne();
+                abilitiesRef.ReleaseOne();
                 abilityOneDown = false;
             }
 
@@ -125,6 +126,7 @@ public class Controller : NetworkTransform
             else if(!data.GetButton(ButtonFlag.NUM2) && abilityTwoDown)
             {
                 //abilitiesRef.DeactivateTwo();
+                abilitiesRef.ReleaseTwo();
                 abilityTwoDown = false;
             }
 
@@ -136,6 +138,7 @@ public class Controller : NetworkTransform
             else if (!data.GetButton(ButtonFlag.NUM3) && abilityThreeDown)
             {
                 //abilitiesRef.DeactivateThree();
+                abilitiesRef.ReleaseThree();
                 abilityThreeDown = false;
             }
             #endregion

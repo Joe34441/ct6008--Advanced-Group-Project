@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2857800f8ba8f49b9af7fb9aa501f2, type: 3}
+  m_Name: BearTrap
+  m_EditorClassIdentifier: 
+  shouldUpdate: 0
+  abilityName: 
+  abilityType: 4
+  cooldown: 0
+  onCooldown: 0
+  hitList:
+    serializedVersion: 2
+    m_Bits: 119
+  placementRange: 20
+  placementIndicator: {fileID: 5844685121556682104, guid: 66cfea195edca9b45ab40f8d336fe166, type: 3}
+  trapPrefab: {fileID: 6126080331380107285, guid: 3b53aa2c49e2c684988931b60f4b49d9, type: 3}

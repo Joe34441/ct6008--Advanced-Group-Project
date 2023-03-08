@@ -70,6 +70,14 @@ public class PlayerAbilities : MonoBehaviour
                     AssignAbility(teleportAbility, index);
                     break;
                 }
+            case AbilityType.BearTrap:
+                {
+                    BearTrap bearTrap = ScriptableObject.CreateInstance<BearTrap>();
+                    bearTrap.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera, abilityHandler.bearTrap.hitList,
+                        abilityHandler.bearTrap.placementRange, abilityHandler.bearTrap.placementIndicator, abilityHandler.bearTrap.trapPrefab);
+                    AssignAbility(bearTrap, index);
+                    break;
+                }
             default:
                 {
                     Debug.LogError("The ability: " + _ability.abilityName + " has no ability type set on the scriptable object");
@@ -78,7 +86,7 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
-    private void AssignAbility(Ability _ability, int index)
+    public void AssignAbility(Ability _ability, int index)
     {
         switch (index)
         {
@@ -99,38 +107,11 @@ public class PlayerAbilities : MonoBehaviour
                 }
             default:
                 {
-                    Debug.LogError("Somethings happened with the index of the ability: " + index);
+                    Debug.LogError("index is outside the range " + index);
                     break;
                 }
         }
 
-    }
-
-    public void SetAbility(int index, Ability _ability)
-    {
-        switch (index)
-        {
-            case 1:
-                {
-                    abilityOne = _ability;
-                    break;
-                }
-            case 2:
-                {
-                    abilityTwo = _ability;
-                    break;
-                }
-            case 3:
-                {
-                    abilityThree = _ability;
-                    break;
-                }
-            default:
-                {
-                    Debug.LogError("index is outside of range: " + index);
-                    break;
-                }
-        }
     }
 
     // Update is called once per frame
@@ -209,6 +190,21 @@ public class PlayerAbilities : MonoBehaviour
             Invoke("ResetThree", abilityThree.cooldown);
         }
         
+    }
+
+    public void ReleaseOne()
+    {
+        abilityOne.Released();
+    }
+
+    public void ReleaseTwo()
+    {
+        abilityTwo.Released();
+    }
+
+    public void ReleaseThree()
+    {
+        abilityThree.Released();
     }
 
     private void ResetOne()

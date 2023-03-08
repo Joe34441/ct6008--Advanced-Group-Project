@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6537219239358297412}
   m_Layer: 0
   m_Name: AbilityHandler
-  m_TagString: Untagged
+  m_TagString: Ability Handler
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48,3 +48,4 @@ MonoBehaviour:
   smokeBomb: {fileID: 11400000, guid: b74863805847e2d4b906bd02c860378a, type: 2}
   teleport: {fileID: 11400000, guid: 443033d4d4b9be64a9bc31ad14ea8d5f, type: 2}
   superJump: {fileID: 11400000, guid: 1d31a75ba56136845a688544a5cf278e, type: 2}
+  bearTrap: {fileID: 11400000, guid: 5c9254676d337c84a8926ebd99bc3ffc, type: 2}

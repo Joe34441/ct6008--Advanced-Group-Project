@@ -17,7 +17,7 @@ public class Teleport : Ability
 
     private Vector3 teleportLocation = Vector3.zero;
 
-    private float timer = 0.1f;
+    private float timer = 0.02f;
     private float timeRef;
 
     public override void ActivateAbility()
