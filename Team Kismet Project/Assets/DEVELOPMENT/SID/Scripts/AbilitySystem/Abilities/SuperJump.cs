@@ -15,29 +15,35 @@ public class SuperJump : Ability
 
     private bool startedFalling = false;
 
-    //private PlayerController playerController;
+    private PlayerCharacterController playerController;
+    private float returnJumpPower;
 
     public override void ActivateAbility()
     {
-        //if(playerController.grounded)
-        //{
-        //    playerController.SetVelocity(Mathf.Sqrt(jumpPower * -2f * -9.81f));
-        //    shouldUpdate = true;
-        //}
-        //else
-        //{
-        //    onCooldown = false;
-        //}
-        activated = true;
+        if(playerController.IsGrounded())
+        {
+            returnJumpPower = playerController.jumpPower;
+            playerController.jumpPower = jumpPower;
+            playerController.TryJump();
+            shouldUpdate = true;
+            startedFalling = false;
+            activated = true;
+        }
+        else
+        {
+            onCooldown = false;
+        }
     }
 
     public override void DeactivateAbility()
     {
-        //playerController.gravityScale = 1.0f;
+        playerController.gravityScale = 1.0f;
+        playerController.jumpPower = returnJumpPower;
         //playerController.ResetVelocity();
         shouldUpdate = false;
         startedFalling = false;
         activated = false;
+        onCooldown = true;
     }
 
     public override void Initialize(GameObject _playerRef, Camera _camera)
@@ -58,31 +64,30 @@ public class SuperJump : Ability
     {
         if (!startedFalling)
         {
-            if (false)//playerController.GetVelocity() <= 0)
+            if (playerController.GetVelocity() <= -0.5f)
             {
                 startedFalling = true;
                 timeRef = Time.time;
-               //playerController.gravityScale = gravityScale;
-                //playerController.targetSpeed = glideSpeed;
+                playerController.gravityScale = gravityScale;
             }
         }
         else
         {
-            //if (Time.time - timeRef >= glideTime || playerController.grounded)
-            //{
-            //    DeactivateAbility();
-            //}
+            if (Time.time - timeRef >= glideTime || playerController.IsGrounded())
+            {
+                DeactivateAbility();
+            }
         }
 
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, float _jumpPower, float _gravityScale, float _glideTime)
+    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController ,float _jumpPower, float _gravityScale, float _glideTime)
     {
         shouldUpdate = false;
         startedFalling = false;
         playerRef = _playerRef;
         playerCamera = _camera;
-        //playerController = playerRef.GetComponent<PlayerController>();
+        playerController = _playerController;
         jumpPower = _jumpPower;
         gravityScale = _gravityScale;
         glideTime = _glideTime;

@@ -14,8 +14,7 @@ public class GrappleHook : Ability
     private Vector3 connectionPoint;
 
     private bool connected = false;
-    private PlayerController playerController;
-    private ThirdPersonMovement _playerController;
+    private PlayerCharacterController playerController;
     private CableComponent grappleCable;
     private GameObject currentCable;
 
@@ -24,55 +23,36 @@ public class GrappleHook : Ability
     private float travelTime;
     private float timeSinceStart;
 
+    private GameObject raycastRef;
+
     public override void Update()
     {
-        if(!offline)
+        if (connected)
         {
-            if (connected)
+            if (grappleCable)
             {
-                if (grappleCable)
+                grappleCable.transform.position = playerRef.transform.position;
+                timeSinceStart += Time.deltaTime;
+                float travelPercent = timeSinceStart / travelTime;
+                if (travelPercent >= 0.9f)
                 {
-                    grappleCable.transform.position = playerRef.transform.position;
-                    timeSinceStart += Time.deltaTime;
-                    float travelPercent = timeSinceStart / travelTime;
-                    if (travelPercent >= 0.9f)
-                    {
-                        connected = false;
-                        DeactivateAbility();
-                        return;
-                    }
-                    playerController.movedPos = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
-                    //playerRef.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
+                    connected = false;
+                    DeactivateAbility();
+                    return;
                 }
+                //playerController.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
+                playerRef.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
             }
         }
-        else if(offline)
-        {
-            if (connected)
-            {
-                if (grappleCable)
-                {
-                    grappleCable.transform.position = playerRef.transform.position;
-                    timeSinceStart += Time.deltaTime;
-                    float travelPercent = timeSinceStart / travelTime;
-                    if (travelPercent >= 0.9f)
-                    {
-                        connected = false;
-                        DeactivateAbility();
-                        return;
-                    }
-                    //playerController.movedPos = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
-                    playerRef.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
-                }
-            }
-        }
-
     }
 
     public override void ActivateAbility()
     {
         RaycastHit hit;
-        if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maxGrappleDistance, hitList))
+        GameObject obj = new GameObject();
+        obj.transform.position = playerCamera.transform.position;
+        obj.transform.LookAt(raycastRef.transform);
+        if (Physics.Raycast(playerCamera.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
         {
             connectionPoint = hit.point;
             //currentCable is a gameobject, grappleCable is the actual cable class itself
@@ -86,17 +66,7 @@ public class GrappleHook : Ability
                 connectionPoint.y = 2f;
             }
 
-            if(offline)
-            {
-                _playerController.movementEnabled = false;
-                
-            }
-            else
-            {
-                Debug.Log("here");
-                playerController.movementEnabled = false;
-                playerController.beingMoved = true;
-            }
+            playerController.movementDisabled = true;
 
             startPoint = playerRef.transform.position;
 
@@ -106,13 +76,8 @@ public class GrappleHook : Ability
             timeSinceStart = 0;
 
             connected = true;
-            onCooldown = true;
             shouldUpdate = true;
             activated = true;
-        }
-        else
-        {
-            return;
         }
     }
 
@@ -120,17 +85,17 @@ public class GrappleHook : Ability
     {
         playerCamera = _camera;
         playerRef = _playerRef;
-        if(offline)
-        {
-            _playerController = _playerRef.GetComponent<ThirdPersonMovement>();
-        }
-        else
-        {
-            playerController = _playerRef.GetComponent<PlayerController>();
-        }
+        //if(offline)
+        //{
+        //    _playerController = _playerRef.GetComponent<ThirdPersonMovement>();
+        //}
+        //else
+        //{
+        //    playerController = _playerRef.GetComponent<PlayerController>();
+        //}
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, LayerMask _hitList, GameObject _cablePrefab, float _grappleSpeed, float _grappleDistance)
+    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController, LayerMask _hitList, GameObject _cablePrefab, float _grappleSpeed, float _grappleDistance)
     {
         if(name == null)
         {
@@ -143,21 +108,14 @@ public class GrappleHook : Ability
         cablePrefab = _cablePrefab;
         grappleSpeed = _grappleSpeed;
         maxGrappleDistance = _grappleDistance;
-        if (offline)
-        {
-            _playerController = _playerRef.GetComponent<ThirdPersonMovement>();
-        }
-        else
-        {
-            playerController = _playerRef.GetComponent<PlayerController>();
-        }
-
+        playerController = _playerController;
+        raycastRef = playerRef.GetComponent<Character>().camRaycastReference;
         onCooldown = false;
     }
 
     public override void Released()
     {
-        
+        //DeactivateAbility();
     }
 
     public override void DeactivateAbility()
@@ -166,17 +124,10 @@ public class GrappleHook : Ability
         currentCable = null;
         grappleCable = null;
 
-        if(offline)
-        {
-            _playerController.movementEnabled = true;
-        }
-        else
-        {
-            playerController.movementEnabled = true;
-            playerController.beingMoved = false;
-        }
+        playerController.movementDisabled = false;
 
         shouldUpdate = false;
+        onCooldown = true;
         activated = false;
 
     }

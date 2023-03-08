@@ -19,6 +19,12 @@ public class PlayerCharacterController : MonoBehaviour
     private float jumpTimer;
     private float jumpTime = 0.5f;
 
+    [HideInInspector] public bool movementDisabled = false;
+
+    private Vector3 velocity;
+    [HideInInspector] public float jumpPower = 3.0f;
+    [HideInInspector] public float gravityScale = 1.0f;
+    [HideInInspector] public float moveSpeed = 10.0f;
 
     //original -
 
@@ -58,11 +64,18 @@ public class PlayerCharacterController : MonoBehaviour
         if (jumping)
         {
             verticalMovement.y += PerformJump(deltaTime);
+            velocity.y = Mathf.Sqrt(jumpPower * -2f * -9.81f);
         }
         //get gravity movement
         if (!grounded)
         {
             verticalMovement.y += -4f;
+            velocity.y += -9.81f * gravityScale * deltaTime;
+        }
+
+        if(movementDisabled)
+        {
+            return;
         }
 
         //early out
@@ -86,7 +99,9 @@ public class PlayerCharacterController : MonoBehaviour
         }
 
         //apply movement
-        characterController.Move((directionMovement * acceleration + verticalMovement) * deltaTime);
+        characterController.Move((directionMovement * moveSpeed) * deltaTime);
+        //jumping/gravity
+        characterController.Move(velocity * deltaTime);
         //apply rotation
         transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
 
@@ -155,6 +170,16 @@ public class PlayerCharacterController : MonoBehaviour
 
         //method 3.5 - smoothdamp pos
         //Camera.main.transform.position = Vector3.SmoothDamp(Camera.main.transform.position, cameraReference.position, ref cameraVelocity, positionLerpRate);
+    }
+
+    public bool IsGrounded()
+    {
+        return grounded;
+    }
+
+    public float GetVelocity()
+    {
+        return velocity.y;
     }
 
     public void TryJump()

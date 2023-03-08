@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729b2fe44ff0a124ba45c7bb7c2eec1b, type: 3}
   m_Name: GrappleHook
   m_EditorClassIdentifier: 
+  abilityType: 0
+  activated: 0
+  shouldUpdate: 0
   abilityName: Grapple Hook
-  cooldown: 3
+  cooldown: 4
   onCooldown: 0
+  offline: 0
   maxGrappleDistance: 50
   hitList:
     serializedVersion: 2
     m_Bits: 119
   cablePrefab: {fileID: 5196090717385268637, guid: 59b62ef315149a14a9d2a761f2c4850f, type: 3}
-  grappleSpeed: 30
+  grappleSpeed: 40

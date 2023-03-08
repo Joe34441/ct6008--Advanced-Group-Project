@@ -15,6 +15,11 @@ public class PlayerAbilities : MonoBehaviour
     //input variables
     private bool abOneDown, abTwoDown, abThreeDown;
 
+    //temp for flow control of cooldowns
+    private bool hasResetOne = false, hasResetTwo = false, hasResetThree = false;
+
+    private PlayerCharacterController playerController;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,9 +30,9 @@ public class PlayerAbilities : MonoBehaviour
     {
         List<Ability> currentList = new List<Ability>(list);
 
-        for(int i = 1; i <= 3; i++)
+        for(int i = 1; i <= 2; i++)
         {
-            int ranNum = 997 * (playerID + 3);
+            int ranNum = 997 * ((playerID + 3));
 
             int randomChoice = ranNum % currentList.Count;
             //int randomChoice = Random.Range(0, currentList.Count);
@@ -41,6 +46,7 @@ public class PlayerAbilities : MonoBehaviour
         //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
         SetAbilityValues(abilityTwo, 2);
         //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
+        AssignAbility(abilityManager.superJump, 3);
         SetAbilityValues(abilityThree, 3);
     }
 
@@ -52,8 +58,10 @@ public class PlayerAbilities : MonoBehaviour
             case AbilityTypes.Grapplehook:
                 {
                     GrappleHook grappleAbility = ScriptableObject.CreateInstance<GrappleHook>();
-                    grappleAbility.Initialize(gameObject, Camera.main, abilityManager.grapple.hitList,
+                    grappleAbility.Initialize(gameObject, Camera.main, playerController, abilityManager.grapple.hitList,
                         abilityManager.grapple.cablePrefab, abilityManager.grapple.grappleSpeed, abilityManager.grapple.maxGrappleDistance);
+                    grappleAbility.abilityName = abilityManager.grapple.abilityName;
+                    grappleAbility.cooldown = abilityManager.grapple.cooldown;
                     AssignAbility(grappleAbility, index);
                     break;
                 }
@@ -62,14 +70,18 @@ public class PlayerAbilities : MonoBehaviour
                     SmokeBomb smokeAbility = ScriptableObject.CreateInstance<SmokeBomb>();
                     smokeAbility.Initialize(gameObject, Camera.main, abilityManager.smokeBomb.smokePrefab,
                         abilityManager.smokeBomb.disappearMat, abilityManager.smokeBomb.renderTimeScale);
+                    smokeAbility.abilityName = abilityManager.smokeBomb.abilityName;
+                    smokeAbility.cooldown = abilityManager.smokeBomb.cooldown;
                     AssignAbility(smokeAbility, index);
                     break;
                 }
             case AbilityTypes.Superjump:
                 {
                     SuperJump superJump = ScriptableObject.CreateInstance<SuperJump>();
-                    superJump.Initialize(gameObject, Camera.main, abilityManager.superJump.jumpPower,
+                    superJump.Initialize(gameObject, Camera.main, playerController, abilityManager.superJump.jumpPower,
                         abilityManager.superJump.gravityScale, abilityManager.superJump.glideTime);
+                    superJump.abilityName = abilityManager.superJump.abilityName;
+                    superJump.cooldown = abilityManager.superJump.cooldown;
                     AssignAbility(superJump, index);
                     break;
                 }
@@ -78,6 +90,8 @@ public class PlayerAbilities : MonoBehaviour
                     Teleport teleportAbility = ScriptableObject.CreateInstance<Teleport>();
                     teleportAbility.Initialize(gameObject, Camera.main, abilityManager.teleport.hitList,
                         abilityManager.teleport.maxTeleportRange, abilityManager.teleport.teleportIndicator);
+                    teleportAbility.abilityName = abilityManager.teleport.abilityName;
+                    teleportAbility.cooldown = abilityManager.teleport.cooldown;
                     AssignAbility(teleportAbility, index);
                     break;
                 }
@@ -86,6 +100,8 @@ public class PlayerAbilities : MonoBehaviour
                     BearTrap bearTrap = ScriptableObject.CreateInstance<BearTrap>();
                     bearTrap.Initialize(gameObject, Camera.main, abilityManager.bearTrap.hitList,
                         abilityManager.bearTrap.placementRange, abilityManager.bearTrap.placementIndicator, abilityManager.bearTrap.trapPrefab);
+                    bearTrap.abilityName = abilityManager.bearTrap.abilityName;
+                    bearTrap.cooldown = abilityManager.bearTrap.cooldown;
                     AssignAbility(bearTrap, index);
                     break;
                 }
@@ -131,6 +147,7 @@ public class PlayerAbilities : MonoBehaviour
 
     public void Setup(int playerID, PlayerCharacterController playerCharacter)
     {
+        playerController = playerCharacter;
         abilityManager = GameObject.FindGameObjectWithTag("AbilityManager").GetComponent<AbilityManager>();
         abilityManager.Setup(this, playerID);
     }
@@ -138,8 +155,8 @@ public class PlayerAbilities : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        abilityOne.Update();
-        abilityTwo.Update();
+        //abilityOne.Update();
+        //abilityTwo.Update();
     }
 
     private void InitializeAbilities()
@@ -155,7 +172,7 @@ public class PlayerAbilities : MonoBehaviour
             if (!abilityOne.onCooldown)
             {
                 abilityOne.ActivateAbility();
-                Invoke("ResetOne", abilityOne.cooldown);
+                hasResetOne = false;
             }
         }
 
@@ -173,10 +190,10 @@ public class PlayerAbilities : MonoBehaviour
             if (!abilityTwo.onCooldown)
             {
                 abilityTwo.ActivateAbility();
-                Invoke("ResetTwo", abilityTwo.cooldown);
+                hasResetTwo = false;
             }
         }
-        if (!abilityTwo.shouldUpdate)
+        if (abilityTwo.shouldUpdate)
         {
             abilityTwo.Update();
         }
@@ -190,7 +207,7 @@ public class PlayerAbilities : MonoBehaviour
             if (!abilityThree.onCooldown)
             {
                 abilityThree.ActivateAbility();
-                Invoke("ResetThree", abilityThree.cooldown);
+                hasResetThree = false;
             }
         }
 
@@ -206,6 +223,17 @@ public class PlayerAbilities : MonoBehaviour
         {
             abilityOne.Released();
         }
+
+        if(abilityOne.shouldUpdate)
+        {
+            abilityOne.Update();
+        }
+
+        if(abilityOne.onCooldown && !hasResetOne)
+        {
+            Invoke("ResetOne", abilityOne.cooldown);
+            hasResetOne = true;
+        }
     }
 
     public void ReleaseTwo()
@@ -214,6 +242,18 @@ public class PlayerAbilities : MonoBehaviour
         {
             abilityTwo.Released();
         }
+
+        if(abilityTwo.shouldUpdate)
+        {
+            abilityTwo.Update();
+        }
+
+        if (abilityTwo.onCooldown && !hasResetTwo)
+        {
+            Invoke("ResetTwo", abilityTwo.cooldown);
+            hasResetTwo = true;
+        }
+
     }
 
     public void ReleaseThree()
@@ -222,6 +262,18 @@ public class PlayerAbilities : MonoBehaviour
         {
             abilityThree.Released();
         }
+
+        if(abilityThree.shouldUpdate)
+        {
+            abilityThree.Update();
+        }
+
+        if (abilityThree.onCooldown && !hasResetThree)
+        {
+            Invoke("ResetThree", abilityThree.cooldown);
+            hasResetThree = true;
+        }
+
     }
 
     private void ResetOne()
@@ -239,6 +291,7 @@ public class PlayerAbilities : MonoBehaviour
         abilityThree.ResetCooldown();
     }
 
+    #region input functions - redundant for networking but im too scared to remove them
     //input functions
     public void OnAbilityOne(InputAction.CallbackContext context)
     {
@@ -278,4 +331,5 @@ public class PlayerAbilities : MonoBehaviour
             abThreeDown = false;
         }
     }
+    #endregion
 }

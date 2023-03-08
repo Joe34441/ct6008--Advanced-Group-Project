@@ -16,7 +16,7 @@ MonoBehaviour:
   activated: 0
   shouldUpdate: 0
   abilityName: 
-  cooldown: 0
+  cooldown: 6
   onCooldown: 0
   jumpPower: 15
   gravityScale: 0.2
