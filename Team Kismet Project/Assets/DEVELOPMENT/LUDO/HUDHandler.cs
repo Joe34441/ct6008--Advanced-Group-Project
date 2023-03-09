@@ -51,21 +51,12 @@ public class HUDHandler : MonoBehaviour
         clock2.fillAmount = 0;
         clock3.fillAmount = 0;
         clock4.fillAmount = 0;
-
-        ShowAbilities("Sprint", "Dash", "GrapplingHook");
-        StartCoroutine(TestCo());
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    IEnumerator TestCo()
-    {
-        yield return new WaitForSeconds(5.0f);
-        EngageCooldowns();
     }
 
     public void AddPlayer(int ID, string name, bool local)
