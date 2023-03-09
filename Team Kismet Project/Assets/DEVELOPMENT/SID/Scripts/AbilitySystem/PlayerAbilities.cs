@@ -46,7 +46,7 @@ public class PlayerAbilities : MonoBehaviour
         //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
         SetAbilityValues(abilityTwo, 2);
         //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-        AssignAbility(abilityManager.superJump, 3);
+        //AssignAbility(abilityManager.dash, 3);
         SetAbilityValues(abilityThree, 3);
     }
 
@@ -103,6 +103,24 @@ public class PlayerAbilities : MonoBehaviour
                     bearTrap.abilityName = abilityManager.bearTrap.abilityName;
                     bearTrap.cooldown = abilityManager.bearTrap.cooldown;
                     AssignAbility(bearTrap, index);
+                    break;
+                }
+            case AbilityTypes.Sprint:
+                {
+                    Sprint sprint = ScriptableObject.CreateInstance<Sprint>();
+                    sprint.Initialize(gameObject, Camera.main, playerController, abilityManager.sprint.sprintSpeed);
+                    sprint.abilityName = abilityManager.sprint.abilityName;
+                    sprint.cooldown = abilityManager.sprint.cooldown;
+                    AssignAbility(sprint, index);
+                    break;
+                }
+            case AbilityTypes.Dash:
+                {
+                    Dash dash = ScriptableObject.CreateInstance<Dash>();
+                    dash.Initialize(gameObject, Camera.main, playerController, abilityManager.dash.dashDistance);
+                    dash.abilityName = abilityManager.dash.abilityName;
+                    dash.cooldown = abilityManager.dash.cooldown;
+                    AssignAbility(dash, index);
                     break;
                 }
             default:

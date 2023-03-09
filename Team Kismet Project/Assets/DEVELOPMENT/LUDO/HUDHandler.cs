@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,15 @@ public class HUDHandler : MonoBehaviour
     [SerializeField]
     private Image clock4;
 
+    [SerializeField]
+    private Transform canvas;
+    [SerializeField]
+    private SpringDynamics abilityExplainer;
+
+    private GameObject ability1Object;
+    private GameObject ability2Object;
+    private GameObject ability3Object;
+
     private Image tempImage;
     private float goalTime = 150.0f;
     private int taggedPlayer = 0;
@@ -28,6 +38,9 @@ public class HUDHandler : MonoBehaviour
 
     public List<int> playerIDtry2 = new List<int>();
     public List<float> playerScoretry2 = new List<float>();
+
+    [SerializeField]
+    private List<GameObject> abilityCards = new List<GameObject>();
 
 
     // Start is called before the first frame update
@@ -124,5 +137,45 @@ public class HUDHandler : MonoBehaviour
         //        playerScores;
         //    }
         //}
+    }
+
+    public void ShowAbilities(string ability1, string ability2, string ability3)
+    {
+        foreach(GameObject ability in abilityCards)
+        {
+            if(ability.name == ability1)
+            {
+                ability1Object = Instantiate(ability);
+                ability1Object.transform.parent = canvas;
+                ability1Object.GetComponent<RectTransform>().anchoredPosition = new Vector2(-746.6f, 268.92f);
+            }
+            else if (ability.name == ability2)
+            {
+                ability2Object = Instantiate(ability);
+                ability2Object.transform.parent = canvas;
+                ability2Object.GetComponent<RectTransform>().anchoredPosition = new Vector2(-769.1f, -16.3f);
+            }
+            else if (ability.name == ability3)
+            {
+                ability3Object = Instantiate(ability);
+                ability3Object.transform.parent = canvas;
+                ability3Object.GetComponent<RectTransform>().anchoredPosition = new Vector2(-794.0f, -291.57f);
+            }
+        }
+    }
+
+    public void EngageCooldowns()
+    {
+        GameObject.Destroy(ability1Object.transform.GetChild(3).gameObject);
+        GameObject.Destroy(ability1Object.transform.GetChild(2).gameObject);
+        GameObject.Destroy(ability2Object.transform.GetChild(3).gameObject);
+        GameObject.Destroy(ability2Object.transform.GetChild(2).gameObject);
+        GameObject.Destroy(ability3Object.transform.GetChild(3).gameObject);
+        GameObject.Destroy(ability3Object.transform.GetChild(2).gameObject);
+
+        ability1Object.GetComponent<SpringDynamics>().OverwriteTarget(new Vector2(-827.7f, -430.1f));
+        ability2Object.GetComponent<SpringDynamics>().OverwriteTarget(new Vector2(-620.51f, -430.1f));
+        ability3Object.GetComponent<SpringDynamics>().OverwriteTarget(new Vector2(-413.32f, -430.1f));
+        abilityExplainer.SwitchPos();
     }
 }

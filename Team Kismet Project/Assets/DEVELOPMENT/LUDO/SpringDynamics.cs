@@ -132,6 +132,11 @@ public class SpringDynamics : MonoBehaviour
         primaryTarget.x = x;
     }
 
+    public void OverwriteTarget(Vector2 newTarget)
+    {
+        primaryTarget = newTarget;
+    }
+
     /// <summary>
     /// Teleports the UI object to its alternate position for use of UI objects coming into view after a scene transition
     /// </summary>

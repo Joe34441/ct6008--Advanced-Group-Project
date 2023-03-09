@@ -25,6 +25,9 @@ public class PlayerCharacterController : MonoBehaviour
     [HideInInspector] public float jumpPower = 3.0f;
     [HideInInspector] public float gravityScale = 1.0f;
     [HideInInspector] public float moveSpeed = 10.0f;
+    public bool sprinting = false;
+
+    private Vector3 moveDirection = Vector3.zero;
 
     //original -
 
@@ -98,8 +101,10 @@ public class PlayerCharacterController : MonoBehaviour
             rotationAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSmoothVelocity, 0.1f);
         }
 
+        RecordDirection(directionMovement);
+
         //apply movement
-        characterController.Move((directionMovement * moveSpeed) * deltaTime);
+        characterController.Move(directionMovement * moveSpeed * deltaTime);
         //jumping/gravity
         characterController.Move(velocity * deltaTime);
         //apply rotation
@@ -170,6 +175,16 @@ public class PlayerCharacterController : MonoBehaviour
 
         //method 3.5 - smoothdamp pos
         //Camera.main.transform.position = Vector3.SmoothDamp(Camera.main.transform.position, cameraReference.position, ref cameraVelocity, positionLerpRate);
+    }
+
+    private void RecordDirection(Vector3 newDirection)
+    {
+        moveDirection = newDirection;
+    }
+
+    public Vector3 GetMoveDirection()
+    {
+        return moveDirection;
     }
 
     public bool IsGrounded()
