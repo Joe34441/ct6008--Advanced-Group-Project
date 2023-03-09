@@ -15,7 +15,7 @@ MonoBehaviour:
   abilityType: 3
   activated: 0
   shouldUpdate: 0
-  abilityName: 
+  abilityName: SuperJump
   cooldown: 6
   onCooldown: 0
   jumpPower: 15

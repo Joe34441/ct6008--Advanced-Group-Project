@@ -44517,6 +44517,8 @@ MonoBehaviour:
   bearTrap: {fileID: 11400000, guid: 18c6f6b67fb651d47b11830a9859f23a, type: 2}
   sprint: {fileID: 11400000, guid: 735582fe747b219419e92ec79789d562, type: 2}
   dash: {fileID: 11400000, guid: 0f1a52fafb5340744983d51fc1801b67, type: 2}
+  doubleJump: {fileID: 11400000, guid: cf055f70839891c4090f1efa6ae49cb9, type: 2}
+  slide: {fileID: 11400000, guid: 5a430139f487a6f4890eb94e31112bf3, type: 2}
 --- !u!4 &1559033448
 Transform:
   m_ObjectHideFlags: 0

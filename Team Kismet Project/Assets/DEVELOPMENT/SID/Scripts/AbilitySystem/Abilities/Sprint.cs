@@ -16,7 +16,6 @@ public class Sprint : Ability
 
     public override void ActivateAbility()
     {
-        returnSpeed = playerController.moveSpeed;
         playerController.moveSpeed = sprintSpeed;
         timeRef = Time.time;    
         activated = true;
@@ -42,6 +41,7 @@ public class Sprint : Ability
         playerCamera = _camera;
         playerController = _playerController;
         sprintSpeed = _sprintSpeed;
+        returnSpeed = playerController.moveSpeed;
     }
 
     public override void Released()

@@ -15,7 +15,7 @@ MonoBehaviour:
   abilityType: 0
   activated: 0
   shouldUpdate: 0
-  abilityName: Grapple Hook
+  abilityName: GrapplingHook
   cooldown: 4
   onCooldown: 0
   offline: 0

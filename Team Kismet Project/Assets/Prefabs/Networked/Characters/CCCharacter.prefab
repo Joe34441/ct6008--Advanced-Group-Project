@@ -380,6 +380,8 @@ MonoBehaviour:
   jumpPower: 3
   gravityScale: 1
   moveSpeed: 10
+  playerBody: {fileID: 4610285446578239554}
+  face: {fileID: 4610285444736294250}
 --- !u!114 &397597289601070434
 MonoBehaviour:
   m_ObjectHideFlags: 0

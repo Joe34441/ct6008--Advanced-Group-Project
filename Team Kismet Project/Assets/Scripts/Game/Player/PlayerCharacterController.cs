@@ -25,7 +25,8 @@ public class PlayerCharacterController : MonoBehaviour
     [HideInInspector] public float jumpPower = 3.0f;
     [HideInInspector] public float gravityScale = 1.0f;
     [HideInInspector] public float moveSpeed = 10.0f;
-    public bool sprinting = false;
+    [SerializeField] private GameObject playerBody;
+    public GameObject face;
 
     private Vector3 moveDirection = Vector3.zero;
 
@@ -139,7 +140,7 @@ public class PlayerCharacterController : MonoBehaviour
     public void NetworkedLookRotation(Transform cameraReference, Vector2 mouseLook, float offset, float xRotationUpperClamp, float xRotationLowerClamp, float mouseLookSpeed, float deltaTime)
     {
         //update look rotation
-        lookRotationX += mouseLook.y * mouseLookSpeed * deltaTime;
+        lookRotationX += -mouseLook.y * mouseLookSpeed * deltaTime;
         lookRotationY += mouseLook.x * mouseLookSpeed * deltaTime;
         //clamp x look rotation
         lookRotationX = Mathf.Clamp(lookRotationX, xRotationLowerClamp, xRotationUpperClamp);
@@ -175,6 +176,16 @@ public class PlayerCharacterController : MonoBehaviour
 
         //method 3.5 - smoothdamp pos
         //Camera.main.transform.position = Vector3.SmoothDamp(Camera.main.transform.position, cameraReference.position, ref cameraVelocity, positionLerpRate);
+    }
+
+    public void SetVelocity(float newVelocity)
+    {
+        velocity.y = newVelocity;
+    }
+
+    public GameObject GetPlayerBody()
+    {
+        return playerBody;
     }
 
     private void RecordDirection(Vector3 newDirection)

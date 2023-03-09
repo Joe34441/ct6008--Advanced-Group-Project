@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a39574fe9a827a4fb85fb4c31578597, type: 3}
-  m_Name: Dash
+  m_Script: {fileID: 11500000, guid: 38b6f61e417d760448cbbac3fdf1fa87, type: 3}
+  m_Name: DoubleJump
   m_EditorClassIdentifier: 
-  abilityType: 6
+  abilityType: 7
   activated: 0
   shouldUpdate: 0
-  abilityName: Dash
-  cooldown: 4
+  abilityName: DoubleJump
+  cooldown: 6
   onCooldown: 0
-  dashDistance: 2

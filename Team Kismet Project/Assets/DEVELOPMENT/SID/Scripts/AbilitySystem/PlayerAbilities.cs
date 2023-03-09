@@ -48,7 +48,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            //AssignAbility(abilityManager.dash, 3);
+            AssignAbility(abilityManager.dash, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -75,8 +75,8 @@ public class PlayerAbilities : MonoBehaviour
             case AbilityTypes.Smokebomb:
                 {
                     SmokeBomb smokeAbility = ScriptableObject.CreateInstance<SmokeBomb>();
-                    smokeAbility.Initialize(gameObject, Camera.main, abilityManager.smokeBomb.smokePrefab,
-                        abilityManager.smokeBomb.disappearMat, abilityManager.smokeBomb.renderTimeScale);
+                    smokeAbility.Initialize(gameObject, Camera.main, abilityManager.smokeBomb.smokePrefab, playerController.face, 
+                        abilityManager.smokeBomb.disappearMat, abilityManager.smokeBomb.renderTimeScale, abilityManager.smokeBomb.invisibleTimer);
                     smokeAbility.abilityName = abilityManager.smokeBomb.abilityName;
                     smokeAbility.cooldown = abilityManager.smokeBomb.cooldown;
                     AssignAbility(smokeAbility, index);
@@ -124,10 +124,28 @@ public class PlayerAbilities : MonoBehaviour
             case AbilityTypes.Dash:
                 {
                     Dash dash = ScriptableObject.CreateInstance<Dash>();
-                    dash.Initialize(gameObject, Camera.main, playerController, abilityManager.dash.dashDistance);
+                    dash.Initialize(gameObject, Camera.main, playerController, abilityManager.dash.dashSpeed);
                     dash.abilityName = abilityManager.dash.abilityName;
                     dash.cooldown = abilityManager.dash.cooldown;
                     AssignAbility(dash, index);
+                    break;
+                }
+            case AbilityTypes.DoubleJump:
+                {
+                    DoubleJump doubleJump = ScriptableObject.CreateInstance<DoubleJump>();
+                    doubleJump.Initialize(gameObject, Camera.main, playerController);
+                    doubleJump.abilityName = abilityManager.doubleJump.abilityName;
+                    doubleJump.cooldown = abilityManager.doubleJump.cooldown;
+                    AssignAbility(doubleJump, index);
+                    break;
+                }
+            case AbilityTypes.Slide:
+                {
+                    Slide slide = ScriptableObject.CreateInstance<Slide>();
+                    slide.Initialize(gameObject, Camera.main, playerController, abilityManager.slide.slideSpeed);
+                    slide.abilityName = abilityManager.slide.abilityName;
+                    slide.cooldown = abilityManager.slide.cooldown;
+                    AssignAbility(slide, index);
                     break;
                 }
             default:

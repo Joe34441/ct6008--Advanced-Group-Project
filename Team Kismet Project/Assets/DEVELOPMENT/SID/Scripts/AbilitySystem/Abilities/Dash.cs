@@ -2,40 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [CreateAssetMenu(menuName = "Abilities/Dash")]
 public class Dash : Ability
 {
-
-    public float dashDistance = 5.0f;
-
     private PlayerCharacterController playerController;
-    private GameObject raycastRef;
-    private float travelTime = 0.5f;
-    private float timeSinceStart;
-    private Vector3 dashLocation;
-    private Vector3 startPoint;
+
+    public float dashSpeed = 40.0f;
+    private float returnSpeed;
+
+    private float timeRef;
+    private float dashTimer = 0.25f;
 
     public override void ActivateAbility()
     {
-        //this is all broken ill fix tomorrow
-        GameObject obj = new GameObject();
-        obj.transform.position = playerCamera.transform.position;
-        obj.transform.LookAt(raycastRef.transform); 
-        dashLocation = (playerController.GetMoveDirection() * dashDistance) + playerRef.transform.position;
-        startPoint = playerRef.transform.position;
-        timeSinceStart = 0;
-        playerController.movementDisabled = true;
+        timeRef = Time.time;
+        playerController.moveSpeed = dashSpeed;
+        
         activated = true;
         shouldUpdate = true;
     }
 
     public override void DeactivateAbility()
     {
+        playerController.moveSpeed = returnSpeed;
         activated = false;
         shouldUpdate = false;
         onCooldown = true;
-        playerController.movementDisabled = false;
     }
 
     public override void Initialize(GameObject _playerRef, Camera _camera)
@@ -43,13 +35,13 @@ public class Dash : Ability
         
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController, float _dashDistance)
+    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController, float _dashSpeed)
     {
         playerRef = _playerRef;
         playerCamera = _camera;
         playerController = _playerController;
-        dashDistance = _dashDistance;
-        raycastRef = playerRef.GetComponent<Character>().camRaycastReference;
+        dashSpeed = _dashSpeed;
+        returnSpeed = playerController.moveSpeed;
     }
 
     public override void Released()
@@ -59,16 +51,9 @@ public class Dash : Ability
 
     public override void Update()
     {
-        if(dashLocation != null)
+        if(Time.time - timeRef >= dashTimer)
         {
-            timeSinceStart += Time.deltaTime;
-            float travelPercent = timeSinceStart / travelTime;
-            if(travelPercent >= 1)
-            {
-                DeactivateAbility();
-            }
-            playerRef.transform.position = Vector3.Lerp(startPoint, dashLocation, travelPercent);
+            DeactivateAbility();
         }
-        
     }
 }

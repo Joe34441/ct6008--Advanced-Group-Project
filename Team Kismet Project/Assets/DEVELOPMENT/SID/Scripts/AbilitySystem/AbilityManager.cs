@@ -12,6 +12,7 @@ public enum AbilityTypes
     Sprint,
     Dash,
     DoubleJump,
+    Slide
 }
 
 
@@ -24,6 +25,8 @@ public class AbilityManager : MonoBehaviour
     public BearTrap bearTrap;
     public Sprint sprint;
     public Dash dash;
+    public DoubleJump doubleJump;
+    public Slide slide;
 
     private List<Ability> abilities = new List<Ability>();
 
@@ -39,8 +42,10 @@ public class AbilityManager : MonoBehaviour
         abilities.Add(smokeBomb);
         abilities.Add(teleport);
         abilities.Add(superJump);
-        abilities.Add(bearTrap);
+        //abilities.Add(bearTrap);
         abilities.Add(sprint);
         abilities.Add(dash);
+        abilities.Add(doubleJump);
+        abilities.Add(slide);
     }
 }

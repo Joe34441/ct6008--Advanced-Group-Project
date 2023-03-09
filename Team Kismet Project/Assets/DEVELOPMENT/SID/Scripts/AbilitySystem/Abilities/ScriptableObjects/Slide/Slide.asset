@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a39574fe9a827a4fb85fb4c31578597, type: 3}
-  m_Name: Dash
+  m_Script: {fileID: 11500000, guid: 7653e8bd67839454bae77b54dc980369, type: 3}
+  m_Name: Slide
   m_EditorClassIdentifier: 
-  abilityType: 6
+  abilityType: 8
   activated: 0
   shouldUpdate: 0
-  abilityName: Dash
+  abilityName: Slide
   cooldown: 4
   onCooldown: 0
-  dashDistance: 2
+  slideSpeed: 30
