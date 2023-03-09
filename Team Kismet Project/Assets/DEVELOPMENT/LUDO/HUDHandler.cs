@@ -11,7 +11,7 @@ public class HUDHandler : MonoBehaviour
     private SpringDynamics clockHolder;
     
     [SerializeField]
-    private Image clock1;
+    private Image clock1; //biggest
     [SerializeField]
     private Image clock2;
     [SerializeField]
@@ -33,39 +33,93 @@ public class HUDHandler : MonoBehaviour
     private int taggedPlayer = 0;
     private int localPlayer;
 
-    private List<KeyValuePair<int,string>> playerIDs = new List<KeyValuePair<int,string>>();
+    private List<KeyValuePair<int, string>> playerIDs = new List<KeyValuePair<int, string>>();
     private List<KeyValuePair<int, float>> playerScores = new List<KeyValuePair<int, float>>();
-
-    public List<int> playerIDtry2 = new List<int>();
-    public List<float> playerScoretry2 = new List<float>();
 
     [SerializeField]
     private List<GameObject> abilityCards = new List<GameObject>();
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        clockHolder = GetComponent<SpringDynamics>();
-        clock1.fillAmount = 0;
-        clock2.fillAmount = 0;
-        clock3.fillAmount = 0;
-        clock4.fillAmount = 0;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void AddPlayer(int ID, string name, bool local)
     {
+        if (!clockHolder) //may as well call here to ensure its not called too late (Start() may be too late), and will only be called 4 times here so ~0 performance impact
+        {
+            clockHolder = GetComponent<SpringDynamics>();
+            clock1.fillAmount = clock2.fillAmount = clock3.fillAmount = clock4.fillAmount = 0;
+        }
+
         playerIDs.Add(new KeyValuePair<int,string>(ID, name));
         playerScores.Add(new KeyValuePair<int, float>(ID, 0));
         if (local)
         {
             localPlayer = ID;
+        }
+    }
+
+    public void UpdateScores(int playerID, bool tagged, float deltaTime)
+    {
+        if (tagged)
+        {
+            //might want to do some stuff here - tagged players have red text/background? while untagged players have green?
+            return;
+        }
+
+        int keyValue = -1;
+        foreach (KeyValuePair<int, float> item in playerScores)
+        {
+            if (item.Key == playerID)
+            {
+                keyValue = item.Key;
+            }
+        }
+        if (keyValue != -1)
+        {
+            try
+            {
+                playerScores[keyValue] = new KeyValuePair<int, float>(playerScores[keyValue].Key, playerScores[keyValue].Value + deltaTime);
+            }
+            catch (System.Exception e) { }
+        }
+
+        UpdateClocks();
+    }
+
+    public void UpdateIntro()
+    {
+        //enable or update anything here that'll be shown in the intro e.g. ability icons & text
+    }
+
+    public void EndIntro()
+    {
+        //disable or otherwise anything here that'll be shown in the intro
+    }
+
+    public void UpdateOutro()
+    {
+        //enable or update anything here that'll be shown in the outro. e.g. bringing clocks to centre, enlarge etc
+    }
+
+    public bool IsGameOver()
+    {
+        foreach (KeyValuePair<int, float> item in playerScores)
+        {
+            if (item.Value >= goalTime) return true;
+        }
+
+        return false;
+    }
+
+    public void UpdateClocks()
+    {
+        clockHolder.SwitchPos();
+
+        foreach (KeyValuePair<int, string> item in playerIDs)
+        {
+            //just preventing index out of bounds quickly
+            if (item.Key == 0) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
+            if (item.Key == 1) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
+            if (item.Key == 2) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
+            if (item.Key == 3) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
         }
     }
 
@@ -95,48 +149,18 @@ public class HUDHandler : MonoBehaviour
             }
         }
 
-        clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = clockName1;
-        clock2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = clockName2;
-        clock3.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = clockName3;
-        clock4.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = clockName4;
+        clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerIDs[0].Value; //clockName1
+        clock2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerIDs[1].Value;
+        clock3.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerIDs[2].Value;
+        clock4.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerIDs[3].Value;
     }
 
     public void UpdateClocks(float clock1Time, float clock2Time, float clock3Time, float clock4Time, float deltaTime)
     {
-        
-        
-        
-        clock1.fillAmount = Mathf.Lerp(clock1.fillAmount, clock1Time / goalTime, Time.deltaTime * 1.5f);
-        clock2.fillAmount = Mathf.Lerp(clock2.fillAmount, clock2Time / goalTime, Time.deltaTime * 1.5f);
-        clock3.fillAmount = Mathf.Lerp(clock3.fillAmount, clock3Time / goalTime, Time.deltaTime * 1.5f);
-        clock4.fillAmount = Mathf.Lerp(clock4.fillAmount, clock4Time / goalTime, Time.deltaTime * 1.5f);
-    }
-
-    public void TagPlayer(int playerID)
-    {
-        
-    }
-
-    public void thisway(int playerID, bool tagged, float deltaTime)
-    {
-        if (tagged) return;
-
-        for (int i = 0; i < playerIDs.Count; i++)
-        {
-            if (playerIDtry2[i] == playerID)
-            {
-                playerScoretry2[i] += deltaTime;
-            }
-        }
-
-        //foreach(KeyValuePair<int, float> item in playerScores)
-        //{
-        //    if (item.Key == playerID)
-        //    {
-        //        KeyValuePair newValue = new KeyValuePair<int, float>();
-        //        playerScores;
-        //    }
-        //}
+        clock1.fillAmount = Mathf.Lerp(clock1.fillAmount, clock1Time / goalTime, deltaTime * 1.5f); //Time.deltaTime
+        clock2.fillAmount = Mathf.Lerp(clock2.fillAmount, clock2Time / goalTime, deltaTime * 1.5f);
+        clock3.fillAmount = Mathf.Lerp(clock3.fillAmount, clock3Time / goalTime, deltaTime * 1.5f);
+        clock4.fillAmount = Mathf.Lerp(clock4.fillAmount, clock4Time / goalTime, deltaTime * 1.5f);
     }
 
     public void ShowAbilities(string ability1, string ability2, string ability3)

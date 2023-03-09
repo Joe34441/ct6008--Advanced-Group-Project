@@ -97,6 +97,7 @@ public class Staging : MonoBehaviour
 	public void OnStart()
 	{
 		SessionProps props = App.Instance.Session.Props;
+		//remove from list
 		App.Instance.Session.LoadMap(props.StartMap);
 	}
 
@@ -178,7 +179,6 @@ public class NameList
 				if (!newNumExists)
 				{
 					assignedPlayerNames.Add(playerRefValue, randomNum);
-
 					Player ply = App.Instance.GetPlayer();
 					ply.RPC_SetName(defaultNames[randomNum]);
 

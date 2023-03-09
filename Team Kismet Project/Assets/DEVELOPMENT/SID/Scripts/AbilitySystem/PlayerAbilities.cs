@@ -41,13 +41,20 @@ public class PlayerAbilities : MonoBehaviour
             currentList.RemoveAt(randomChoice);
         }
 
-        //abilityOne = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-        SetAbilityValues(abilityOne, 1);
-        //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-        SetAbilityValues(abilityTwo, 2);
-        //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-        //AssignAbility(abilityManager.dash, 3);
-        SetAbilityValues(abilityThree, 3);
+        try //***********************************************************************************************************************************************************************************
+        {
+            //abilityOne = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
+            SetAbilityValues(abilityOne, 1);
+            //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
+            SetAbilityValues(abilityTwo, 2);
+            //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
+            //AssignAbility(abilityManager.dash, 3);
+            SetAbilityValues(abilityThree, 3);
+        }
+        catch (System.Exception e) //************************************************************************************************************************************************************
+        {
+            Debug.LogWarning("SKIPPED ERROR - " + e);
+        }
     }
 
 
@@ -158,9 +165,6 @@ public class PlayerAbilities : MonoBehaviour
                     break;
                 }
         }
-
-
-
     }
 
     public void Setup(int playerID, PlayerCharacterController playerCharacter)
@@ -276,22 +280,28 @@ public class PlayerAbilities : MonoBehaviour
 
     public void ReleaseThree()
     {
-        if(abilityThree.activated)
+        try //***********************************************************************************************************************************************************************************
         {
-            abilityThree.Released();
-        }
+            if (abilityThree.activated)
+            {
+                abilityThree.Released();
+            }
 
-        if(abilityThree.shouldUpdate)
+            if (abilityThree.shouldUpdate)
+            {
+                abilityThree.Update();
+            }
+
+            if (abilityThree.onCooldown && !hasResetThree)
+            {
+                Invoke("ResetThree", abilityThree.cooldown);
+                hasResetThree = true;
+            }
+        }
+        catch (System.Exception e) //************************************************************************************************************************************************************
         {
-            abilityThree.Update();
+            Debug.LogWarning("SKIPPED ERROR - " + e);
         }
-
-        if (abilityThree.onCooldown && !hasResetThree)
-        {
-            Invoke("ResetThree", abilityThree.cooldown);
-            hasResetThree = true;
-        }
-
     }
 
     private void ResetOne()

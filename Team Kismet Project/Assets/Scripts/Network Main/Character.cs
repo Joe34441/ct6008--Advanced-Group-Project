@@ -43,6 +43,8 @@ public class Character : NetworkTransform
 
 	public GameObject camRaycastReference;
 
+	private HUDHandler _hudHandler;
+
 	private PlayerRef myPlayerRef;
 
 	private bool badlocaltaggedcheck = false;
@@ -52,6 +54,16 @@ public class Character : NetworkTransform
 	public bool badlocaltagboolstatecheckthingbutpublic = true;
 
 	private bool doneOnce = false;
+
+	private bool finishedIntro = false;
+	private bool startedIntro = false;
+	private float introTimer = 0;
+	private float introTime = 10.0f;
+
+	private bool gameOver = false;
+	private bool finishedOutro = false;
+	private float outroTimer = 0;
+	private float outroTime = 10.0f;
 
 	#region OnChanged Events
 
@@ -129,6 +141,8 @@ public class Character : NetworkTransform
 
 		_playerAbilities.Setup(Object.InputAuthority, _playerCharacterController);
 
+		_hudHandler = GameObject.FindGameObjectWithTag("HUDHandler").GetComponent<HUDHandler>();
+
 		if (Object.HasInputAuthority)
 		{
 			LocalCharacter = this;
@@ -169,7 +183,7 @@ public class Character : NetworkTransform
 
 	public override void FixedUpdateNetwork()
 	{
-		//ignore this mess *********
+		//ignore this mess ***************************************************************
 		if (!doneOnce)
         {
 			doneOnce = true;
@@ -194,6 +208,55 @@ public class Character : NetworkTransform
 			Debug.Log(numOfPlayers);
 		}
 
+		if (Object.HasInputAuthority && Runner.IsLastTick)
+		{
+			if (!finishedIntro)
+			{
+				if (!startedIntro)
+				{
+					startedIntro = true;
+					_hudHandler.AddPlayer(Runner.LocalPlayer.PlayerId, _player.Name.ToString(), (Object.HasInputAuthority && !Object.HasStateAuthority));
+				}
+				if (introTimer < introTime)
+				{
+					introTimer += Runner.DeltaTime;
+					_hudHandler.UpdateIntro(); //update some ui info *****************************************************************************************************************************
+					return;
+				}
+				else
+				{
+					introTimer = 0;
+					finishedIntro = true;
+					_hudHandler.EndIntro();
+				}
+			}
+
+			if (!gameOver) gameOver = _hudHandler.IsGameOver();
+			else
+			{
+				if (!finishedOutro)
+				{
+					if (outroTimer < outroTime)
+					{
+						outroTimer += Runner.DeltaTime;
+						_hudHandler.UpdateOutro(); //update some ui info **************************************************************************************************************************
+					}
+					else
+					{
+						outroTimer = 0;
+						finishedOutro = true;
+					}
+				}
+				else
+				{
+				//return to room here **********************************************************************************************************************************
+				}
+				return;
+			}
+
+			_hudHandler.UpdateScores(Runner.LocalPlayer.PlayerId, IsTagged, Runner.DeltaTime);
+        }
+
 		if (IsTagged != badlocaltaggedcheck)
         {
 			badlocaltaggedcheck = IsTagged;
@@ -213,8 +276,8 @@ public class Character : NetworkTransform
 				badlocaltagboolstatecheckthingbutpublic = true;
             }
         }
-		
-		//but it almost works ******
+
+		//but it almost works ************************************************************
 
 
 		if (_jumpTimePassed < _jumpCooldown) _jumpTimePassed += Runner.DeltaTime;
