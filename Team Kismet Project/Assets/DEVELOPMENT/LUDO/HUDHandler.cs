@@ -27,6 +27,15 @@ public class HUDHandler : MonoBehaviour
     private GameObject ability1Object;
     private GameObject ability2Object;
     private GameObject ability3Object;
+    //More janky cooldown code
+    private float cooldown1;
+    private float cooldown2;
+    private float cooldown3;
+    private float cooldownMax1;
+    private float cooldownMax2;
+    private float cooldownMax3;
+
+    private bool cooldownsEngaged = false;
 
     private Image tempImage;
     private float goalTime = 150.0f;
@@ -81,6 +90,18 @@ public class HUDHandler : MonoBehaviour
             catch (System.Exception e) { }
         }
 
+        //Some janky cooldown code
+        if (cooldownsEngaged)
+        {
+            cooldown1 += Time.deltaTime;
+            cooldown2 += Time.deltaTime;
+            cooldown3 += Time.deltaTime;
+
+            ability1Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown1/cooldownMax1;
+            ability2Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown2/cooldownMax2;
+            ability3Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown3/cooldownMax3;
+        }
+
         UpdateClocks();
     }
 
@@ -107,6 +128,25 @@ public class HUDHandler : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void TriggerCooldown(int abilityNumber, float cooldownTime)
+    {
+        if(abilityNumber == 1)
+        {
+            cooldown1 = 0;
+            cooldownMax1 = cooldownTime;
+        }
+        else if (abilityNumber == 2)
+        {
+            cooldown2 = 0;
+            cooldownMax2 = cooldownTime;
+        }
+        else if (abilityNumber == 3)
+        {
+            cooldown3 = 0;
+            cooldownMax3 = cooldownTime;
+        }
     }
 
     public void UpdateClocks()
@@ -201,5 +241,6 @@ public class HUDHandler : MonoBehaviour
         ability2Object.GetComponent<SpringDynamics>().OverwriteTarget(new Vector2(-620.51f, -430.1f));
         ability3Object.GetComponent<SpringDynamics>().OverwriteTarget(new Vector2(-413.32f, -430.1f));
         abilityExplainer.SwitchPos();
+        cooldownsEngaged = true;
     }
 }
