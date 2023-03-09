@@ -14,7 +14,7 @@ public class NewRoomPanel : MonoBehaviour
 	//[SerializeField] private Toggle _toggleMap1;
 	//[SerializeField] private Toggle _toggleMap2;
 
-	private int _maxPly = 6;
+	private int _maxPly = 4;
 	private PlayMode _playMode;
 
 	public void Show(PlayMode mode)

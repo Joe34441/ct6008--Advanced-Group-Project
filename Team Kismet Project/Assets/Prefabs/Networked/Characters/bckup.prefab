@@ -273,7 +273,7 @@ GameObject:
   - component: {fileID: 4610285444781331943}
   - component: {fileID: 6188410901271086014}
   m_Layer: 7
-  m_Name: CCCharacter
+  m_Name: bckup
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -415,7 +415,7 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
-    RawGuidValue: b14670b03e99e1e49935ebddf75fcf25
+    RawGuidValue: b2e38c702cf050e4593ee84c72ee3902
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1433703955198663636}

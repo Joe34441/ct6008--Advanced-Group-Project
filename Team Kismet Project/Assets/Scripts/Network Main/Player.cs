@@ -49,6 +49,15 @@ public class Player : NetworkBehaviour
 		App.Instance.Session.Map.GetCharacter(taggerPlayer).IsTagged = false;
 	}
 
+	[Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+	public void RPC_ForceTag(PlayerRef tagged)
+	{
+		//get Player from PlayerRefs
+		Player taggedPlayer = App.Instance.GetPlayer(tagged);
+		//set IsTagged on Player Character
+		App.Instance.Session.Map.GetCharacter(taggedPlayer).IsTagged = true;
+	}
+
 	//called from any client, sent to all clients
 	[Rpc]
 	public static void RPC_StaticTag(NetworkRunner runner, PlayerRef tagged, PlayerRef tagger)

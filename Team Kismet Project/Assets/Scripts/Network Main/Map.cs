@@ -42,10 +42,12 @@ public class Map : SimulationBehaviour, ISpawned
 		if (player.Object.HasStateAuthority) // We have StateAuth over the player if we are the host or if we're the player self in shared mode
 		{
 			Debug.Log($"Spawning avatar for player {player.Name} with input auth {player.Object.InputAuthority}");
-			Transform trans = _spawnPoints[((int)player.Object.InputAuthority) % _spawnPoints.Length];
+			Transform trans = _spawnPoints[((int)player.Object.InputAuthority.PlayerId) % _spawnPoints.Length];
+			//Debug.Log
+			//Transform trans = _spawnPoints[player.Object.InputAuthority.PlayerId];
 			Character character = Runner.Spawn(player.CharacterPrefab, trans.position / 2, trans.rotation, player.Object.InputAuthority); //position is doubled on spawn.....................
 			//Controller character = Runner.Spawn(player.CharacterPrefab, trans.position, trans.rotation, player.Object.InputAuthority);
-			Debug.Log($"Spawned avatar for player {player.Name} at {trans.position}");
+			Debug.Log($"Spawned avatar for player {player.Name} (ID {player.Object.InputAuthority.PlayerId}) at {trans.position}");
 			_playerCharacters[player] = character;
 			player.InputEnabled = lateJoiner;
 		}
