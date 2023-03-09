@@ -32,6 +32,7 @@ public class AbilityManager : MonoBehaviour
 
     public void Setup(PlayerAbilities pa, int playerID, HUDHandler _hudHandler)
     {
+        
         PopulateList();
         pa.CreateAbilityInstance(abilities, playerID, _hudHandler);
     }

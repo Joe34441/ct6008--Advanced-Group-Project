@@ -65,6 +65,8 @@ public class Character : NetworkTransform
 	private float outroTimer = 0;
 	private float outroTime = 10.0f;
 
+	private bool doneOnceTwice = false;
+
 	#region OnChanged Events
 
 	[Networked(OnChanged = nameof(OnTagged))]
@@ -278,6 +280,12 @@ public class Character : NetworkTransform
             }
         }
 
+		if (!doneOnceTwice)
+        {
+			_hudHandler.transform.parent.gameObject.SetActive(false);
+			doneOnceTwice = true;
+        }
+
 		//but it almost works ************************************************************
 
 
@@ -327,6 +335,7 @@ public class Character : NetworkTransform
 			if (inputData.GetButton(ButtonFlag.P))
 			{
 				//Tag();
+				Application.Quit();
 			}
 
 			if (inputData.GetButton(ButtonFlag.NUM1))

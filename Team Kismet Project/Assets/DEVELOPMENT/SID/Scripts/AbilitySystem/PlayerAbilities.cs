@@ -43,6 +43,26 @@ public class PlayerAbilities : MonoBehaviour
             currentList.RemoveAt(randomChoice);
         }
 
+        //if(playerID == 0)
+        //{
+        //    AssignAbility(abilityManager.dash, 1);
+        //    AssignAbility(abilityManager.sprint, 2);
+        //    AssignAbility(abilityManager.grapple, 3);
+        //}
+        //else if(playerID == 1)
+        //{
+        //    AssignAbility(abilityManager.superJump, 1);
+        //    AssignAbility(abilityManager.sprint, 2);
+        //    AssignAbility(abilityManager.smokeBomb, 3);
+        //}
+        //else if (playerID == 2)
+        //{
+        //    AssignAbility(abilityManager.sprint, 1);
+        //    AssignAbility(abilityManager.slide, 2);
+        //    AssignAbility(abilityManager.superJump, 3);
+        //}
+
+
         try //***********************************************************************************************************************************************************************************
         {
             //abilityOne = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
@@ -61,6 +81,7 @@ public class PlayerAbilities : MonoBehaviour
         hud = _hudHandler;
         hud.ShowAbilities(abilityOne.abilityName, abilityTwo.abilityName, abilityThree.abilityName);
         hud.Invoke("EngageCooldowns", 10);
+
     }
 
 
