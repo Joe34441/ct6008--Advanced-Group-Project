@@ -331,6 +331,8 @@ MonoBehaviour:
   teleport: {fileID: 11400000, guid: 443033d4d4b9be64a9bc31ad14ea8d5f, type: 2}
   superJump: {fileID: 11400000, guid: 1d31a75ba56136845a688544a5cf278e, type: 2}
   bearTrap: {fileID: 11400000, guid: 18c6f6b67fb651d47b11830a9859f23a, type: 2}
+  sprint: {fileID: 11400000, guid: 735582fe747b219419e92ec79789d562, type: 2}
+  dash: {fileID: 11400000, guid: 0f1a52fafb5340744983d51fc1801b67, type: 2}
 --- !u!4 &100697580
 Transform:
   m_ObjectHideFlags: 0

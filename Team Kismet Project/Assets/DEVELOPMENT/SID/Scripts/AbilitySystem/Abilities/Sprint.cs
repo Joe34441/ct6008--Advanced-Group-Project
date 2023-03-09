@@ -11,14 +11,24 @@ public class Sprint : Ability
 
     private PlayerCharacterController playerController;
 
+    private float timeRef;
+    private float sprintTime = 3.0f;
+
     public override void ActivateAbility()
     {
         returnSpeed = playerController.moveSpeed;
+        playerController.moveSpeed = sprintSpeed;
+        timeRef = Time.time;    
+        activated = true;
+        shouldUpdate = true;
     }
 
     public override void DeactivateAbility()
     {
-        
+        playerController.moveSpeed = returnSpeed;
+        shouldUpdate = false;
+        activated = false;
+        onCooldown = true;
     }
 
     public override void Initialize(GameObject _playerRef, Camera _camera)
@@ -41,6 +51,9 @@ public class Sprint : Ability
 
     public override void Update()
     {
-        
+        if(Time.time - timeRef >= sprintTime)
+        {
+            DeactivateAbility();
+        }
     }
 }

@@ -251,11 +251,11 @@ public class Character : NetworkTransform
 			//}
 		}
 
-		if (_playerTagTrigger.tryTag)
-        {
-			if (_playerTagTrigger.otherCharacter.myPlayerRef == Runner.LocalPlayer) _playerTagTrigger.tryTag = false;
-			else Tag(_playerTagTrigger.otherCharacter);
-        }
+		//if (_playerTagTrigger.tryTag)
+  //      {
+		//	if (_playerTagTrigger.otherCharacter.myPlayerRef == Runner.LocalPlayer) _playerTagTrigger.tryTag = false;
+		//	else Tag(_playerTagTrigger.otherCharacter);
+  //      }
 
 		if (Object.HasInputAuthority)
 		{
