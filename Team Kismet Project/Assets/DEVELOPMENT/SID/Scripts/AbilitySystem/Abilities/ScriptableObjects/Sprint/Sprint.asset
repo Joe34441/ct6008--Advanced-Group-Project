@@ -16,6 +16,6 @@ MonoBehaviour:
   activated: 0
   shouldUpdate: 0
   abilityName: Sprint
-  cooldown: 6
+  cooldown: 8
   onCooldown: 0
   sprintSpeed: 20

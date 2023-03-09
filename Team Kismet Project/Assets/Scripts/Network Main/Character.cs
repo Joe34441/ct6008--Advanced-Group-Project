@@ -139,9 +139,10 @@ public class Character : NetworkTransform
 		_playerCharacterController = GetComponent<PlayerCharacterController>();
 		_playerAbilities = GetComponent<PlayerAbilities>();
 
-		_playerAbilities.Setup(Object.InputAuthority, _playerCharacterController);
-
 		_hudHandler = GameObject.FindGameObjectWithTag("HUDHandler").GetComponent<HUDHandler>();
+
+		_playerAbilities.Setup(Object.InputAuthority, _playerCharacterController, _hudHandler);
+
 
 		if (Object.HasInputAuthority)
 		{

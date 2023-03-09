@@ -26,7 +26,7 @@ public class PlayerAbilities : MonoBehaviour
         InitializeAbilities();
     }
 
-    public void CreateAbilityInstance(List<Ability> list, int playerID)
+    public void CreateAbilityInstance(List<Ability> list, int playerID, HUDHandler _hudHandler)
     {
         List<Ability> currentList = new List<Ability>(list);
 
@@ -55,6 +55,9 @@ public class PlayerAbilities : MonoBehaviour
         {
             Debug.LogWarning("SKIPPED ERROR - " + e);
         }
+
+        _hudHandler.ShowAbilities(abilityOne.abilityName, abilityTwo.abilityName, abilityThree.abilityName);
+        _hudHandler.Invoke("EngageCooldowns", 10);
     }
 
 
@@ -185,11 +188,11 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
-    public void Setup(int playerID, PlayerCharacterController playerCharacter)
+    public void Setup(int playerID, PlayerCharacterController playerCharacter, HUDHandler _hudHandler)
     {
         playerController = playerCharacter;
         abilityManager = GameObject.FindGameObjectWithTag("AbilityManager").GetComponent<AbilityManager>();
-        abilityManager.Setup(this, playerID);
+        abilityManager.Setup(this, playerID, _hudHandler);
     }
 
     // Update is called once per frame
