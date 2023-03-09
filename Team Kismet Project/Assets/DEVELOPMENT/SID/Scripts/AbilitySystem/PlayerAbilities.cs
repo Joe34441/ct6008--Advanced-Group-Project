@@ -20,6 +20,8 @@ public class PlayerAbilities : MonoBehaviour
 
     private PlayerCharacterController playerController;
 
+    HUDHandler hud;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,9 +32,9 @@ public class PlayerAbilities : MonoBehaviour
     {
         List<Ability> currentList = new List<Ability>(list);
 
-        for(int i = 1; i <= 2; i++)
+        for(int i = 1; i <= 3; i++)
         {
-            int ranNum = 997 * ((playerID + 3));
+            int ranNum = 997 * ((playerID + 3) * 3);
 
             int randomChoice = ranNum % currentList.Count;
             //int randomChoice = Random.Range(0, currentList.Count);
@@ -48,7 +50,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            AssignAbility(abilityManager.dash, 3);
+            //AssignAbility(abilityManager.dash, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -56,8 +58,9 @@ public class PlayerAbilities : MonoBehaviour
             Debug.LogWarning("SKIPPED ERROR - " + e);
         }
 
-        _hudHandler.ShowAbilities(abilityOne.abilityName, abilityTwo.abilityName, abilityThree.abilityName);
-        _hudHandler.Invoke("EngageCooldowns", 10);
+        hud = _hudHandler;
+        hud.ShowAbilities(abilityOne.abilityName, abilityTwo.abilityName, abilityThree.abilityName);
+        hud.Invoke("EngageCooldowns", 10);
     }
 
 
@@ -275,6 +278,7 @@ public class PlayerAbilities : MonoBehaviour
         if(abilityOne.onCooldown && !hasResetOne)
         {
             Invoke("ResetOne", abilityOne.cooldown);
+            hud.TriggerCooldown(1, abilityOne.cooldown);
             hasResetOne = true;
         }
     }
@@ -294,6 +298,7 @@ public class PlayerAbilities : MonoBehaviour
         if (abilityTwo.onCooldown && !hasResetTwo)
         {
             Invoke("ResetTwo", abilityTwo.cooldown);
+            hud.TriggerCooldown(2, abilityTwo.cooldown);
             hasResetTwo = true;
         }
 
@@ -316,6 +321,7 @@ public class PlayerAbilities : MonoBehaviour
             if (abilityThree.onCooldown && !hasResetThree)
             {
                 Invoke("ResetThree", abilityThree.cooldown);
+                hud.TriggerCooldown(3, abilityThree.cooldown);
                 hasResetThree = true;
             }
         }

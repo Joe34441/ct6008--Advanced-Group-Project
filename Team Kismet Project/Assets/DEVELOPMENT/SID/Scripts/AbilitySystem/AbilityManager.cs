@@ -40,7 +40,7 @@ public class AbilityManager : MonoBehaviour
     {
         abilities.Add(grapple);
         abilities.Add(smokeBomb);
-        abilities.Add(teleport);
+        //abilities.Add(teleport);
         abilities.Add(superJump);
         //abilities.Add(bearTrap);
         abilities.Add(sprint);

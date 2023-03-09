@@ -177,7 +177,7 @@ public class Character : NetworkTransform
 		if (Object.HasInputAuthority && Runner.IsClient ||
 			Object.HasInputAuthority && Object.HasStateAuthority)
         {
-			Debug.Log("here 1 with " + _name.text);
+			//Debug.Log("here 1 with " + _name.text);
 			_playerCharacterController.UpdateCamera(_cameraReference, _cameraPositionLerpRate, _cameraRotationLerpRate);
 		}
 	}

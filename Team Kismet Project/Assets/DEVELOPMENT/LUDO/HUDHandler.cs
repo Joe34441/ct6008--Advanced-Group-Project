@@ -48,6 +48,22 @@ public class HUDHandler : MonoBehaviour
     [SerializeField]
     private List<GameObject> abilityCards = new List<GameObject>();
 
+    private void Update()
+    {
+        //Some janky cooldown code
+        if (cooldownsEngaged)
+        {
+           //Debug.Log("here");
+            cooldown1 += Time.deltaTime;
+            cooldown2 += Time.deltaTime;
+            cooldown3 += Time.deltaTime;
+
+            ability1Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown1 / cooldownMax1;
+            ability2Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown2 / cooldownMax2;
+            ability3Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown3 / cooldownMax3;
+        }
+
+    }
 
     public void AddPlayer(int ID, string name, bool local)
     {
@@ -90,17 +106,6 @@ public class HUDHandler : MonoBehaviour
             catch (System.Exception e) { }
         }
 
-        //Some janky cooldown code
-        if (cooldownsEngaged)
-        {
-            cooldown1 += Time.deltaTime;
-            cooldown2 += Time.deltaTime;
-            cooldown3 += Time.deltaTime;
-
-            ability1Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown1/cooldownMax1;
-            ability2Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown2/cooldownMax2;
-            ability3Object.transform.GetChild(0).GetComponent<Image>().fillAmount = cooldown3/cooldownMax3;
-        }
 
         UpdateClocks();
     }

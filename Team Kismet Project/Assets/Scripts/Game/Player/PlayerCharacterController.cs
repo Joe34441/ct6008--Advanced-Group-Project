@@ -22,11 +22,14 @@ public class PlayerCharacterController : MonoBehaviour
     [HideInInspector] public bool movementDisabled = false;
 
     private Vector3 velocity;
-    [HideInInspector] public float jumpPower = 3.0f;
+    public float jumpPower = 3.0f;
     [HideInInspector] public float gravityScale = 1.0f;
     [HideInInspector] public float moveSpeed = 10.0f;
     [SerializeField] private GameObject playerBody;
     public GameObject face;
+
+    public bool superJump = false;
+
 
     private Vector3 moveDirection = Vector3.zero;
 
@@ -68,7 +71,17 @@ public class PlayerCharacterController : MonoBehaviour
         if (jumping)
         {
             verticalMovement.y += PerformJump(deltaTime);
-            velocity.y = Mathf.Sqrt(jumpPower * -2f * -9.81f);
+            if(!superJump)
+            {
+                Debug.Log("not super");
+                velocity.y = Mathf.Sqrt(jumpPower * -2f * -9.81f);
+            }
+            else
+            {
+                Debug.Log("Superjump");
+                velocity.y = Mathf.Sqrt(jumpPower * -4f * -9.81f);
+            }
+            
         }
         //get gravity movement
         if (!grounded)

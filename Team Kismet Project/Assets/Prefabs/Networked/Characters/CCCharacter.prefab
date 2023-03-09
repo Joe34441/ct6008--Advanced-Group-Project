@@ -377,7 +377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDisabled: 0
-  jumpPower: 3
+  jumpPower: 1.5
   gravityScale: 1
   moveSpeed: 10
   playerBody: {fileID: 4610285446578239554}

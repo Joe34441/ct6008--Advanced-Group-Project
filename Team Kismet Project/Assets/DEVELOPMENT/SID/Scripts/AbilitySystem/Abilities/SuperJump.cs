@@ -8,7 +8,6 @@ public class SuperJump : Ability
     
     public float jumpPower = 15.0f;
     public float gravityScale = 0.2f;
-    //public float glideSpeed = 12.0f;
 
     private float timeRef;
     public float glideTime = 2.0f;
@@ -22,8 +21,9 @@ public class SuperJump : Ability
     {
         if(playerController.IsGrounded())
         {
-            returnJumpPower = playerController.jumpPower;
-            playerController.jumpPower = jumpPower;
+            //returnJumpPower = playerController.jumpPower;
+            //playerController.jumpPower = jumpPower;
+            playerController.superJump = true;
             playerController.TryJump();
             shouldUpdate = true;
             startedFalling = false;
@@ -38,7 +38,8 @@ public class SuperJump : Ability
     public override void DeactivateAbility()
     {
         playerController.gravityScale = 1.0f;
-        playerController.jumpPower = returnJumpPower;
+        //playerController.jumpPower = returnJumpPower;
+        playerController.superJump = false;
         //playerController.ResetVelocity();
         shouldUpdate = false;
         startedFalling = false;
@@ -73,7 +74,7 @@ public class SuperJump : Ability
         }
         else
         {
-            if (Time.time - timeRef >= glideTime || playerController.IsGrounded())
+            if (Time.time - timeRef >= glideTime)
             {
                 DeactivateAbility();
             }
