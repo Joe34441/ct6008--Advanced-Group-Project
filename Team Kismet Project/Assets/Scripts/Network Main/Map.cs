@@ -43,7 +43,6 @@ public class Map : SimulationBehaviour, ISpawned
 		{
 			Debug.Log($"Spawning avatar for player {player.Name} with input auth {player.Object.InputAuthority}");
 			Transform trans = _spawnPoints[((int)player.Object.InputAuthority.PlayerId) % _spawnPoints.Length];
-			//Debug.Log
 			//Transform trans = _spawnPoints[player.Object.InputAuthority.PlayerId];
 			Character character = Runner.Spawn(player.CharacterPrefab, trans.position / 2, trans.rotation, player.Object.InputAuthority); //position is doubled on spawn.....................
 			//Controller character = Runner.Spawn(player.CharacterPrefab, trans.position, trans.rotation, player.Object.InputAuthority);

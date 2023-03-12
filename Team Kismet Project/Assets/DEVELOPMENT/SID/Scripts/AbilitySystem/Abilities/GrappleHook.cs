@@ -52,7 +52,8 @@ public class GrappleHook : Ability
         GameObject obj = new GameObject();
         obj.transform.position = playerCamera.transform.position;
         obj.transform.LookAt(raycastRef.transform);
-        if (Physics.Raycast(playerCamera.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
+        //if (Physics.Raycast(playerCamera.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
+        if (Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
         {
             connectionPoint = hit.point;
             //currentCable is a gameobject, grappleCable is the actual cable class itself

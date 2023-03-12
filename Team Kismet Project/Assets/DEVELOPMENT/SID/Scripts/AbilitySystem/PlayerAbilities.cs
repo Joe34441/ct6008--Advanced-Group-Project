@@ -28,7 +28,7 @@ public class PlayerAbilities : MonoBehaviour
         InitializeAbilities();
     }
 
-    public void CreateAbilityInstance(List<Ability> list, int playerID, HUDHandler _hudHandler)
+    public void CreateAbilityInstance(List<Ability> list, int playerID, HUDHandler _hudHandler, bool hasInput)
     {
         List<Ability> currentList = new List<Ability>(list);
 
@@ -79,9 +79,11 @@ public class PlayerAbilities : MonoBehaviour
         }
 
         hud = _hudHandler;
-        hud.ShowAbilities(abilityOne.abilityName, abilityTwo.abilityName, abilityThree.abilityName);
-        hud.Invoke("EngageCooldowns", 10);
-
+        if (hasInput)
+        {
+            hud.ShowAbilities(abilityOne.abilityName, abilityTwo.abilityName, abilityThree.abilityName);
+            hud.Invoke("EngageCooldowns", 10);
+        }
     }
 
 
@@ -212,11 +214,11 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
-    public void Setup(int playerID, PlayerCharacterController playerCharacter, HUDHandler _hudHandler)
+    public void Setup(int playerID, PlayerCharacterController playerCharacter, HUDHandler _hudHandler, bool hasInput)
     {
         playerController = playerCharacter;
         abilityManager = GameObject.FindGameObjectWithTag("AbilityManager").GetComponent<AbilityManager>();
-        abilityManager.Setup(this, playerID, _hudHandler);
+        abilityManager.Setup(this, playerID, _hudHandler, hasInput);
     }
 
     // Update is called once per frame

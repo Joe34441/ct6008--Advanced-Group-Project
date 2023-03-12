@@ -53,7 +53,7 @@ public class Character : NetworkTransform
 	private bool badlocaltagboolstatecheckthing = false;
 	public bool badlocaltagboolstatecheckthingbutpublic = true;
 
-	private bool doneOnce = false;
+	private bool firstFUNTick = true;
 
 	private bool finishedIntro = false;
 	private bool startedIntro = false;
@@ -65,7 +65,6 @@ public class Character : NetworkTransform
 	private float outroTimer = 0;
 	private float outroTime = 10.0f;
 
-	private bool doneOnceTwice = false;
 
 	#region OnChanged Events
 
@@ -143,11 +142,12 @@ public class Character : NetworkTransform
 
 		_hudHandler = GameObject.FindGameObjectWithTag("HUDHandler").GetComponent<HUDHandler>();
 
-		_playerAbilities.Setup(Object.InputAuthority, _playerCharacterController, _hudHandler);
+
 
 
 		if (Object.HasInputAuthority)
 		{
+			Debug.Log("????");
 			LocalCharacter = this;
 			//Camera.main.transform.position = _cameraReference.transform.position;
 			//Camera.main.transform.parent = _cameraReference;
@@ -163,6 +163,7 @@ public class Character : NetworkTransform
 
 			IsTagged = true;
 		}
+
 	}
 
 	private void Update()
@@ -176,10 +177,9 @@ public class Character : NetworkTransform
 
     private void LateUpdate()
     {
-		if (Object.HasInputAuthority && Runner.IsClient ||
-			Object.HasInputAuthority && Object.HasStateAuthority)
+		if (Object.HasInputAuthority)
+		//if (Object.HasInputAuthority && Runner.IsClient || Object.HasInputAuthority && Object.HasStateAuthority)
         {
-			//Debug.Log("here 1 with " + _name.text);
 			_playerCharacterController.UpdateCamera(_cameraReference, _cameraPositionLerpRate, _cameraRotationLerpRate);
 		}
 	}
@@ -187,32 +187,11 @@ public class Character : NetworkTransform
 	public override void FixedUpdateNetwork()
 	{
 		//ignore this mess ***************************************************************
-		if (!doneOnce)
-        {
-			doneOnce = true;
-
-			int numOfPlayers = 0;
-			PlayerRef target = PlayerRef.None;
-			foreach (PlayerRef pr in Runner.ActivePlayers)
-			{
-				numOfPlayers++;
-				if (pr.PlayerId == 1) target = pr;
-			}
-			if (numOfPlayers == 4)
-			{
-				_player.RPC_ForceTag(target);
-				if (Runner.LocalPlayer.PlayerId == 1 && false)
-				{
-					Debug.Log("I think im tagged - " + _name.text);
-					IsTagged = true;
-				}
-			}
-
-			Debug.Log(numOfPlayers);
-		}
+		if (firstFUNTick) FirstNetworkTickUpdate();
 
 		if (Object.HasInputAuthority && Runner.IsLastTick)
 		{
+			Debug.Log("running " + _player.Name);
 			if (!finishedIntro)
 			{
 				if (!startedIntro)
@@ -260,7 +239,7 @@ public class Character : NetworkTransform
 			_hudHandler.UpdateScores(Runner.LocalPlayer.PlayerId, IsTagged, Runner.DeltaTime);
         }
 
-		if (IsTagged != badlocaltaggedcheck)
+		if (IsTagged != badlocaltaggedcheck && Runner.IsLastTick)
         {
 			badlocaltaggedcheck = IsTagged;
 			badlocaltagboolstatecheckthing = true;
@@ -278,12 +257,6 @@ public class Character : NetworkTransform
 				badlocaltagboolstatecheckthing = false;
 				badlocaltagboolstatecheckthingbutpublic = true;
             }
-        }
-
-		if (!doneOnceTwice)
-        {
-			_hudHandler.transform.parent.gameObject.SetActive(false);
-			doneOnceTwice = true;
         }
 
 		//but it almost works ************************************************************
@@ -406,6 +379,23 @@ public class Character : NetworkTransform
 		_playerCharacterController.PerformMove(_characterController, _cameraReference, _groundCheckReference, movementDirection, _moveAcceleration, _moveDeceleration, Runner.DeltaTime);
 	}
 
+	private void FirstNetworkTickUpdate()
+    {
+		firstFUNTick = false;
+
+		//if (Object.HasInputAuthority) _playerAbilities.Setup(Object.InputAuthority, _playerCharacterController, _hudHandler);
+		_playerAbilities.Setup(Object.InputAuthority, _playerCharacterController, _hudHandler, Object.HasInputAuthority);
+
+		int numOfPlayers = 0;
+		PlayerRef target = PlayerRef.None;
+		foreach (PlayerRef pr in Runner.ActivePlayers)
+		{
+			numOfPlayers++;
+			if (pr.PlayerId == 1) target = pr;
+		}
+		if (numOfPlayers == 4) _player.RPC_ForceTag(target);
+	}
+
 	private void Tag(Character myCharacter, Character otherCharacter)
     {
 		PlayerRef tagged = PlayerRef.None;
@@ -425,7 +415,17 @@ public class Character : NetworkTransform
 		if (tagged != PlayerRef.None && tagger != PlayerRef.None)
         {
 			_playerTagTrigger.ToggleCollider();
-			_player.RPC_Tag(tagged, tagger);
+			//_player.RPC_Tag(tagged, tagger);
+
+			//get Player from PlayerRefs
+			Player taggedPlayer = App.Instance.GetPlayer(tagged);
+			Player taggerPlayer = App.Instance.GetPlayer(tagger);
+			//set IsTagged on Player Character
+			App.Instance.Session.Map.GetCharacter(taggedPlayer).IsTagged = true;
+			App.Instance.Session.Map.GetCharacter(taggerPlayer).IsTagged = false;
+
+			//have a "canbetagged" bool, cannot tag if its false
+			//in FUN, inrcement taggedCooldownTimer till >= taggedCooldownTime, then set canbetagged to true
 		}
 
 		////do checks to see who should be tagged, and if it's valid

@@ -30,11 +30,11 @@ public class AbilityManager : MonoBehaviour
 
     private List<Ability> abilities = new List<Ability>();
 
-    public void Setup(PlayerAbilities pa, int playerID, HUDHandler _hudHandler)
+    public void Setup(PlayerAbilities pa, int playerID, HUDHandler hudHandler, bool hasInput)
     {
-        
+        abilities.Clear();
         PopulateList();
-        pa.CreateAbilityInstance(abilities, playerID, _hudHandler);
+        pa.CreateAbilityInstance(abilities, playerID, hudHandler, hasInput);
     }
 
     private void PopulateList()

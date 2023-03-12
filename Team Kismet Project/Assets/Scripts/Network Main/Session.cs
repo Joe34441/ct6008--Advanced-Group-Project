@@ -34,7 +34,7 @@ public class Session : NetworkBehaviour
 		_finishedLoading.Add(playerRef);
 		if (_finishedLoading.Count >= App.Instance.Players.Count)
 		{
-			PostLoadCountDown = TickTimer.CreateFromSeconds(Runner, 3);
+			PostLoadCountDown = TickTimer.CreateFromSeconds(Runner, 10);
 		}
 	}
 
