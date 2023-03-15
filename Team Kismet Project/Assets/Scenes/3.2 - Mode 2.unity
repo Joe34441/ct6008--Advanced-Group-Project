@@ -21757,7 +21757,7 @@ GameObject:
   - component: {fileID: 724572859}
   - component: {fileID: 724572858}
   m_Layer: 0
-  m_Name: Test Clock
+  m_Name: Test Clock Local
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24956,7 +24956,7 @@ GameObject:
   - component: {fileID: 837781637}
   - component: {fileID: 837781636}
   m_Layer: 0
-  m_Name: Test Clock
+  m_Name: Test Clock 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25379,7 +25379,7 @@ GameObject:
   - component: {fileID: 866545431}
   - component: {fileID: 866545430}
   m_Layer: 0
-  m_Name: Test Clock
+  m_Name: Test Clock 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25472,7 +25472,7 @@ GameObject:
   - component: {fileID: 868384272}
   - component: {fileID: 868384271}
   m_Layer: 0
-  m_Name: Test Clock
+  m_Name: Test Clock 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44215,10 +44215,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2562dec30f0f9d7458ee76d428607504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clock1: {fileID: 724572859}
-  clock2: {fileID: 837781637}
-  clock3: {fileID: 866545431}
-  clock4: {fileID: 868384272}
+  localClock: {fileID: 724572859}
+  clock1: {fileID: 868384272}
+  clock2: {fileID: 866545431}
+  clock3: {fileID: 837781637}
   canvas: {fileID: 873996260}
   abilityExplainer: {fileID: 625604127}
   abilityCards:

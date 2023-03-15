@@ -11,13 +11,13 @@ public class HUDHandler : MonoBehaviour
     private SpringDynamics clockHolder;
     
     [SerializeField]
-    private Image clock1; //biggest
+    private Image localClock; //biggest
+    [SerializeField]
+    private Image clock1;
     [SerializeField]
     private Image clock2;
     [SerializeField]
     private Image clock3;
-    [SerializeField]
-    private Image clock4;
 
     [SerializeField]
     private Transform canvas;
@@ -39,11 +39,9 @@ public class HUDHandler : MonoBehaviour
 
     private Image tempImage;
     private float goalTime = 150.0f;
-    private int taggedPlayer = 0;
-    private int localPlayer;
 
-    private List<KeyValuePair<int, string>> playerIDs = new List<KeyValuePair<int, string>>();
-    private List<KeyValuePair<int, float>> playerScores = new List<KeyValuePair<int, float>>();
+    private KeyValuePair<int, string> localPlayerID;
+    private List<KeyValuePair<int, string>> otherPlayerIDs = new List<KeyValuePair<int, string>>();
 
     [SerializeField]
     private List<GameObject> abilityCards = new List<GameObject>();
@@ -65,49 +63,26 @@ public class HUDHandler : MonoBehaviour
 
     }
 
-    public void AddPlayer(int ID, string name, bool local)
+    public void AddPlayer(int localID, int playerID, string name)
     {
         if (!clockHolder) //may as well call here to ensure its not called too late (Start() may be too late), and will only be called 4 times here so ~0 performance impact
         {
             clockHolder = GetComponent<SpringDynamics>();
-            clock1.fillAmount = clock2.fillAmount = clock3.fillAmount = clock4.fillAmount = 0;
+            localClock.fillAmount = clock1.fillAmount = clock2.fillAmount = clock3.fillAmount = 0;
         }
 
-        playerIDs.Add(new KeyValuePair<int,string>(ID, name));
-        playerScores.Add(new KeyValuePair<int, float>(ID, 0));
-        if (local)
-        {
-            localPlayer = ID;
-        }
+        if (playerID == localID) localPlayerID = new KeyValuePair<int, string>(localID, name);
+        else otherPlayerIDs.Add(new KeyValuePair<int, string>(playerID, name));
     }
 
-    public void UpdateScores(int playerID, bool tagged, float deltaTime)
+    public void UpdateScores(int playerID, float score, float deltaTime, bool tagged)
     {
         if (tagged)
         {
             //might want to do some stuff here - tagged players have red text/background? while untagged players have green?
-            return;
         }
 
-        int keyValue = -1;
-        foreach (KeyValuePair<int, float> item in playerScores)
-        {
-            if (item.Key == playerID)
-            {
-                keyValue = item.Key;
-            }
-        }
-        if (keyValue != -1)
-        {
-            try
-            {
-                playerScores[keyValue] = new KeyValuePair<int, float>(playerScores[keyValue].Key, playerScores[keyValue].Value + deltaTime);
-            }
-            catch (System.Exception e) { }
-        }
-
-
-        UpdateClocks();
+        UpdateClocks(playerID, score, deltaTime);
     }
 
     public void UpdateIntro()
@@ -125,12 +100,9 @@ public class HUDHandler : MonoBehaviour
         //enable or update anything here that'll be shown in the outro. e.g. bringing clocks to centre, enlarge etc
     }
 
-    public bool IsGameOver()
+    public bool IsGameOver(float score)
     {
-        foreach (KeyValuePair<int, float> item in playerScores)
-        {
-            if (item.Value >= goalTime) return true;
-        }
+        if (score >= goalTime) return true;
 
         return false;
     }
@@ -154,17 +126,36 @@ public class HUDHandler : MonoBehaviour
         }
     }
 
-    public void UpdateClocks()
+    private void UpdateClocks(int playerID, float score, float deltaTime)
     {
+        if (!clockHolder || otherPlayerIDs.Count < 3) return;
+
         clockHolder.SwitchPos();
 
-        foreach (KeyValuePair<int, string> item in playerIDs)
+        if (playerID == localPlayerID.Key)
+        {
+            localClock.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = localPlayerID.Value;
+            localClock.fillAmount = Mathf.Lerp(localClock.fillAmount, score / goalTime, deltaTime * 1.5f);
+        }
+        else
+        {
+            clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[0].Value;
+            clock1.fillAmount = Mathf.Lerp(clock1.fillAmount, score / goalTime, deltaTime * 1.5f);
+            clock2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[1].Value;
+            clock2.fillAmount = Mathf.Lerp(clock2.fillAmount, score / goalTime, deltaTime * 1.5f);
+            clock3.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[2].Value;
+            clock3.fillAmount = Mathf.Lerp(clock3.fillAmount, score / goalTime, deltaTime * 1.5f);
+        }
+
+        return;
+
+        foreach (KeyValuePair<int, string> item in otherPlayerIDs)
         {
             //just preventing index out of bounds quickly
             if (item.Key == 0) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
-            if (item.Key == 1) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
-            if (item.Key == 2) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
-            if (item.Key == 3) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
+            else if (item.Key == 1) clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
+            else if (item.Key == 2) clock2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
+            else if (item.Key == 3) clock3.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.Value;
         }
     }
 
@@ -175,37 +166,37 @@ public class HUDHandler : MonoBehaviour
         //Making sure the clock on the right is the client clock
         if(clientNumber != 1)
         {
-            tempImage = clock1;
+            tempImage = localClock;
 
             if(clientNumber == 2)
             {
-                clock1 = clock2;
-                clock2 = tempImage;
+                localClock = clock1;
+                clock1 = tempImage;
             }
             else if(clientNumber == 3)
             {
-                clock1 = clock3;
-                clock3 = tempImage;
+                localClock = clock2;
+                clock2 = tempImage;
             }
             else if (clientNumber == 4)
             {
-                clock1 = clock4;
-                clock4 = tempImage;
+                localClock = clock3;
+                clock3 = tempImage;
             }
         }
 
-        clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerIDs[0].Value; //clockName1
-        clock2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerIDs[1].Value;
-        clock3.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerIDs[2].Value;
-        clock4.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerIDs[3].Value;
+        localClock.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = localPlayerID.Value; //clockName1
+        clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[0].Value;
+        clock2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[1].Value;
+        clock3.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[2].Value;
     }
 
     public void UpdateClocks(float clock1Time, float clock2Time, float clock3Time, float clock4Time, float deltaTime)
     {
-        clock1.fillAmount = Mathf.Lerp(clock1.fillAmount, clock1Time / goalTime, deltaTime * 1.5f); //Time.deltaTime
-        clock2.fillAmount = Mathf.Lerp(clock2.fillAmount, clock2Time / goalTime, deltaTime * 1.5f);
-        clock3.fillAmount = Mathf.Lerp(clock3.fillAmount, clock3Time / goalTime, deltaTime * 1.5f);
-        clock4.fillAmount = Mathf.Lerp(clock4.fillAmount, clock4Time / goalTime, deltaTime * 1.5f);
+        localClock.fillAmount = Mathf.Lerp(localClock.fillAmount, clock1Time / goalTime, deltaTime * 1.5f); //Time.deltaTime
+        clock1.fillAmount = Mathf.Lerp(clock1.fillAmount, clock2Time / goalTime, deltaTime * 1.5f);
+        clock2.fillAmount = Mathf.Lerp(clock2.fillAmount, clock3Time / goalTime, deltaTime * 1.5f);
+        clock3.fillAmount = Mathf.Lerp(clock3.fillAmount, clock4Time / goalTime, deltaTime * 1.5f);
     }
 
     public void ShowAbilities(string ability1, string ability2, string ability3)
@@ -237,8 +228,10 @@ public class HUDHandler : MonoBehaviour
     {
         GameObject.Destroy(ability1Object.transform.GetChild(3).gameObject);
         GameObject.Destroy(ability1Object.transform.GetChild(2).gameObject);
+
         GameObject.Destroy(ability2Object.transform.GetChild(3).gameObject);
         GameObject.Destroy(ability2Object.transform.GetChild(2).gameObject);
+
         GameObject.Destroy(ability3Object.transform.GetChild(3).gameObject);
         GameObject.Destroy(ability3Object.transform.GetChild(2).gameObject);
 

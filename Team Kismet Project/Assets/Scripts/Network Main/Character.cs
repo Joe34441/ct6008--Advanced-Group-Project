@@ -45,7 +45,7 @@ public class Character : NetworkTransform
 
 	private HUDHandler _hudHandler;
 
-	private PlayerRef myPlayerRef;
+	private PlayerRef thisPlayerRef;
 
 	private bool badlocaltaggedcheck = false;
 	private float badlocaltagtimer = 0;
@@ -65,6 +65,7 @@ public class Character : NetworkTransform
 	private float outroTimer = 0;
 	private float outroTime = 10.0f;
 
+	[Networked] public float score { get; set; }
 
 	#region OnChanged Events
 
@@ -133,7 +134,7 @@ public class Character : NetworkTransform
 
 	public override void Spawned()
 	{
-		myPlayerRef = Object.InputAuthority;
+		thisPlayerRef = Object.InputAuthority;
 		_player = App.Instance.GetPlayer(Object.InputAuthority);
 		_name.text = _player.Name.Value;
 		_characterController = GetComponent<CharacterController>();
@@ -169,16 +170,11 @@ public class Character : NetworkTransform
 	private void Update()
     {
 		//raw local inputs
-
-		//if (IsTagged) _name.text = "tagged";
-		//else _name.text = "not tagged";
-		//Debug.Log(Camera.main.transform.position);
 	}
 
     private void LateUpdate()
     {
 		if (Object.HasInputAuthority)
-		//if (Object.HasInputAuthority && Runner.IsClient || Object.HasInputAuthority && Object.HasStateAuthority)
         {
 			_playerCharacterController.UpdateCamera(_cameraReference, _cameraPositionLerpRate, _cameraRotationLerpRate);
 		}
@@ -189,15 +185,17 @@ public class Character : NetworkTransform
 		//ignore this mess ***************************************************************
 		if (firstFUNTick) FirstNetworkTickUpdate();
 
-		if (Object.HasInputAuthority && Runner.IsLastTick)
-		{
-			Debug.Log("running " + _player.Name);
+		if (Runner.IsLastTick)
+        {
+			_hudHandler.UpdateScores(thisPlayerRef.PlayerId, score, Runner.DeltaTime, IsTagged);
+			//_hudHandler.UpdateScores(Runner.LocalPlayer.PlayerId, thisPlayerRef.PlayerId, IsTagged, score);
+
 			if (!finishedIntro)
 			{
 				if (!startedIntro)
 				{
 					startedIntro = true;
-					_hudHandler.AddPlayer(Runner.LocalPlayer.PlayerId, _player.Name.ToString(), (Object.HasInputAuthority && !Object.HasStateAuthority));
+					_hudHandler.AddPlayer(Runner.LocalPlayer.PlayerId, thisPlayerRef.PlayerId, _player.Name.ToString());
 				}
 				if (introTimer < introTime)
 				{
@@ -213,7 +211,57 @@ public class Character : NetworkTransform
 				}
 			}
 
-			if (!gameOver) gameOver = _hudHandler.IsGameOver();
+			if (!gameOver) gameOver = _hudHandler.IsGameOver(score);
+			else
+			{
+				if (!finishedOutro)
+				{
+					if (outroTimer < outroTime)
+					{
+						outroTimer += Runner.DeltaTime;
+						_hudHandler.UpdateOutro(); //update some ui info **************************************************************************************************************************
+					}
+					else
+					{
+						outroTimer = 0;
+						finishedOutro = true;
+					}
+				}
+				else
+				{
+					//return to room here **********************************************************************************************************************************
+				}
+				return;
+			}
+		}
+
+
+
+		if (Object.HasInputAuthority && Runner.IsLastTick && false) //this is wrong? only this, local player will be added to ui list
+		{
+			Debug.Log("running " + _player.Name);
+			if (!finishedIntro)
+			{
+				if (!startedIntro)
+				{
+					startedIntro = true;
+					//_hudHandler.AddPlayer(Runner.LocalPlayer.PlayerId, _player.Name.ToString(), (Object.HasInputAuthority && !Object.HasStateAuthority));
+				}
+				if (introTimer < introTime)
+				{
+					introTimer += Runner.DeltaTime;
+					_hudHandler.UpdateIntro(); //update some ui info *****************************************************************************************************************************
+					return;
+				}
+				else
+				{
+					introTimer = 0;
+					finishedIntro = true;
+					_hudHandler.EndIntro();
+				}
+			}
+
+			if (!gameOver) gameOver = _hudHandler.IsGameOver(score);
 			else
 			{
 				if (!finishedOutro)
@@ -236,8 +284,8 @@ public class Character : NetworkTransform
 				return;
 			}
 
-			_hudHandler.UpdateScores(Runner.LocalPlayer.PlayerId, IsTagged, Runner.DeltaTime);
-        }
+			//_hudHandler.UpdateScores(Runner.LocalPlayer.PlayerId, IsTagged, score);
+		}
 
 		if (IsTagged != badlocaltaggedcheck && Runner.IsLastTick)
         {
@@ -267,12 +315,17 @@ public class Character : NetworkTransform
 		if (Object.HasStateAuthority)
 		{
 			//host only stuff
+
+			if (Runner.IsLastTick)
+            {
+				if (!IsTagged) score += Runner.DeltaTime;
+			}
 		}
 
 		Vector3 movementDirection = Vector3.zero;
 		if (GetInput(out InputData inputData))
 		{
-			if (Object.HasStateAuthority && Runner.IsLastTick)
+			if (Object.HasStateAuthority && Runner.IsFirstTick)
 			{
 				Vector2 lookRotation = inputData.GetLookRotation();
 				_playerCharacterController.NetworkedLookRotation(_cameraReference, lookRotation, _cameraPositionOffset, _xMouseLookUpperClamp, _xMouseLookLowerClamp, _mouseLookSpeed, Runner.DeltaTime);
@@ -366,7 +419,7 @@ public class Character : NetworkTransform
 
 		if (_playerTagTrigger.tryTag)
         {
-			if (_playerTagTrigger.otherCharacter.myPlayerRef == _playerTagTrigger.myCharacter.myPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
+			if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
 			else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
         }
 
@@ -382,6 +435,8 @@ public class Character : NetworkTransform
 	private void FirstNetworkTickUpdate()
     {
 		firstFUNTick = false;
+
+		score = 0;
 
 		//if (Object.HasInputAuthority) _playerAbilities.Setup(Object.InputAuthority, _playerCharacterController, _hudHandler);
 		_playerAbilities.Setup(Object.InputAuthority, _playerCharacterController, _hudHandler, Object.HasInputAuthority);
@@ -403,13 +458,13 @@ public class Character : NetworkTransform
 
 		if (myCharacter.IsTagged)
         {
-			tagged = otherCharacter.myPlayerRef;
-			tagger = myCharacter.myPlayerRef;
+			tagged = otherCharacter.thisPlayerRef;
+			tagger = myCharacter.thisPlayerRef;
 		}
 		else
         {
-			tagged = myCharacter.myPlayerRef;
-			tagger = otherCharacter.myPlayerRef;
+			tagged = myCharacter.thisPlayerRef;
+			tagger = otherCharacter.thisPlayerRef;
 		}
 
 		if (tagged != PlayerRef.None && tagger != PlayerRef.None)
