@@ -60,12 +60,15 @@ public class Character : NetworkTransform
 	private float introTimer = 0;
 	private float introTime = 10.0f;
 
-	private bool gameOver = false;
+	//private bool gameOver = false;
 	private bool finishedOutro = false;
 	private float outroTimer = 0;
 	private float outroTime = 10.0f;
 
-	[Networked] public float score { get; set; }
+	private bool gameEnded = false;
+
+	[Networked] public NetworkBool GameOver { get; set; }
+	[Networked] public float Score { get; set; }
 
 	#region OnChanged Events
 
@@ -81,7 +84,6 @@ public class Character : NetworkTransform
 		else self._playerMeshRenderer.material = self._playerNotTaggedMaterial;
 
 	}
-
 
 
 	#endregion OnChanged Events
@@ -105,33 +107,6 @@ public class Character : NetworkTransform
     }
 
 
-
-	//****************************************************************************************************************************************
-	[Header("\nOLD")]
-	//variables to calculate player movement goes here
-	[SerializeField] private float _moveSpeed = 10.0f;
-	[SerializeField] private float _jumpForce = 30.0f;
-	[SerializeField] private float _jumpCooldown = 0.1f;
-	private float _jumpTimePassed;
-
-	[SerializeField] private PhysxBall _prefabPhysxBall;
-	[Networked] private TickTimer ballSpawnDelay { get; set; }
-
-	public NetworkBool spawned { get; set; }
-
-	private float _turnSpeed = 45.0f;
-	private float _turnSmoothInterval = 0.05f;
-	private float _turnSmoothVelocity;
-
-	private bool _jumping;
-	private float _jumpTime = 0.35f;
-	private void StopJumping() { _jumping = false; }
-
-	//should be depreciated but keeping here temporarily
-	private Vector2 _v2MousePos;
-	private Vector2Int _v2IMousePos;
-	//****************************************************************************************************************************************
-
 	public override void Spawned()
 	{
 		thisPlayerRef = Object.InputAuthority;
@@ -140,31 +115,21 @@ public class Character : NetworkTransform
 		_characterController = GetComponent<CharacterController>();
 		_playerCharacterController = GetComponent<PlayerCharacterController>();
 		_playerAbilities = GetComponent<PlayerAbilities>();
-
 		_hudHandler = GameObject.FindGameObjectWithTag("HUDHandler").GetComponent<HUDHandler>();
-
-
-
 
 		if (Object.HasInputAuthority)
 		{
 			Debug.Log("????");
 			LocalCharacter = this;
-			//Camera.main.transform.position = _cameraReference.transform.position;
-			//Camera.main.transform.parent = _cameraReference;
+
 			Camera.main.transform.position = _cameraReference.position;
 			Camera.main.transform.rotation = _cameraReference.rotation;
-			//Camera.main.transform.localPosition = Vector3.zero;
-			//Camera.main.transform.position = transform.position;// + -transform.forward * 8;
-			//Camera.main.transform.position += new Vector3(0, 6, -8);
-			//Camera.main.transform.LookAt(transform);
 
 			Cursor.visible = false;
 			Cursor.lockState = CursorLockMode.Locked;
 
 			IsTagged = true;
 		}
-
 	}
 
 	private void Update()
@@ -187,7 +152,7 @@ public class Character : NetworkTransform
 
 		if (Runner.IsLastTick)
         {
-			_hudHandler.UpdateScores(thisPlayerRef.PlayerId, score, Runner.DeltaTime, IsTagged);
+			_hudHandler.UpdateScores(thisPlayerRef.PlayerId, Score, Runner.DeltaTime, IsTagged);
 			//_hudHandler.UpdateScores(Runner.LocalPlayer.PlayerId, thisPlayerRef.PlayerId, IsTagged, score);
 
 			if (!finishedIntro)
@@ -211,8 +176,7 @@ public class Character : NetworkTransform
 				}
 			}
 
-			if (!gameOver) gameOver = _hudHandler.IsGameOver(score);
-			else
+			if (GameOver)
 			{
 				if (!finishedOutro)
 				{
@@ -235,57 +199,7 @@ public class Character : NetworkTransform
 			}
 		}
 
-
-
-		if (Object.HasInputAuthority && Runner.IsLastTick && false) //this is wrong? only this, local player will be added to ui list
-		{
-			Debug.Log("running " + _player.Name);
-			if (!finishedIntro)
-			{
-				if (!startedIntro)
-				{
-					startedIntro = true;
-					//_hudHandler.AddPlayer(Runner.LocalPlayer.PlayerId, _player.Name.ToString(), (Object.HasInputAuthority && !Object.HasStateAuthority));
-				}
-				if (introTimer < introTime)
-				{
-					introTimer += Runner.DeltaTime;
-					_hudHandler.UpdateIntro(); //update some ui info *****************************************************************************************************************************
-					return;
-				}
-				else
-				{
-					introTimer = 0;
-					finishedIntro = true;
-					_hudHandler.EndIntro();
-				}
-			}
-
-			if (!gameOver) gameOver = _hudHandler.IsGameOver(score);
-			else
-			{
-				if (!finishedOutro)
-				{
-					if (outroTimer < outroTime)
-					{
-						outroTimer += Runner.DeltaTime;
-						_hudHandler.UpdateOutro(); //update some ui info **************************************************************************************************************************
-					}
-					else
-					{
-						outroTimer = 0;
-						finishedOutro = true;
-					}
-				}
-				else
-				{
-				//return to room here **********************************************************************************************************************************
-				}
-				return;
-			}
-
-			//_hudHandler.UpdateScores(Runner.LocalPlayer.PlayerId, IsTagged, score);
-		}
+		if (GameOver) return;
 
 		if (IsTagged != badlocaltaggedcheck && Runner.IsLastTick)
         {
@@ -310,15 +224,27 @@ public class Character : NetworkTransform
 		//but it almost works ************************************************************
 
 
-		if (_jumpTimePassed < _jumpCooldown) _jumpTimePassed += Runner.DeltaTime;
-
-		if (Object.HasStateAuthority)
+		if (Object.HasStateAuthority) //host only stuff
 		{
-			//host only stuff
+			if (!GameOver) GameOver = _hudHandler.IsGameOver(Score);
+
+			if (GameOver && !gameEnded)
+            {
+				gameEnded = true;
+				
+				foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+                {
+					player.GetComponent<Character>().GameOver = true;
+                }
+            }
 
 			if (Runner.IsLastTick)
             {
-				if (!IsTagged) score += Runner.DeltaTime;
+				if (!IsTagged)
+				{
+					Score += Runner.DeltaTime;
+					Debug.Log("giving " + _player.Name + " points");
+				}
 			}
 		}
 
@@ -360,15 +286,12 @@ public class Character : NetworkTransform
 
 			if (inputData.GetButton(ButtonFlag.P))
 			{
-				//Tag();
 				Application.Quit();
 			}
 
 			if (inputData.GetButton(ButtonFlag.NUM1))
 			{
 				_playerAbilities.ActivateOne();
-				//Debug.Log("number 1 pressed");
-				//call abilitymanager
 			}
             else
             {
@@ -378,8 +301,6 @@ public class Character : NetworkTransform
 			if (inputData.GetButton(ButtonFlag.NUM2))
 			{
 				_playerAbilities.ActivateTwo();
-				//Debug.Log("number 2 pressed");
-				//call abilitymanager
 			}
             else
             {
@@ -389,14 +310,13 @@ public class Character : NetworkTransform
 			if (inputData.GetButton(ButtonFlag.NUM3))
 			{
 				_playerAbilities.ActivateThree();
-				//Debug.Log("number 3 pressed");
-				//call abilitymanager
 			}
             else
             {
 				_playerAbilities.ReleaseThree();
             }
 
+			//KEEP FOR SPAWNING TEMPLATE ******************************************************************************************************************************************************************
 			//if (ballSpawnDelay.ExpiredOrNotRunning(Runner))
 			//{
 			//	if (dataOld.GetButton(ButtonFlag.LMB))
@@ -436,9 +356,8 @@ public class Character : NetworkTransform
     {
 		firstFUNTick = false;
 
-		score = 0;
+		Score = 0;
 
-		//if (Object.HasInputAuthority) _playerAbilities.Setup(Object.InputAuthority, _playerCharacterController, _hudHandler);
 		_playerAbilities.Setup(Object.InputAuthority, _playerCharacterController, _hudHandler, Object.HasInputAuthority);
 
 		int numOfPlayers = 0;
@@ -482,18 +401,5 @@ public class Character : NetworkTransform
 			//have a "canbetagged" bool, cannot tag if its false
 			//in FUN, inrcement taggedCooldownTimer till >= taggedCooldownTime, then set canbetagged to true
 		}
-
-		////do checks to see who should be tagged, and if it's valid
-		//if (IsTagged)
-		//{
-		//	PlayerRef tagged = PlayerRef.None;
-		//	PlayerRef tagger = Runner.LocalPlayer;
-		//	foreach (PlayerRef pr in Runner.ActivePlayers)
-		//	{
-		//		if (pr.PlayerId != Runner.LocalPlayer.PlayerId) tagged = pr;
-		//	}
-
-		//	_player.RPC_Tag(tagged, tagger);
-		//}
 	}
 }

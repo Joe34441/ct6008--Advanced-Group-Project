@@ -137,12 +137,18 @@ public class HUDHandler : MonoBehaviour
             localClock.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = localPlayerID.Value;
             localClock.fillAmount = Mathf.Lerp(localClock.fillAmount, score / goalTime, deltaTime * 1.5f);
         }
-        else
+        else if (playerID == otherPlayerIDs[0].Key)
         {
             clock1.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[0].Value;
             clock1.fillAmount = Mathf.Lerp(clock1.fillAmount, score / goalTime, deltaTime * 1.5f);
+        }
+        else if (playerID == otherPlayerIDs[1].Key)
+        {
             clock2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[1].Value;
             clock2.fillAmount = Mathf.Lerp(clock2.fillAmount, score / goalTime, deltaTime * 1.5f);
+        }
+        else if (playerID == otherPlayerIDs[2].Key)
+        {
             clock3.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = otherPlayerIDs[2].Value;
             clock3.fillAmount = Mathf.Lerp(clock3.fillAmount, score / goalTime, deltaTime * 1.5f);
         }
