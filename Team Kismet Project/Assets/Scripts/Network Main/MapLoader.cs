@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public enum MapIndex {
 	LobbyRoom,
 	GameOver,
-	Map0,
-	Map1,
+	Urban,
+	Dojo
 };
 
 /// <summary>
@@ -51,7 +51,7 @@ public class MapLoader : NetworkSceneManagerBase
 				break;
 
 			default:
-				path = _maps[newScene - (int)MapIndex.Map0];
+				path = _maps[newScene - (int)MapIndex.Urban];
 				break;
 		}	
 		yield return SceneManager.LoadSceneAsync(path, LoadSceneMode.Single);

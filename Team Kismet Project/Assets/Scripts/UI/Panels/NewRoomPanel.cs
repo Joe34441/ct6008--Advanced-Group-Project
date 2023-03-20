@@ -69,8 +69,8 @@ public class NewRoomPanel : MonoBehaviour
 
 		SessionProps props = new SessionProps();
 		//props.StartMap = _toggleMap1.isOn ? MapIndex.Map0 : MapIndex.Map1;
-		if (_playMode == PlayMode.Mode1) props.StartMap = MapIndex.Map0;
-		else if (_playMode == PlayMode.Mode2) props.StartMap = MapIndex.Map1;
+		if (_playMode == PlayMode.Mode1) props.StartMap = MapIndex.Urban;
+		else if (_playMode == PlayMode.Mode2) props.StartMap = MapIndex.Dojo;
 		props.PlayMode = _playMode;
 		props.PlayerLimit = _maxPly;
 		props.RoomName = _inputName.text;

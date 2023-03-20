@@ -85,7 +85,7 @@ public class Map : SimulationBehaviour, ISpawned
 
 	public void OnLoadMap1()
 	{
-		App.Instance.Session.LoadMap(MapIndex.Map1);
+		App.Instance.Session.LoadMap(MapIndex.Urban);
 	}
 
 	public void OnGameOver()

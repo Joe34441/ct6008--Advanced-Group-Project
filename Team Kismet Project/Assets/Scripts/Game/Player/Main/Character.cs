@@ -119,7 +119,6 @@ public class Character : NetworkTransform
 
 		if (Object.HasInputAuthority)
 		{
-			Debug.Log("????");
 			LocalCharacter = this;
 
 			Camera.main.transform.position = _cameraReference.position;
@@ -147,56 +146,13 @@ public class Character : NetworkTransform
 
 	public override void FixedUpdateNetwork()
 	{
-		//ignore this mess ***************************************************************
 		if (firstFUNTick) FirstNetworkTickUpdate();
 
 		if (Runner.IsLastTick)
         {
 			_hudHandler.UpdateScores(thisPlayerRef.PlayerId, Score, Runner.DeltaTime, IsTagged);
-			//_hudHandler.UpdateScores(Runner.LocalPlayer.PlayerId, thisPlayerRef.PlayerId, IsTagged, score);
-
-			if (!finishedIntro)
-			{
-				if (!startedIntro)
-				{
-					startedIntro = true;
-					_hudHandler.AddPlayer(Runner.LocalPlayer.PlayerId, thisPlayerRef.PlayerId, _player.Name.ToString());
-				}
-				if (introTimer < introTime)
-				{
-					introTimer += Runner.DeltaTime;
-					_hudHandler.UpdateIntro(); //update some ui info *****************************************************************************************************************************
-					return;
-				}
-				else
-				{
-					introTimer = 0;
-					finishedIntro = true;
-					_hudHandler.EndIntro();
-				}
-			}
-
-			if (GameOver)
-			{
-				if (!finishedOutro)
-				{
-					if (outroTimer < outroTime)
-					{
-						outroTimer += Runner.DeltaTime;
-						_hudHandler.UpdateOutro(); //update some ui info **************************************************************************************************************************
-					}
-					else
-					{
-						outroTimer = 0;
-						finishedOutro = true;
-					}
-				}
-				else
-				{
-					//return to room here **********************************************************************************************************************************
-				}
-				return;
-			}
+			Intro();
+			Outro();
 		}
 
 		if (GameOver) return;
@@ -220,8 +176,6 @@ public class Character : NetworkTransform
 				badlocaltagboolstatecheckthingbutpublic = true;
             }
         }
-
-		//but it almost works ************************************************************
 
 
 		if (Object.HasStateAuthority) //host only stuff
@@ -348,7 +302,7 @@ public class Character : NetworkTransform
 			//other local only stuff
 		}
 
-		//perform movement for this tick
+		//perform movement
 		_playerCharacterController.PerformMove(_characterController, _cameraReference, _groundCheckReference, movementDirection, _moveAcceleration, _moveDeceleration, Runner.DeltaTime);
 	}
 
@@ -368,6 +322,58 @@ public class Character : NetworkTransform
 			if (pr.PlayerId == 1) target = pr;
 		}
 		if (numOfPlayers == 4) _player.RPC_ForceTag(target);
+	}
+
+	private void Intro()
+    {
+		if (!finishedIntro)
+		{
+			if (!startedIntro)
+			{
+				startedIntro = true;
+				_hudHandler.AddPlayer(Runner.LocalPlayer.PlayerId, thisPlayerRef.PlayerId, _player.Name.ToString());
+			}
+			if (introTimer < introTime)
+			{
+				introTimer += Runner.DeltaTime;
+				_hudHandler.UpdateIntro();
+				return;
+			}
+			else
+			{
+				introTimer = 0;
+				finishedIntro = true;
+				_hudHandler.EndIntro();
+			}
+		}
+	}
+
+	private void Outro()
+    {
+		if (GameOver)
+		{
+			if (!finishedOutro)
+			{
+				if (outroTimer < outroTime)
+				{
+					outroTimer += Runner.DeltaTime;
+					if (Object.HasInputAuthority) _hudHandler.UpdateOutro();
+				}
+				else
+				{
+					outroTimer = 0;
+					finishedOutro = true;
+				}
+			}
+			else
+			{
+				Debug.Log("Returning to lobby room");
+				Cursor.visible = true;
+				Cursor.lockState = CursorLockMode.None;
+				Runner.SetActiveScene((int)MapIndex.LobbyRoom);
+			}
+			return;
+		}
 	}
 
 	private void Tag(Character myCharacter, Character otherCharacter)

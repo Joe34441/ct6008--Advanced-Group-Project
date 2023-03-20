@@ -55,7 +55,7 @@ namespace GameUI.Intro
 		public void OnCreateSession()
 		{
 			SessionProps props = new SessionProps();
-			props.StartMap = _toggleMap1.isOn ? MapIndex.Map0 : MapIndex.Map1;
+			props.StartMap = _toggleMap1.isOn ? MapIndex.Urban : MapIndex.Dojo;
 			props.PlayMode = _playMode;
 			props.PlayerLimit = _maxPly;
 			props.RoomName = _inputName.text;

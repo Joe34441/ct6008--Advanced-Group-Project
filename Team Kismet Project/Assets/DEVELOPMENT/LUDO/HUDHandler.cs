@@ -4,6 +4,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class HUDHandler : MonoBehaviour
 {
@@ -45,6 +46,12 @@ public class HUDHandler : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> abilityCards = new List<GameObject>();
+
+    [SerializeField] private GameObject outro1st;
+    [SerializeField] private GameObject outro2nd;
+    [SerializeField] private GameObject outro3rd;
+    [SerializeField] private GameObject outro4th;
+    private bool outroShown = false;
 
     private void Update()
     {
@@ -97,7 +104,31 @@ public class HUDHandler : MonoBehaviour
 
     public void UpdateOutro()
     {
-        //enable or update anything here that'll be shown in the outro. e.g. bringing clocks to centre, enlarge etc
+        //enable or update anything here that'll be shown in the outro. e.g. displaying players scores
+        if (outroShown) return;
+
+        Debug.Log("Displaying scores");
+
+        outroShown = true;
+
+        List<KeyValuePair<string, float>> scores = new List<KeyValuePair<string, float>>();
+
+        scores.Add(new KeyValuePair<string, float>(otherPlayerIDs[0].Value, Mathf.Floor(clock1.fillAmount * 100)));
+        scores.Add(new KeyValuePair<string, float>(otherPlayerIDs[1].Value, Mathf.Floor(clock2.fillAmount * 100)));
+        scores.Add(new KeyValuePair<string, float>(otherPlayerIDs[2].Value, Mathf.Floor(clock3.fillAmount * 100)));
+        scores.Add(new KeyValuePair<string, float>(localPlayerID.Value, Mathf.Floor(localClock.fillAmount * 100)));
+
+        List<KeyValuePair<string, float>> orderedScores = scores.OrderBy(o => o.Value).ToList();
+
+        outro1st.GetComponent<TextMeshProUGUI>().text = "1st: " + orderedScores[3].Key + " - 100%";
+        outro2nd.GetComponent<TextMeshProUGUI>().text = "2nd: " + orderedScores[2].Key + " - " + orderedScores[2].Value + "%";
+        outro3rd.GetComponent<TextMeshProUGUI>().text = "3rd: " + orderedScores[1].Key + " - " + orderedScores[1].Value + "%";
+        outro4th.GetComponent<TextMeshProUGUI>().text = "4th: " + orderedScores[0].Key + " - " + orderedScores[0].Value + "%";
+
+        outro1st.SetActive(true);
+        outro2nd.SetActive(true);
+        outro3rd.SetActive(true);
+        outro4th.SetActive(true);
     }
 
     public bool IsGameOver(float score)
