@@ -161,7 +161,6 @@ public class HUDHandler : MonoBehaviour
     {
         if (!clockHolder || otherPlayerIDs.Count < 3) return;
 
-        clockHolder.SwitchPos();
 
         if (playerID == localPlayerID.Key)
         {
