@@ -6,7 +6,6 @@ using Fusion;
 
 // Visual representation of a Player - the Character is instantiated by the map once it's loaded.
 // Movement is handled in PlayerCharacterController.cs
-
 public class Character : NetworkTransform
 {
 	[SerializeField] private Text _name;
@@ -36,16 +35,17 @@ public class Character : NetworkTransform
 
 	private Player _player;
 	private PlayerCharacterController _playerCharacterController;
-
 	private CharacterController _characterController;
-
 	private PlayerAbilities _playerAbilities;
+	private HUDHandler _hudHandler;
 
 	public GameObject camRaycastReference;
 
-	private HUDHandler _hudHandler;
-
 	private PlayerRef thisPlayerRef;
+
+	public Transform GetCameraReference() { return _cameraReference; }
+	public Player GetPlayer() { return _player; }
+	public NetworkRunner GetRunner() { return Runner; }
 
 	private bool badlocaltaggedcheck = false;
 	private float badlocaltagtimer = 0;
@@ -60,7 +60,6 @@ public class Character : NetworkTransform
 	private float introTimer = 0;
 	private float introTime = 10.0f;
 
-	//private bool gameOver = false;
 	private bool finishedOutro = false;
 	private float outroTimer = 0;
 	private float outroTime = 10.0f;
@@ -70,7 +69,6 @@ public class Character : NetworkTransform
 	[Networked] public NetworkBool GameOver { get; set; }
 	[Networked] public float Score { get; set; }
 
-	#region OnChanged Events
 
 	[Networked(OnChanged = nameof(OnTagged))]
 	public bool IsTagged { get; set; }
@@ -82,27 +80,10 @@ public class Character : NetworkTransform
 
 		if (self.IsTagged) self._playerMeshRenderer.material = self._playerTaggedMaterial;
 		else self._playerMeshRenderer.material = self._playerNotTaggedMaterial;
-
 	}
 
 
-	#endregion OnChanged Events
 
-
-	public Transform GetCameraReference()
-    {
-		return _cameraReference;
-    }
-
-	public Player GetPlayer()
-    {
-		return _player;
-    }
-
-	public NetworkRunner GetRunner()
-    {
-		return Runner;
-    }
 
 	public void TaggedNotStatic()
 	{
@@ -120,7 +101,6 @@ public class Character : NetworkTransform
 		Debug.Log(_player.Name + ": ive been untagged!");
 		IsTagged = false;
     }
-
 
 	public override void Spawned()
 	{
@@ -148,7 +128,7 @@ public class Character : NetworkTransform
 
 	private void Update()
     {
-		//raw local inputs
+		//any local stuff
 	}
 
     private void LateUpdate()
@@ -166,32 +146,13 @@ public class Character : NetworkTransform
 		if (Runner.IsLastTick)
         {
 			_hudHandler.UpdateScores(thisPlayerRef.PlayerId, Score, Runner.DeltaTime, IsTagged);
-			Intro();
-			Outro();
+			if (Intro()) return;
+			if (Outro()) return;
 		}
 
 		if (GameOver) return;
 
-		if (IsTagged != badlocaltaggedcheck && Runner.IsLastTick)
-        {
-			badlocaltaggedcheck = IsTagged;
-			badlocaltagboolstatecheckthing = true;
-			badlocaltagboolstatecheckthingbutpublic = false;
-			if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
-			else _playerMeshRenderer.material = _playerNotTaggedMaterial;
-		}
-
-		if (badlocaltagboolstatecheckthing && Runner.IsLastTick)
-        {
-			if (badlocaltagtimer < badlocaltagtime) badlocaltagtimer += Runner.DeltaTime;
-			else
-            {
-				badlocaltagtimer = 0;
-				badlocaltagboolstatecheckthing = false;
-				badlocaltagboolstatecheckthingbutpublic = true;
-            }
-        }
-
+		if (Runner.IsLastTick) CheckTag();
 
 		if (Object.HasStateAuthority) //host only stuff
 		{
@@ -339,7 +300,7 @@ public class Character : NetworkTransform
 		if (numOfPlayers == 4) _player.RPC_ForceTag(target);
 	}
 
-	private void Intro()
+	private bool Intro()
     {
 		if (!finishedIntro)
 		{
@@ -352,7 +313,7 @@ public class Character : NetworkTransform
 			{
 				introTimer += Runner.DeltaTime;
 				_hudHandler.UpdateIntro();
-				return;
+				return true;
 			}
 			else
 			{
@@ -361,9 +322,10 @@ public class Character : NetworkTransform
 				_hudHandler.EndIntro();
 			}
 		}
+		return false;
 	}
 
-	private void Outro()
+	private bool Outro()
     {
 		if (GameOver)
 		{
@@ -387,7 +349,31 @@ public class Character : NetworkTransform
 				Cursor.lockState = CursorLockMode.None;
 				Runner.SetActiveScene((int)MapIndex.LobbyRoom);
 			}
-			return;
+			return true;
+		}
+		return false;
+	}
+
+	private void CheckTag()
+    {
+		if (IsTagged != badlocaltaggedcheck)
+		{
+			badlocaltaggedcheck = IsTagged;
+			badlocaltagboolstatecheckthing = true;
+			badlocaltagboolstatecheckthingbutpublic = false;
+			if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
+			else _playerMeshRenderer.material = _playerNotTaggedMaterial;
+		}
+
+		if (badlocaltagboolstatecheckthing)
+		{
+			if (badlocaltagtimer < badlocaltagtime) badlocaltagtimer += Runner.DeltaTime;
+			else
+			{
+				badlocaltagtimer = 0;
+				badlocaltagboolstatecheckthing = false;
+				badlocaltagboolstatecheckthingbutpublic = true;
+			}
 		}
 	}
 
