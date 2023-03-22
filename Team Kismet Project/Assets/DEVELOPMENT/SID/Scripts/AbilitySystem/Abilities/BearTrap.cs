@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
 
 [CreateAssetMenu(menuName = "Abilities/BearTrap")]
 public class BearTrap : Ability
@@ -105,7 +106,9 @@ public class BearTrap : Ability
 
     public override void Released()
     {
-        Instantiate(trapPrefab, trapLocation, Quaternion.identity);
+        //Instantiate(trapPrefab, trapLocation, Quaternion.identity);
+        //playerRef.GetComponent<Character>().GetPlayer().Runner.Spawn(trapPrefab, trapLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
+        playerRef.GetComponent<Character>().GetRunner().Spawn(trapPrefab, trapLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
         DeactivateAbility();
     }
 

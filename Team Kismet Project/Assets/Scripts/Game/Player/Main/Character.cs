@@ -94,6 +94,16 @@ public class Character : NetworkTransform
 		return _cameraReference;
     }
 
+	public Player GetPlayer()
+    {
+		return _player;
+    }
+
+	public NetworkRunner GetRunner()
+    {
+		return Runner;
+    }
+
 	public void TaggedNotStatic()
 	{
 		Debug.Log(_player.Name + ": ive been tagged!");
