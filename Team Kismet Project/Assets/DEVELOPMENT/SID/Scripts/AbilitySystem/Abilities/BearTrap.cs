@@ -20,7 +20,8 @@ public class BearTrap : Ability
 
     private Character playerCharacter;
     private GameObject raycastRef;
-    private GameObject test;
+
+    GameObject obj;
 
     public override void ActivateAbility()
     {
@@ -31,9 +32,10 @@ public class BearTrap : Ability
         }
         trapLocation = Vector3.zero;
         currentIndicator = Instantiate(placementIndicator, trapLocation, Quaternion.identity);
-        test = new GameObject();
         shouldUpdate = true;
         activated = true;
+
+        obj = new GameObject();
     }
 
     public override void DeactivateAbility()
@@ -42,6 +44,7 @@ public class BearTrap : Ability
         {
             Destroy(currentIndicator);
         }
+        Destroy(obj);
         shouldUpdate = false;
         activated = false;
     }
@@ -56,13 +59,12 @@ public class BearTrap : Ability
         //new transform.LookAt raycast reference
         //get forward on new trasform
         //happy days
-        GameObject obj = new GameObject();
-        obj.transform.position = playerCamera.transform.position;
+        obj.transform.position = cameraReference.position;
         obj.transform.LookAt(raycastRef.transform);
 
         //Vector3 direction = playerCamera.transform.position - raycastRef.transform.position;
 
-        bool hitSomething = Physics.Raycast(playerCamera.transform.position, obj.transform.forward, out hit, placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position), hitList);
+        bool hitSomething = Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position), hitList);
 
         if (hitSomething)
         {
@@ -70,7 +72,7 @@ public class BearTrap : Ability
         }
         else
         {
-            Vector3 downPoint = playerCamera.transform.position + (obj.transform.forward * (placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position)));
+            Vector3 downPoint = cameraReference.transform.position + (obj.transform.forward * (placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position)));
             Physics.Raycast(downPoint, Vector3.down, out hit, Mathf.Infinity, hitList);
             trapLocation = hit.point;
         }
@@ -79,7 +81,6 @@ public class BearTrap : Ability
         {
             currentIndicator.transform.position = trapLocation;
         }
-        //Destroy(obj);
     }
 
     public override void Initialize(GameObject _playerRef, Camera _camera)
@@ -88,10 +89,11 @@ public class BearTrap : Ability
         playerCamera = _camera;
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, LayerMask _hitList, float _placementRange, GameObject _indicator, GameObject _trapPrefab)
+    public void Initialize(GameObject _playerRef, Camera _camera, Transform _cameraRef, LayerMask _hitList, float _placementRange, GameObject _indicator, GameObject _trapPrefab)
     {
         playerRef = _playerRef;
         playerCamera = _camera;
+        cameraReference = _cameraRef;
         hitList = _hitList;
         placementRange = _placementRange;
         placementIndicator = _indicator;

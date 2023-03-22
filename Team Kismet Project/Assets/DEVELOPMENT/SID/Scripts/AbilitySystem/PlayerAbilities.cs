@@ -19,6 +19,9 @@ public class PlayerAbilities : MonoBehaviour
     private bool hasResetOne = false, hasResetTwo = false, hasResetThree = false;
 
     private PlayerCharacterController playerController;
+    private Character _playerCharacter;
+
+    [HideInInspector] public bool abilitiesEnabled = true;
 
     HUDHandler hud;
 
@@ -70,7 +73,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            //AssignAbility(abilityManager.dash, 3);
+            AssignAbility(abilityManager.bearTrap, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -94,7 +97,7 @@ public class PlayerAbilities : MonoBehaviour
             case AbilityTypes.Grapplehook:
                 {
                     GrappleHook grappleAbility = ScriptableObject.CreateInstance<GrappleHook>();
-                    grappleAbility.Initialize(gameObject, Camera.main, playerController, abilityManager.grapple.hitList,
+                    grappleAbility.Initialize(gameObject, Camera.main, _playerCharacter.GetCameraReference(), playerController, abilityManager.grapple.hitList,
                         abilityManager.grapple.cablePrefab, abilityManager.grapple.grappleSpeed, abilityManager.grapple.maxGrappleDistance);
                     grappleAbility.abilityName = abilityManager.grapple.abilityName;
                     grappleAbility.cooldown = abilityManager.grapple.cooldown;
@@ -124,8 +127,8 @@ public class PlayerAbilities : MonoBehaviour
             case AbilityTypes.Teleport:
                 {
                     Teleport teleportAbility = ScriptableObject.CreateInstance<Teleport>();
-                    teleportAbility.Initialize(gameObject, Camera.main, abilityManager.teleport.hitList,
-                        abilityManager.teleport.maxTeleportRange, abilityManager.teleport.teleportIndicator);
+                    teleportAbility.Initialize(gameObject, _playerCharacter.GetCameraReference(), abilityManager.teleport.maxTeleportRange,
+                        abilityManager.teleport.teleportIndicator, abilityManager.teleport.hitList);
                     teleportAbility.abilityName = abilityManager.teleport.abilityName;
                     teleportAbility.cooldown = abilityManager.teleport.cooldown;
                     AssignAbility(teleportAbility, index);
@@ -134,7 +137,7 @@ public class PlayerAbilities : MonoBehaviour
             case AbilityTypes.Beartrap:
                 {
                     BearTrap bearTrap = ScriptableObject.CreateInstance<BearTrap>();
-                    bearTrap.Initialize(gameObject, Camera.main, abilityManager.bearTrap.hitList,
+                    bearTrap.Initialize(gameObject, Camera.main, _playerCharacter.GetCameraReference(), abilityManager.bearTrap.hitList,
                         abilityManager.bearTrap.placementRange, abilityManager.bearTrap.placementIndicator, abilityManager.bearTrap.trapPrefab);
                     bearTrap.abilityName = abilityManager.bearTrap.abilityName;
                     bearTrap.cooldown = abilityManager.bearTrap.cooldown;
@@ -217,6 +220,7 @@ public class PlayerAbilities : MonoBehaviour
     public void Setup(int playerID, PlayerCharacterController playerCharacter, HUDHandler _hudHandler, bool hasInput)
     {
         playerController = playerCharacter;
+        _playerCharacter = gameObject.GetComponent<Character>();
         abilityManager = GameObject.FindGameObjectWithTag("AbilityManager").GetComponent<AbilityManager>();
         abilityManager.Setup(this, playerID, _hudHandler, hasInput);
     }
@@ -236,53 +240,61 @@ public class PlayerAbilities : MonoBehaviour
 
     public void ActivateOne()
     {
-        if (!abilityOne.activated)
+        if(abilitiesEnabled)
         {
-            if (!abilityOne.onCooldown)
+            if (!abilityOne.activated)
             {
-                abilityOne.ActivateAbility();
-                hasResetOne = false;
+                if (!abilityOne.onCooldown)
+                {
+                    abilityOne.ActivateAbility();
+                    hasResetOne = false;
+                }
+            }
+
+            if (abilityOne.shouldUpdate)
+            {
+                abilityOne.Update();
             }
         }
 
-        if (abilityOne.shouldUpdate)
-        {
-            abilityOne.Update();
-        }
     }
 
     public void ActivateTwo()
     {
-
-        if (!abilityTwo.activated)
+        if(abilitiesEnabled)
         {
-            if (!abilityTwo.onCooldown)
+            if (!abilityTwo.activated)
             {
-                abilityTwo.ActivateAbility();
-                hasResetTwo = false;
+                if (!abilityTwo.onCooldown)
+                {
+                    abilityTwo.ActivateAbility();
+                    hasResetTwo = false;
+                }
+            }
+            if (abilityTwo.shouldUpdate)
+            {
+                abilityTwo.Update();
             }
         }
-        if (abilityTwo.shouldUpdate)
-        {
-            abilityTwo.Update();
-        }
-        
     }
 
     public void ActivateThree()
     {
-        if (!abilityThree.activated)
+        if(abilitiesEnabled)
         {
-            if (!abilityThree.onCooldown)
+            if (!abilityThree.activated)
             {
-                abilityThree.ActivateAbility();
-                hasResetThree = false;
+                if (!abilityThree.onCooldown)
+                {
+                    abilityThree.ActivateAbility();
+                    hasResetThree = false;
+                }
             }
-        }
 
-        if (abilityThree.shouldUpdate)
-        {
-            abilityThree.Update();
+            if (abilityThree.shouldUpdate)
+            {
+                abilityThree.Update();
+            }
         }
     }
 

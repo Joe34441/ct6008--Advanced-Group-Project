@@ -73,12 +73,12 @@ public class PlayerCharacterController : MonoBehaviour
             verticalMovement.y += PerformJump(deltaTime);
             if(!superJump)
             {
-                Debug.Log("not super");
+                
                 velocity.y = Mathf.Sqrt(jumpPower * -2f * -9.81f);
             }
             else
             {
-                Debug.Log("Superjump");
+                
                 velocity.y = Mathf.Sqrt(jumpPower * -4f * -9.81f);
             }
             

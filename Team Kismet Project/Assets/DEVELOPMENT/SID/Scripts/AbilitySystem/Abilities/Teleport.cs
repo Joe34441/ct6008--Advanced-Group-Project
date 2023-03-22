@@ -6,7 +6,9 @@ using UnityEngine;
 public class Teleport : Ability
 {
 
-   // private PlayerController playerController;
+    // private PlayerController playerController;
+
+    private PlayerCharacterController playerController;
 
     public LayerMask hitList;
     private float currentTeleportRange;
@@ -14,11 +16,18 @@ public class Teleport : Ability
 
     public GameObject teleportIndicator;
     private GameObject currentIndicator;
+    private GameObject raycastRef;
 
     private Vector3 teleportLocation = Vector3.zero;
 
     private float timer = 0.02f;
     private float timeRef;
+
+    private bool sendTeleport = false;
+
+    private int frameRef = 0;
+
+    GameObject obj;
 
     public override void ActivateAbility()
     {
@@ -28,32 +37,39 @@ public class Teleport : Ability
             Destroy(currentIndicator);
         }
         currentIndicator = Instantiate(teleportIndicator, teleportLocation, Quaternion.identity);
+        obj = new GameObject();
         SendTeleportPosition();
         shouldUpdate = true;
         activated = true;
+        sendTeleport = false;
     }
 
     public override void DeactivateAbility()
     {
+        playerController.movementDisabled = false;
         shouldUpdate = false;
         activated = false;
         if(currentIndicator)
         {
             Destroy(currentIndicator);
         }
+        frameRef = 0;
+        Destroy(obj);
     }
 
     public void SendTeleportPosition()
     {
         RaycastHit hit;
-        bool hitSomething = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maxTeleportRange, hitList);
+        obj.transform.position = cameraReference.position;
+        obj.transform.LookAt(raycastRef.transform);
+        bool hitSomething = Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, maxTeleportRange, hitList);
         if (hitSomething)
         {
             teleportLocation = hit.point;
         }
         else
         {
-            Vector3 downPoint = playerCamera.transform.position += (playerCamera.transform.forward * maxTeleportRange);
+            Vector3 downPoint = cameraReference.transform.position + (obj.transform.forward * (maxTeleportRange + Vector3.Distance(raycastRef.transform.position, cameraReference.position)));
             Physics.Raycast(downPoint, Vector3.down, out hit, Mathf.Infinity, hitList);
             teleportLocation = hit.point;
         }
@@ -77,8 +93,8 @@ public class Teleport : Ability
 
     public override void Released()
     {
-        playerRef.transform.position = teleportLocation;
-        DeactivateAbility();
+        playerController.movementDisabled = true;
+        sendTeleport = true;
     }
 
     public override void Update()
@@ -89,16 +105,32 @@ public class Teleport : Ability
             timeRef = Time.time;
         }
 
+        if(sendTeleport)
+        {
+            playerRef.transform.position = teleportLocation;
+
+            frameRef += 1;
+
+            if (frameRef == 2)
+            {
+                DeactivateAbility();
+            }
+
+        }
+
+
+        
+
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, LayerMask _hitList, float _teleportRange, GameObject _indicator)
+    public void Initialize(GameObject _playerRef, Transform _cameraRef, float _teleportRange, GameObject _teleportIndicator, LayerMask _hitList)
     {
-        playerCamera = _camera;
         playerRef = _playerRef;
-        //playerController = playerRef.GetComponent<PlayerController>();
-
-        hitList = _hitList;
+        playerController = playerRef.GetComponent<PlayerCharacterController>();
+        raycastRef = playerRef.GetComponent<Character>().camRaycastReference;
+        cameraReference = _cameraRef;
         maxTeleportRange = _teleportRange;
-        teleportIndicator = _indicator;
+        teleportIndicator = _teleportIndicator;
+        hitList = _hitList;
     }
 }

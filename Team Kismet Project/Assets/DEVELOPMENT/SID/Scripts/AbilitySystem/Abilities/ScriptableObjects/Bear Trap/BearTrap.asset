@@ -15,8 +15,8 @@ MonoBehaviour:
   abilityType: 4
   activated: 0
   shouldUpdate: 0
-  abilityName: 
-  cooldown: 0
+  abilityName: BearTrap
+  cooldown: 2
   onCooldown: 0
   hitList:
     serializedVersion: 2

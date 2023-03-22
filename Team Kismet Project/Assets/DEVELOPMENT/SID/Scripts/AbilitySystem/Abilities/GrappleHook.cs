@@ -50,7 +50,7 @@ public class GrappleHook : Ability
     {
         RaycastHit hit;
         GameObject obj = new GameObject();
-        obj.transform.position = playerCamera.transform.position;
+        obj.transform.position = cameraReference.transform.position;
         obj.transform.LookAt(raycastRef.transform);
         //if (Physics.Raycast(playerCamera.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
         if (Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
@@ -96,15 +96,11 @@ public class GrappleHook : Ability
         //}
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController, LayerMask _hitList, GameObject _cablePrefab, float _grappleSpeed, float _grappleDistance)
+    public void Initialize(GameObject _playerRef, Camera _camera, Transform _cameraRef, PlayerCharacterController _playerController, LayerMask _hitList, GameObject _cablePrefab, float _grappleSpeed, float _grappleDistance)
     {
-        if(name == null)
-        {
-            name = "Grapple Hook";
-        }
-
         playerRef = _playerRef;
         playerCamera = _camera;
+        cameraReference = _cameraRef;
         hitList = _hitList;
         cablePrefab = _cablePrefab;
         grappleSpeed = _grappleSpeed;

@@ -15,11 +15,11 @@ MonoBehaviour:
   abilityType: 2
   activated: 0
   shouldUpdate: 0
-  abilityName: 
-  cooldown: 0
+  abilityName: Teleport
+  cooldown: 3
   onCooldown: 0
   hitList:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 119
   maxTeleportRange: 20
-  teleportIndicator: {fileID: 0}
+  teleportIndicator: {fileID: 7302076537998978344, guid: 2ff91d5436e27f3429952d7c1b4e08b8, type: 3}

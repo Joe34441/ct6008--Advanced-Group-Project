@@ -17,6 +17,7 @@ public abstract class Ability : ScriptableObject
 
     protected GameObject playerRef;
     protected Camera playerCamera;
+    protected Transform cameraReference;
 
     public void ResetCooldown()
     {

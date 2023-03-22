@@ -89,6 +89,11 @@ public class Character : NetworkTransform
 	#endregion OnChanged Events
 
 
+	public Transform GetCameraReference()
+    {
+		return _cameraReference;
+    }
+
 	public void TaggedNotStatic()
 	{
 		Debug.Log(_player.Name + ": ive been tagged!");
