@@ -54,6 +54,7 @@ public class Teleport : Ability
             Destroy(currentIndicator);
         }
         frameRef = 0;
+        onCooldown = true;
         Destroy(obj);
     }
 
