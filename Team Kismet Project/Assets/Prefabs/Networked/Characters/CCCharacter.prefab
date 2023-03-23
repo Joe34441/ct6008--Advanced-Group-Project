@@ -356,14 +356,13 @@ MonoBehaviour:
   _xMouseLookLowerClamp: 5
   _cameraPositionOffset: 10
   _cameraPositionLerpRate: 0.1
-  _cameraRotationLerpRate: 0.05
+  _cameraRotationLerpRate: 0.1
   camRaycastReference: {fileID: 26631113310054572}
   badlocaltagboolstatecheckthingbutpublic: 1
+  _GameOver:
+    _value: 0
+  _Score: 0
   _IsTagged: 0
-  _moveSpeed: 10
-  _jumpForce: 10
-  _jumpCooldown: 0.1
-  _prefabPhysxBall: {fileID: 1710859803498140592, guid: a77c49d25c08e6a47be93900c2e93440, type: 3}
 --- !u!114 &5161583762825246717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,6 +381,7 @@ MonoBehaviour:
   moveSpeed: 10
   playerBody: {fileID: 4610285446578239554}
   face: {fileID: 4610285444736294250}
+  superJump: 0
 --- !u!114 &397597289601070434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,6 +398,7 @@ MonoBehaviour:
   abilityOne: {fileID: 0}
   abilityTwo: {fileID: 0}
   abilityThree: {fileID: 0}
+  abilitiesEnabled: 1
 --- !u!114 &4610285444781331943
 MonoBehaviour:
   m_ObjectHideFlags: 0
