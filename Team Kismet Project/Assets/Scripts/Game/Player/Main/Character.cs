@@ -152,7 +152,7 @@ public class Character : NetworkTransform
 
 		if (GameOver) return;
 
-		if (Runner.IsLastTick) CheckTag();
+		//if (Runner.IsLastTick) CheckTag();
 
 		if (Object.HasStateAuthority) //host only stuff
 		{
@@ -170,6 +170,14 @@ public class Character : NetworkTransform
 
 			if (Runner.IsLastTick)
             {
+				CheckTag();
+
+				if (_playerTagTrigger.tryTag)
+				{
+					if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
+					else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
+				}
+
 				if (!IsTagged)
 				{
 					Score += Runner.DeltaTime;
@@ -267,16 +275,11 @@ public class Character : NetworkTransform
 			//}
 		}
 
-		if (_playerTagTrigger.tryTag)
-        {
-			if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
-			else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
-        }
-
-		if (Object.HasInputAuthority)
-		{
-			//other local only stuff
-		}
+		//if (_playerTagTrigger.tryTag)
+		//      {
+		//	if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
+		//	else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
+		//      }
 
 		//perform movement
 		_playerCharacterController.PerformMove(_characterController, _cameraReference, _groundCheckReference, movementDirection, _moveAcceleration, _moveDeceleration, Runner.DeltaTime);
@@ -379,8 +382,8 @@ public class Character : NetworkTransform
 
 	private void Tag(Character myCharacter, Character otherCharacter)
     {
-		PlayerRef tagged = PlayerRef.None;
-		PlayerRef tagger = PlayerRef.None;
+		PlayerRef tagged;
+		PlayerRef tagger;
 
 		if (myCharacter.IsTagged)
         {
