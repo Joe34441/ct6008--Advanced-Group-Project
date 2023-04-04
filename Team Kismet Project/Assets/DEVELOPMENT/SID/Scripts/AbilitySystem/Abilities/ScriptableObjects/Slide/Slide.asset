@@ -16,6 +16,6 @@ MonoBehaviour:
   activated: 0
   shouldUpdate: 0
   abilityName: Slide
-  cooldown: 4
+  cooldown: 10
   onCooldown: 0
   slideSpeed: 30

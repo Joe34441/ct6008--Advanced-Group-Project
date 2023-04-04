@@ -73,7 +73,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            //AssignAbility(abilityManager.bearTrap, 3);
+            AssignAbility(abilityManager.icePillar, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -178,6 +178,16 @@ public class PlayerAbilities : MonoBehaviour
                     slide.abilityName = abilityManager.slide.abilityName;
                     slide.cooldown = abilityManager.slide.cooldown;
                     AssignAbility(slide, index);
+                    break;
+                }
+            case AbilityTypes.IcePillar:
+                {
+                    IcePillar icePillar = ScriptableObject.CreateInstance<IcePillar>();
+                    icePillar.Initialize(gameObject, Camera.main, _playerCharacter.GetCameraReference(), abilityManager.icePillar.hitList,
+                        abilityManager.icePillar.placementRange, abilityManager.icePillar.placementIndicator, abilityManager.icePillar.pillarPrefab);
+                    icePillar.abilityName = abilityManager.icePillar.abilityName;
+                    icePillar.cooldown = abilityManager.icePillar.cooldown;
+                    AssignAbility(icePillar, index);
                     break;
                 }
             default:

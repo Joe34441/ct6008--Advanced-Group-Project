@@ -9,19 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 729b2fe44ff0a124ba45c7bb7c2eec1b, type: 3}
-  m_Name: GrappleHook
+  m_Script: {fileID: 11500000, guid: 9a04beb16ec07f741b6446bb589a2770, type: 3}
+  m_Name: IcePillar
   m_EditorClassIdentifier: 
-  abilityType: 0
+  abilityType: 9
   activated: 0
   shouldUpdate: 0
-  abilityName: GrapplingHook
+  abilityName: IcePillar
   cooldown: 15
   onCooldown: 0
-  offline: 0
-  maxGrappleDistance: 50
   hitList:
     serializedVersion: 2
     m_Bits: 119
-  cablePrefab: {fileID: 5196090717385268637, guid: 59b62ef315149a14a9d2a761f2c4850f, type: 3}
-  grappleSpeed: 40
+  placementRange: 20
+  placementIndicator: {fileID: 4258684206005247554, guid: 0e35a413924c2c64491444dea664830c, type: 3}
+  pillarPrefab: {fileID: 3517672003874885077, guid: c05738eec3c0dc54a9d84a9633b2f63c, type: 3}

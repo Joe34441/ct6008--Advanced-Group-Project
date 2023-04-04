@@ -16,6 +16,6 @@ MonoBehaviour:
   activated: 0
   shouldUpdate: 0
   abilityName: Dash
-  cooldown: 4
+  cooldown: 8
   onCooldown: 0
-  dashDistance: 2
+  dashSpeed: 40

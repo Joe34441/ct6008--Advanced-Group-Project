@@ -44842,6 +44842,7 @@ MonoBehaviour:
   - {fileID: 1142332140456619822, guid: 36c13c73b941e124399b2d284e2c5d9b, type: 3}
   - {fileID: 6990280412805829938, guid: efe92ea30394e3341a1866b84f4ff66d, type: 3}
   - {fileID: 4458188425145061071, guid: 671d18417283149429532332f24d42ec, type: 3}
+  - {fileID: 8131206338717943317, guid: e3c27056c9dfaa442812feea0cc42d22, type: 3}
   outro1st: {fileID: 428302014}
   outro2nd: {fileID: 612370442}
   outro3rd: {fileID: 914990018}
@@ -45272,6 +45273,7 @@ MonoBehaviour:
   dash: {fileID: 11400000, guid: 0f1a52fafb5340744983d51fc1801b67, type: 2}
   doubleJump: {fileID: 11400000, guid: cf055f70839891c4090f1efa6ae49cb9, type: 2}
   slide: {fileID: 11400000, guid: 5a430139f487a6f4890eb94e31112bf3, type: 2}
+  icePillar: {fileID: 11400000, guid: ec0c2912730c1e64b8004826a03a2ca0, type: 2}
 --- !u!4 &1559033448
 Transform:
   m_ObjectHideFlags: 0

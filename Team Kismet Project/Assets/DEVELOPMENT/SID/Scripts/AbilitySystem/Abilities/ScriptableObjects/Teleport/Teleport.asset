@@ -16,7 +16,7 @@ MonoBehaviour:
   activated: 0
   shouldUpdate: 0
   abilityName: Teleport
-  cooldown: 3
+  cooldown: 12
   onCooldown: 0
   hitList:
     serializedVersion: 2

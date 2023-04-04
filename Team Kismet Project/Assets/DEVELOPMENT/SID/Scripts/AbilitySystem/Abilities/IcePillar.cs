@@ -1,20 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Fusion;
 
-[CreateAssetMenu(menuName = "Abilities/BearTrap")]
-public class BearTrap : Ability
+[CreateAssetMenu(menuName = "Abilities/IcePillar")]
+public class IcePillar : Ability
 {
-
     public LayerMask hitList;
     public float placementRange = 20.0f;
 
     private GameObject currentIndicator;
     public GameObject placementIndicator;
-    public GameObject trapPrefab;
+    public GameObject pillarPrefab;
 
-    private Vector3 trapLocation = Vector3.zero;
+    private Vector3 pillarLocation = Vector3.zero;
 
     private float timer = 0.02f;
     private float timeRef;
@@ -27,16 +25,42 @@ public class BearTrap : Ability
     public override void ActivateAbility()
     {
         timeRef = Time.time;
-        if(currentIndicator)
+        if (currentIndicator)
         {
             Destroy(currentIndicator);
         }
-        trapLocation = Vector3.zero;
-        currentIndicator = Instantiate(placementIndicator, trapLocation, Quaternion.identity);
+        pillarLocation = Vector3.zero;
+        currentIndicator = Instantiate(placementIndicator, pillarLocation, Quaternion.identity);
         shouldUpdate = true;
         activated = true;
 
         obj = new GameObject();
+    }
+
+    private void PerformRaycast()
+    {
+        RaycastHit hit;
+
+        obj.transform.position = cameraReference.position;
+        obj.transform.LookAt(raycastRef.transform);
+
+        bool hitSomething = Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position), hitList);
+
+        if (hitSomething)
+        {
+            pillarLocation = hit.point;
+        }
+        else
+        {
+            Vector3 downPoint = cameraReference.transform.position + (obj.transform.forward * (placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position)));
+            Physics.Raycast(downPoint, Vector3.down, out hit, Mathf.Infinity, hitList);
+            pillarLocation = hit.point;
+        }
+
+        if (currentIndicator)
+        {
+            currentIndicator.transform.position = pillarLocation;
+        }
     }
 
     public override void DeactivateAbility()
@@ -50,65 +74,27 @@ public class BearTrap : Ability
         activated = false;
     }
 
-    private void PerformRaycast()
-    {
-        RaycastHit hit;
-
-        //create camera raycast reference empty game object on character
-        //get reference to the camera raycast reference
-        //create new TRANSFORM, at player camera location
-        //new transform.LookAt raycast reference
-        //get forward on new trasform
-        //happy days
-        obj.transform.position = cameraReference.position;
-        obj.transform.LookAt(raycastRef.transform);
-
-        //Vector3 direction = playerCamera.transform.position - raycastRef.transform.position;
-
-        bool hitSomething = Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position), hitList);
-
-        if (hitSomething)
-        {
-            trapLocation = hit.point;
-        }
-        else
-        {
-            Vector3 downPoint = cameraReference.transform.position + (obj.transform.forward * (placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position)));
-            Physics.Raycast(downPoint, Vector3.down, out hit, Mathf.Infinity, hitList);
-            trapLocation = hit.point;
-        }
-
-        if(currentIndicator)
-        {
-            currentIndicator.transform.position = trapLocation;
-        }
-    }
-
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
-        playerRef = _playerRef;
-        playerCamera = _camera;
+        
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, Transform _cameraRef, LayerMask _hitList, float _placementRange, GameObject _indicator, GameObject _trapPrefab)
+    public void Initialize(GameObject _playerRef, Camera _playerCamera, Transform _cameraRef, LayerMask _hitList, float _placementRange, GameObject _indicator, GameObject _pillarPrefab)
     {
         playerRef = _playerRef;
-        playerCamera = _camera;
+        playerCamera = _playerCamera;
         cameraReference = _cameraRef;
         hitList = _hitList;
         placementRange = _placementRange;
         placementIndicator = _indicator;
-        trapPrefab = _trapPrefab;
+        pillarPrefab = _pillarPrefab;
         playerCharacter = playerRef.GetComponent<Character>();
         raycastRef = playerCharacter.camRaycastReference;
-        
     }
 
     public override void Released()
     {
-        //Instantiate(trapPrefab, trapLocation, Quaternion.identity);
-        //playerRef.GetComponent<Character>().GetPlayer().Runner.Spawn(trapPrefab, trapLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
-        playerRef.GetComponent<Character>().GetRunner().Spawn(trapPrefab, trapLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
+        playerRef.GetComponent<Character>().GetRunner().Spawn(pillarPrefab, pillarLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
         onCooldown = true;
         DeactivateAbility();
     }

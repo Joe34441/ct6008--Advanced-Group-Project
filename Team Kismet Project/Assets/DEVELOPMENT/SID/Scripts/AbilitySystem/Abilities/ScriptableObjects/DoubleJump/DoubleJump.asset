@@ -16,5 +16,5 @@ MonoBehaviour:
   activated: 0
   shouldUpdate: 0
   abilityName: DoubleJump
-  cooldown: 6
+  cooldown: 12
   onCooldown: 0

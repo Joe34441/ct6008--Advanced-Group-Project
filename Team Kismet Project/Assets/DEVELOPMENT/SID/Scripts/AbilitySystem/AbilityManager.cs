@@ -12,7 +12,10 @@ public enum AbilityTypes
     Sprint,
     Dash,
     DoubleJump,
-    Slide
+    Slide,
+    IcePillar,
+    Shuriken,
+    EagleVision,
 }
 
 
@@ -27,6 +30,7 @@ public class AbilityManager : MonoBehaviour
     public Dash dash;
     public DoubleJump doubleJump;
     public Slide slide;
+    public IcePillar icePillar;
 
     private List<Ability> abilities = new List<Ability>();
 
@@ -48,5 +52,6 @@ public class AbilityManager : MonoBehaviour
         abilities.Add(dash);
         abilities.Add(doubleJump);
         abilities.Add(slide);
+        //abilities.Add(icePillar);
     }
 }
