@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 816374412720547645}
   - component: {fileID: 6002331106912896855}
   m_Layer: 0
-  m_Name: AbilityIcePillar
+  m_Name: AbilityShuriken
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 15566f96266673248a127859fd3a22d7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0c714bc71f7b9374cab9649811bbf45a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -142,10 +142,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Summon an ice pillar wherever you''re aiming, be that at your feet
-
-    or
-    in the path of an enemy to block them off or reach new heights!'
+  m_text: Toss throwing stars at your enemies to stun and knock them back.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 068f0c025f7e51d47835315bd178f1ea, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 66b007d63d84f7542ac9d44996dcca2b, type: 2}
@@ -372,7 +369,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ice Pillar
+  m_text: Shuriken
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 068f0c025f7e51d47835315bd178f1ea, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 66b007d63d84f7542ac9d44996dcca2b, type: 2}
@@ -454,7 +451,7 @@ GameObject:
   - component: {fileID: 5428910263151304456}
   - component: {fileID: 4323561308460330545}
   m_Layer: 0
-  m_Name: IcePillar
+  m_Name: Shuriken
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
