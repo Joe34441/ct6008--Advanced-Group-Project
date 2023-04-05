@@ -18,17 +18,24 @@ public class IcePillarBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RaycastHit hit;
-        bool hitFloor = Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, whatIsGround);
-        if(hitFloor)
-        {
-            upPosition = transform.position;
-            downPosition = new Vector3(hit.point.x, hit.point.y - 1f, hit.point.z);
-            transform.position = downPosition;
-            startTimeRef = Time.time;
-            started = true;
-            Destroy(gameObject, pillarRaiseTime + pillarLifeTime);
-        }
+        //RaycastHit hit;
+        //bool hitFloor = Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, whatIsGround);
+        //if(hitFloor)
+        //{
+        //    upPosition = transform.position;
+        //    downPosition = new Vector3(hit.point.x, hit.point.y - 1.5f, hit.point.z);
+        //    transform.position = downPosition;
+        //    startTimeRef = Time.time;
+        //    started = true;
+        //    Destroy(gameObject, pillarRaiseTime + pillarLifeTime);
+        //}
+
+        upPosition = transform.position;
+        downPosition = new Vector3(transform.position.x, transform.position.y - 3.5f, transform.position.z);
+        transform.position = downPosition;
+        startTimeRef = Time.time;
+        started = true;
+        Destroy(gameObject, pillarRaiseTime + pillarLifeTime);
     }
 
     // Update is called once per frame

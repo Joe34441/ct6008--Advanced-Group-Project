@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3237601114134913240}
   - component: {fileID: 795644300694869010}
   - component: {fileID: 5511460050795843538}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: IcePillarOBJ
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 1678259062021511840}
   - component: {fileID: 3069593371896177905}
   - component: {fileID: 3646902849371919723}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: IcePillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

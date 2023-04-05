@@ -73,7 +73,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            AssignAbility(abilityManager.icePillar, 3);
+            AssignAbility(abilityManager.shuriken, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -188,6 +188,15 @@ public class PlayerAbilities : MonoBehaviour
                     icePillar.abilityName = abilityManager.icePillar.abilityName;
                     icePillar.cooldown = abilityManager.icePillar.cooldown;
                     AssignAbility(icePillar, index);
+                    break;
+                }
+            case AbilityTypes.Shuriken:
+                {
+                    Shuriken shuriken = ScriptableObject.CreateInstance<Shuriken>();
+                    shuriken.Initialize(gameObject, Camera.main, _playerCharacter.GetCameraReference(), abilityManager.shuriken.projectileSpeed, abilityManager.shuriken.shurikenRange, abilityManager.shuriken.shurikenPrefab);
+                    shuriken.abilityName = abilityManager.shuriken.abilityName;
+                    shuriken.cooldown = abilityManager.shuriken.cooldown;
+                    AssignAbility(shuriken, index);
                     break;
                 }
             default:

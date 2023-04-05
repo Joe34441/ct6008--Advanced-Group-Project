@@ -31,6 +31,7 @@ public class AbilityManager : MonoBehaviour
     public DoubleJump doubleJump;
     public Slide slide;
     public IcePillar icePillar;
+    public Shuriken shuriken;
 
     private List<Ability> abilities = new List<Ability>();
 
@@ -52,6 +53,7 @@ public class AbilityManager : MonoBehaviour
         abilities.Add(dash);
         abilities.Add(doubleJump);
         abilities.Add(slide);
-        //abilities.Add(icePillar);
+        abilities.Add(icePillar);
+        //abilities.Add(shuriken);
     }
 }

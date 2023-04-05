@@ -28,8 +28,8 @@ public class PlayerCharacterController : MonoBehaviour
     [SerializeField] private GameObject playerBody;
     public GameObject face;
 
-    public bool superJump = false;
-
+    [HideInInspector] public bool superJump = false;
+    [SerializeField] private LayerMask whatIsGround;
 
     private Vector3 moveDirection = Vector3.zero;
 
@@ -46,7 +46,7 @@ public class PlayerCharacterController : MonoBehaviour
     public void PerformMove(CharacterController characterController, Transform cameraReference, Transform groundCheckReference, Vector3 movement, float acceleration, float deceleration, float deltaTime)
     {
         //update grounded
-        grounded = Physics.CheckSphere(groundCheckReference.position, 0.1f, LayerMask.GetMask("Ground"));
+        grounded = Physics.CheckSphere(groundCheckReference.position, 0.2f, whatIsGround);
 
         //update jumping bool
         if (tryJump)

@@ -45275,6 +45275,7 @@ MonoBehaviour:
   doubleJump: {fileID: 11400000, guid: cf055f70839891c4090f1efa6ae49cb9, type: 2}
   slide: {fileID: 11400000, guid: 5a430139f487a6f4890eb94e31112bf3, type: 2}
   icePillar: {fileID: 11400000, guid: ec0c2912730c1e64b8004826a03a2ca0, type: 2}
+  shuriken: {fileID: 11400000, guid: 43b4af4e1f7a0334e9f7e2ef5a8cff10, type: 2}
 --- !u!4 &1559033448
 Transform:
   m_ObjectHideFlags: 0
