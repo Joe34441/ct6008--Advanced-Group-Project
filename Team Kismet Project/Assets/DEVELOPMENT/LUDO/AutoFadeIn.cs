@@ -7,23 +7,21 @@ public class AutoFadeIn : MonoBehaviour
 {
     TextMeshProUGUI textFade;
     private float fadeSpeed = 1.5f;
-    private Color fadeTo;
+    private Color fadeTo = Color.white;
+    private Color transparent = new Color(1.0f, 1.0f, 1.0f, -0.5f);
 
     [SerializeField]
+    private bool startFadeIn;
     private bool fadeIn = true;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         textFade = GetComponent<TextMeshProUGUI>();
-        if (fadeIn)
+        if (startFadeIn)
         {
             textFade.color = new Color(1.0f, 1.0f, 1.0f, -0.5f);
-            fadeTo = Color.white;
-        }
-        else
-        {
-            fadeTo = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+            fadeIn = true;
         }
     }
 
@@ -34,10 +32,15 @@ public class AutoFadeIn : MonoBehaviour
         {
             textFade.color = Color.Lerp(textFade.color, fadeTo, Time.deltaTime * fadeSpeed);
         }
+        else
+        {
+            textFade.color = Color.Lerp(textFade.color, transparent, Time.deltaTime * fadeSpeed);
+        }
     }
 
-    public void startFadeOut()
+    public void switchFade()
     {
-        fadeIn = true;
+        fadeIn = !fadeIn;
     }
+
 }

@@ -16,6 +16,8 @@ public class MenuManager : MonoBehaviour
     private SpringDynamics joinRandom;
     [SerializeField]
     private SpringDynamics hostGame;
+    [SerializeField]
+    private SpringDynamics back;
 
     // Start is called before the first frame update
     void Start()
@@ -43,16 +45,38 @@ public class MenuManager : MonoBehaviour
         StartCoroutine(PlayButtonSequence());
     }
 
+    public void startBackDropdown()
+    {
+        StartCoroutine(BackButtonSequence());
+    }
+
     IEnumerator PlayButtonSequence()
     {
         yield return new WaitForSeconds(0.1f);
         serverBrowser.gameObject.SetActive(true);
         joinRandom.gameObject.SetActive(true);
         hostGame.gameObject.SetActive(true);
+        back.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(0.001f);
         serverBrowser.SwitchPos();
         joinRandom.SwitchPos();
         hostGame.SwitchPos();
+        back.SwitchPos();
+    }
+
+    IEnumerator BackButtonSequence()
+    {
+        yield return new WaitForSeconds(0.001f);
+        serverBrowser.SwitchPos();
+        joinRandom.SwitchPos();
+        hostGame.SwitchPos();
+        back.SwitchPos();
+
+        yield return new WaitForSeconds(0.3f);
+        serverBrowser.gameObject.SetActive(false);
+        joinRandom.gameObject.SetActive(false);
+        hostGame.gameObject.SetActive(false);
+        back.gameObject.SetActive(false);
     }
 }
