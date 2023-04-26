@@ -21,6 +21,14 @@ public class RoomListPanel : MonoBehaviour
 		_header.text = $"{mode} Lobby";
 		OnSessionListUpdated(new List<SessionInfo>());
 		await App.Instance.EnterLobby($"GameMode{mode}", OnSessionListUpdated);
+		//await App.Instance.EnterLobby($"GameModeALL", OnSessionListUpdated);
+	}
+
+	public async void NewShow()
+	{
+		OnSessionListUpdated(new List<SessionInfo>());
+		//await App.Instance.EnterLobby($"GameMode{mode}", OnSessionListUpdated);
+		await App.Instance.EnterLobby($"GameModeALL", OnSessionListUpdated);
 	}
 
 	public void Hide()
@@ -50,6 +58,8 @@ public class RoomListPanel : MonoBehaviour
 
 	public void OnShowNewSessionUI()
 	{
+		return;
+
 		_newSessionPanel.Show(_playMode);
 	}
 }

@@ -7,15 +7,15 @@ public class Staging : MonoBehaviour
 {
 	[SerializeField] private GridBuilder _playerGrid;
 	[SerializeField] private PlayerListItem _playerListItemPrefab;
-	[SerializeField] private Slider _sliderR;
-	[SerializeField] private Slider _sliderG;
-	[SerializeField] private Slider _sliderB;
-	[SerializeField] private Image _color;
 	[SerializeField] private Button _startButton;
 	[SerializeField] private Text _startLabel;
 	[SerializeField] private Text _sessionInfo;
 	[SerializeField] private Text _playerName;
 	[SerializeField] private GameObject _playerReady;
+
+	private bool canStart = false;
+
+	private Color _color;
 
 	private float _sessionRefresh;
 
@@ -65,9 +65,7 @@ public class Staging : MonoBehaviour
 
 				_playerName.text = "Player Setup : " + NameList.GetName(playerID);
 
-				_sliderR.value = Random.Range(_sliderR.minValue, _sliderR.maxValue);
-				_sliderG.value = Random.Range(_sliderG.minValue, _sliderG.maxValue);
-				_sliderB.value = Random.Range(_sliderB.minValue, _sliderB.maxValue);
+				OnColorUpdated();
 			}
 
 			_playerGrid.AddRow(_playerListItemPrefab, item => item.Setup(ply));
@@ -76,12 +74,24 @@ public class Staging : MonoBehaviour
 		}
 
 		string wait = null;
-		if (ready < count)
-			wait = $"Waiting for {count - ready} of {count} players";
-		else if (!App.Instance.IsMaster)
-			wait = "Waiting for master to start";
+		if (count < 4 && !Application.isEditor)
+		{
+			int playersNeeded = 4 - count;
+			if (playersNeeded == 1) wait = $"Waiting for 1 player to join";
+			else wait = $"Waiting for {playersNeeded} players to join";
+		}
+		else if (ready < count)
+		{
+			int playersNotReady = count - ready;
+			if (playersNotReady == 1) wait = $"1 player is not ready";
+			else wait = $"{playersNotReady} players are not ready";
+		}
+		else if (!App.Instance.IsMaster) wait = "Waiting for host to start";
 
-		_startButton.enabled = wait==null;
+		canStart = false;
+		if (ready == 4 || (Application.isEditor && count == ready)) canStart = true;
+
+		_startButton.enabled = wait == null;
 		_startLabel.text = wait ?? "Start";
 	  
 		_playerGrid.EndUpdate();
@@ -96,8 +106,11 @@ public class Staging : MonoBehaviour
 
 	public void OnStart()
 	{
+		Debug.Log("a");
+
 		SessionProps props = App.Instance.Session.Props;
-		//remove from list
+		if (canStart) props.StartMap = MapIndex.Dojo;
+		//if (canStart) props.StartMap = App.Instance.Session.Props.PlayMode;
 		App.Instance.Session.LoadMap(props.StartMap);
 	}
 
@@ -125,9 +138,10 @@ public class Staging : MonoBehaviour
 	public void OnColorUpdated()
 	{
 		Player ply = App.Instance.GetPlayer();
-		Color c = new Color(_sliderR.value, _sliderG.value, _sliderB.value);
-			_color.color = c;
-			ply.RPC_SetColor(c);
+		Color color = new Color(Random.Range(0.1f, 1.0f), Random.Range(0.1f, 1.0f), Random.Range(0.1f, 1.0f), 1.0f);
+		_color = color;
+		Debug.Log(color);
+		ply.RPC_SetColor(color);
 	}
 
 	public void OnDisconnect()

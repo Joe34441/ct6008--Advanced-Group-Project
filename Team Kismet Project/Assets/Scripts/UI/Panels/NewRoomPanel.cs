@@ -11,6 +11,9 @@ public class NewRoomPanel : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI _textMaxPlayers;
 	[SerializeField] private TextMeshProUGUI _textGameMode;
 
+	[SerializeField] private TMP_Dropdown _map;
+	[SerializeField] private TMP_Dropdown _lobbyType;
+
 	//[SerializeField] private Toggle _toggleMap1;
 	//[SerializeField] private Toggle _toggleMap2;
 
@@ -69,9 +72,18 @@ public class NewRoomPanel : MonoBehaviour
 
 		SessionProps props = new SessionProps();
 		//props.StartMap = _toggleMap1.isOn ? MapIndex.Map0 : MapIndex.Map1;
-		if (_playMode == PlayMode.Mode1) props.StartMap = MapIndex.Urban;
-		else if (_playMode == PlayMode.Mode2) props.StartMap = MapIndex.Dojo;
-		props.PlayMode = _playMode;
+		//if (_playMode == PlayMode.Mode1) props.StartMap = MapIndex.Urban;
+		//else if (_playMode == PlayMode.Mode2) props.StartMap = MapIndex.Dojo;
+		//props.PlayMode = _playMode;
+
+		props.PlayMode = PlayMode.Mode2;
+
+		if (_map.value == 0) props.PlayMode = PlayMode.Mode2;
+		else if (_map.value == 1) return;
+
+		if (_lobbyType.value == 0) _ = 0; //public
+		else if (_lobbyType.value == 1) return;
+
 		props.PlayerLimit = _maxPly;
 		props.RoomName = _inputName.text;
 		App.Instance.CreateSession(props);
