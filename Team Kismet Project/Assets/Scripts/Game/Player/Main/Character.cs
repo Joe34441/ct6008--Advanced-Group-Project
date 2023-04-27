@@ -83,7 +83,10 @@ public class Character : NetworkTransform
 	}
 
 
-
+	public string GetName()
+    {
+		return _name.text;
+    }
 
 	public void TaggedNotStatic()
 	{
@@ -100,6 +103,11 @@ public class Character : NetworkTransform
     {
 		Debug.Log(_player.Name + ": ive been untagged!");
 		IsTagged = false;
+    }
+
+	public MeshRenderer GetMeshRenderer()
+    {
+		return _playerMeshRenderer;
     }
 
 	public override void Spawned()

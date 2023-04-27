@@ -112,7 +112,7 @@ public class PlayerCharacterController : MonoBehaviour
             float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + cameraReference.eulerAngles.y;
             directionMovement = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
             //calculate the angle that the player should rotate to when moving, and smoothly rotate the player over time
-            rotationAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSmoothVelocity, 0.1f);
+            rotationAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSmoothVelocity, 0.025f);
         }
 
         RecordDirection(directionMovement);
@@ -189,6 +189,11 @@ public class PlayerCharacterController : MonoBehaviour
 
         //method 3.5 - smoothdamp pos
         //Camera.main.transform.position = Vector3.SmoothDamp(Camera.main.transform.position, cameraReference.position, ref cameraVelocity, positionLerpRate);
+    }
+
+    public void ResetMovement()
+    {
+        movementDisabled = false;
     }
 
     public void SetVelocity(float newVelocity)
