@@ -73,7 +73,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            AssignAbility(abilityManager.decoy, 3);
+            AssignAbility(abilityManager.shuriken, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -197,15 +197,6 @@ public class PlayerAbilities : MonoBehaviour
                     shuriken.abilityName = abilityManager.shuriken.abilityName;
                     shuriken.cooldown = abilityManager.shuriken.cooldown;
                     AssignAbility(shuriken, index);
-                    break;
-                }
-            case AbilityTypes.Decoy:
-                {
-                    Decoy decoy = ScriptableObject.CreateInstance<Decoy>();
-                    decoy.Initialize(gameObject, Camera.main, abilityManager.decoy.decoyObj, abilityManager.decoy.decoySpeed, abilityManager.decoy.decoyUpTime);
-                    decoy.abilityName = abilityManager.decoy.abilityName;
-                    decoy.cooldown = abilityManager.decoy.cooldown;
-                    AssignAbility(decoy, index);
                     break;
                 }
             default:

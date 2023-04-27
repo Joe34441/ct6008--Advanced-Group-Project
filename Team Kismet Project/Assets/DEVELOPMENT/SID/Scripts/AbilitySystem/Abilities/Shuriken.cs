@@ -20,7 +20,7 @@ public class Shuriken : Ability
     {
         throwDirection = cameraReference.forward;
         currentShuriken = playerRef.GetComponent<Character>().GetRunner().Spawn(shurikenPrefab, spawnLocation.transform.position, new Quaternion(throwDirection.x, throwDirection.y, throwDirection.z, 1), playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority).gameObject;
-        currentShuriken.GetComponent<ShurikenBehaviour>().FireShuriken(cameraReference.transform.forward, shurikenRange, projectileSpeed, playerRef);
+        currentShuriken.GetComponent<ShurikenBehaviour>().FireShuriken(cameraReference.transform.forward, shurikenRange, projectileSpeed);
         activated = true;
     }
 

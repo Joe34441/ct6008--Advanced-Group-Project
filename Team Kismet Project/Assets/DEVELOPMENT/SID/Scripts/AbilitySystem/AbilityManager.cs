@@ -15,7 +15,6 @@ public enum AbilityTypes
     Slide,
     IcePillar,
     Shuriken,
-    Decoy,
     EagleVision,
 }
 
@@ -33,7 +32,6 @@ public class AbilityManager : MonoBehaviour
     public Slide slide;
     public IcePillar icePillar;
     public Shuriken shuriken;
-    public Decoy decoy;
 
     private List<Ability> abilities = new List<Ability>();
 
@@ -57,6 +55,5 @@ public class AbilityManager : MonoBehaviour
         abilities.Add(slide);
         abilities.Add(icePillar);
         //abilities.Add(shuriken);
-        abilities.Add(decoy);
     }
 }
