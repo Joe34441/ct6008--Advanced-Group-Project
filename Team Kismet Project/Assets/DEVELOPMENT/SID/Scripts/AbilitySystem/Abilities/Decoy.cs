@@ -26,7 +26,7 @@ public class Decoy : Ability
         {
             currentDecoy.GetComponent<DecoyBehaviour>().BeginMoving(playerRef.transform.forward, decoySpeed, playerRef.GetComponent<Character>().GetRunner(), decoyUpTime);
         }
-        currentDecoy.GetComponent<DecoyBehaviour>().SetupDecoyLook(playerRef.GetComponent<Character>().GetMeshRenderer().material, playerRef.GetComponent<Character>().GetName());
+        //currentDecoy.GetComponent<DecoyBehaviour>().SetupDecoyLook(playerRef.GetComponent<Character>().GetMeshRenderer().material, playerRef.GetComponent<Character>().GetName());
 
         activated = true;
     }
