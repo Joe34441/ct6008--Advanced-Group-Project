@@ -83,10 +83,10 @@ public class Character : NetworkTransform
 	}
 
 
-	//public string GetName()
- //   {
-	//	return _name.text;
- //   }
+	public string GetName()
+    {
+		return _name.text;
+    }
 
 	public void TaggedNotStatic()
 	{
