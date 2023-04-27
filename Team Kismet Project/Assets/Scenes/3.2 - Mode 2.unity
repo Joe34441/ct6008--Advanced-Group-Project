@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.29701257, g: 0.63377464, b: 0.9937137, a: 1}
+  m_IndirectSpecularColor: {r: 0.40966842, g: 0.7666028, b: 0.9799803, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -16039,6 +16039,7 @@ MonoBehaviour:
   slide: {fileID: 11400000, guid: 5a430139f487a6f4890eb94e31112bf3, type: 2}
   icePillar: {fileID: 11400000, guid: ec0c2912730c1e64b8004826a03a2ca0, type: 2}
   shuriken: {fileID: 11400000, guid: 43b4af4e1f7a0334e9f7e2ef5a8cff10, type: 2}
+  decoy: {fileID: 11400000, guid: d927db083e7aa6e42a942b7eb182629b, type: 2}
 --- !u!4 &1559033448
 Transform:
   m_ObjectHideFlags: 0

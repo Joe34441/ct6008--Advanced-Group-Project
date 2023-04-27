@@ -8,10 +8,15 @@ public class ShurikenBehaviour : MonoBehaviour
 
     private bool moving;
     private Vector3 moveDirection;
-    private float moveDistance;
+    private float lifetime = 10.0f;
     private float moveSpeed;
 
+
+
     private Vector3 startLocation;
+
+    private BoxCollider collision;
+    private GameObject whoFired;
 
     // Start is called before the first frame update
     void Start()
@@ -28,11 +33,21 @@ public class ShurikenBehaviour : MonoBehaviour
         }
     }
 
-    public void FireShuriken(Vector3 _direction, float _distance, float _speed)
+    public void FireShuriken(Vector3 _direction, float _distance, float _speed, GameObject _whoFired)
     {
         moveDirection = _direction;
-        moveDistance = _distance;
         moveSpeed = _speed;
         moving = true;
+        whoFired = _whoFired;
+        Destroy(gameObject, lifetime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "player" && other.gameObject != whoFired)
+        {
+            other.gameObject.GetComponent<PlayerCharacterController>().movementDisabled = true;
+            other.gameObject.GetComponent<PlayerCharacterController>().Invoke("ResetMovement", 3.0f);
+        }
     }
 }
