@@ -66,8 +66,6 @@ public class Character : NetworkTransform
 
 	private bool gameEnded = false;
 
-	private float currentDistance;
-
 	[Networked] public NetworkBool GameOver { get; set; }
 	[Networked] public float Score { get; set; }
 
@@ -86,9 +84,9 @@ public class Character : NetworkTransform
 
 
 	//public string GetName()
-	//   {
+ //   {
 	//	return _name.text;
-	//   }
+ //   }
 
 	public void TaggedNotStatic()
 	{
@@ -96,21 +94,21 @@ public class Character : NetworkTransform
 	}
 
 	public void Tagged()
-	{
+    {
 		Debug.Log(_player.Name + ": ive been tagged!");
 		IsTagged = true;
-	}
+    }
 
 	public void UnTagged()
-	{
+    {
 		Debug.Log(_player.Name + ": ive been untagged!");
 		IsTagged = false;
-	}
+    }
 
 	public MeshRenderer GetMeshRenderer()
-	{
+    {
 		return _playerMeshRenderer;
-	}
+    }
 
 	public override void Spawned()
 	{
@@ -137,19 +135,14 @@ public class Character : NetworkTransform
 	}
 
 	private void Update()
-	{
+    {
 		//any local stuff
 	}
 
-	private void LateUpdate()
-	{
+    private void LateUpdate()
+    {
 		if (Object.HasInputAuthority)
-		{
-			float _distance = _playerCharacterController.GetCameraDistance(_cameraReference);
-			currentDistance = Mathf.Lerp(currentDistance, _distance, Runner.DeltaTime * 25);
-			_playerCharacterController.SetCamPosition(_cameraReference, currentDistance);
-			//Camera.main.transform.position = _cameraReference.position;
-			//Camera.main.transform.rotation = _cameraReference.rotation;
+        {
 			_playerCharacterController.UpdateCamera(_cameraReference, _cameraPositionLerpRate, _cameraRotationLerpRate);
 		}
 	}
@@ -159,7 +152,7 @@ public class Character : NetworkTransform
 		if (firstFUNTick) FirstNetworkTickUpdate();
 
 		if (Runner.IsLastTick)
-		{
+        {
 			_hudHandler.UpdateScores(thisPlayerRef.PlayerId, Score, Runner.DeltaTime, IsTagged);
 			if (Intro()) return;
 			if (Outro()) return;
@@ -174,17 +167,17 @@ public class Character : NetworkTransform
 			if (!GameOver) GameOver = _hudHandler.IsGameOver(Score);
 
 			if (GameOver && !gameEnded)
-			{
+            {
 				gameEnded = true;
-
+				
 				foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
-				{
+                {
 					player.GetComponent<Character>().GameOver = true;
-				}
-			}
+                }
+            }
 
 			if (Runner.IsLastTick)
-			{
+            {
 				CheckTag();
 
 				if (_playerTagTrigger.tryTag)
@@ -246,28 +239,28 @@ public class Character : NetworkTransform
 			{
 				_playerAbilities.ActivateOne();
 			}
-			else
-			{
+            else
+            {
 				_playerAbilities.ReleaseOne();
-			}
+            }
 
 			if (inputData.GetButton(ButtonFlag.NUM2))
 			{
 				_playerAbilities.ActivateTwo();
 			}
-			else
-			{
+            else
+            {
 				_playerAbilities.ReleaseTwo();
-			}
+            }
 
 			if (inputData.GetButton(ButtonFlag.NUM3))
 			{
 				_playerAbilities.ActivateThree();
 			}
-			else
-			{
+            else
+            {
 				_playerAbilities.ReleaseThree();
-			}
+            }
 
 			//KEEP FOR SPAWNING TEMPLATE ******************************************************************************************************************************************************************
 			//if (ballSpawnDelay.ExpiredOrNotRunning(Runner))
@@ -301,7 +294,7 @@ public class Character : NetworkTransform
 	}
 
 	private void FirstNetworkTickUpdate()
-	{
+    {
 		firstFUNTick = false;
 
 		Score = 0;
@@ -319,7 +312,7 @@ public class Character : NetworkTransform
 	}
 
 	private bool Intro()
-	{
+    {
 		if (!finishedIntro)
 		{
 			if (!startedIntro)
@@ -344,7 +337,7 @@ public class Character : NetworkTransform
 	}
 
 	private bool Outro()
-	{
+    {
 		if (GameOver)
 		{
 			if (!finishedOutro)
@@ -373,7 +366,7 @@ public class Character : NetworkTransform
 	}
 
 	private void CheckTag()
-	{
+    {
 		if (IsTagged != badlocaltaggedcheck)
 		{
 			badlocaltaggedcheck = IsTagged;
@@ -396,23 +389,23 @@ public class Character : NetworkTransform
 	}
 
 	private void Tag(Character myCharacter, Character otherCharacter)
-	{
+    {
 		PlayerRef tagged;
 		PlayerRef tagger;
 
 		if (myCharacter.IsTagged)
-		{
+        {
 			tagged = otherCharacter.thisPlayerRef;
 			tagger = myCharacter.thisPlayerRef;
 		}
 		else
-		{
+        {
 			tagged = myCharacter.thisPlayerRef;
 			tagger = otherCharacter.thisPlayerRef;
 		}
 
 		if (tagged != PlayerRef.None && tagger != PlayerRef.None)
-		{
+        {
 			_playerTagTrigger.ToggleCollider();
 			//_player.RPC_Tag(tagged, tagger);
 

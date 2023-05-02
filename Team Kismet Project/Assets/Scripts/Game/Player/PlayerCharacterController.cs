@@ -11,7 +11,6 @@ public class PlayerCharacterController : MonoBehaviour
     private float lookRotationX;
     private float lookRotationY;
 
-    [SerializeField] private LayerMask cameraRayLayer;
 
     private bool grounded;
 
@@ -72,17 +71,17 @@ public class PlayerCharacterController : MonoBehaviour
         if (jumping)
         {
             verticalMovement.y += PerformJump(deltaTime);
-            if (!superJump)
+            if(!superJump)
             {
-
+                
                 velocity.y = Mathf.Sqrt(jumpPower * -2f * -9.81f);
             }
             else
             {
-
+                
                 velocity.y = Mathf.Sqrt(jumpPower * -4f * -9.81f);
             }
-
+            
         }
         //get gravity movement
         if (!grounded)
@@ -91,7 +90,7 @@ public class PlayerCharacterController : MonoBehaviour
             velocity.y += -9.81f * gravityScale * deltaTime;
         }
 
-        if (movementDisabled)
+        if(movementDisabled)
         {
             return;
         }
@@ -162,33 +161,6 @@ public class PlayerCharacterController : MonoBehaviour
         cameraReference.eulerAngles = new Vector3(lookRotationX, lookRotationY, 0);
         //update camera reference position
         cameraReference.position = transform.position - cameraReference.forward * offset;
-
-    }
-
-    public void SetCamPosition(Transform cameraReference, float currentDistance)
-    {
-        cameraReference.position = gameObject.transform.position + (cameraReference.position - gameObject.transform.position).normalized * currentDistance;
-    }
-
-    public float GetCameraDistance(Transform cameraReference)
-    {
-        RaycastHit hit;
-
-        Vector3 castDirection = cameraReference.position - gameObject.transform.position;
-
-        if (Physics.Raycast(new Ray(gameObject.transform.position, castDirection), out hit, castDirection.magnitude + 0.1f, cameraRayLayer, QueryTriggerInteraction.Ignore))
-        {
-            if (hit.distance - 0.1f < 0f)
-            {
-                return hit.distance;
-            }
-            else
-            {
-                return hit.distance - 0.1f;
-            }
-        }
-
-        return castDirection.magnitude;
     }
 
     public void UpdateCamera(Transform cameraReference, float positionLerpRate, float rotationLerpRate)
@@ -272,4 +244,3 @@ public class PlayerCharacterController : MonoBehaviour
         return result;
     }
 }
-
