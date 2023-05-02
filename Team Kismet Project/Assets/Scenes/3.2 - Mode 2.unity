@@ -2145,6 +2145,10 @@ PrefabInstance:
       value: Level6EnvironmentV2_Export
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2fb3b31648a00ac449d63fa80397ec49, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2fb3b31648a00ac449d63fa80397ec49, type: 3}
       propertyPath: m_TagString
       value: Ground
       objectReference: {fileID: 0}
