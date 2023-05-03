@@ -354,7 +354,7 @@ MonoBehaviour:
   _moveDeceleration: -6
   _mouseLookSpeed: 140
   _xMouseLookUpperClamp: 75
-  _xMouseLookLowerClamp: 5
+  _xMouseLookLowerClamp: -5
   _cameraPositionOffset: 10
   _cameraPositionLerpRate: 0.1
   _cameraRotationLerpRate: 0.1
