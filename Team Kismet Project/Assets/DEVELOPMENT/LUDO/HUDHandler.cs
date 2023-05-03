@@ -198,6 +198,7 @@ public class HUDHandler : MonoBehaviour
     public void EngageClocks(int clientNumber,string clockName1,string clockName2, string clockName3, string clockName4, float newGoalTime)
     {
         clockHolder.SwitchPos();
+        Debug.Log("Does the clock swotch?");
         goalTime = newGoalTime;
         //Making sure the clock on the right is the client clock
         if(clientNumber != 1)
@@ -275,6 +276,7 @@ public class HUDHandler : MonoBehaviour
         ability2Object.GetComponent<SpringDynamics>().OverwriteTarget(new Vector2(-620.51f, -430.1f));
         ability3Object.GetComponent<SpringDynamics>().OverwriteTarget(new Vector2(-413.32f, -430.1f));
         abilityExplainer.SwitchPos();
+        clockHolder.SwitchPos();
         cooldownsEngaged = true;
     }
 }
