@@ -90,6 +90,16 @@ public class Character : NetworkTransform
 		return _name.text;
 	}
 
+	public void HideName()
+    {
+		_name.gameObject.SetActive(false);
+    }
+	
+	public void ShowName()
+    {
+		_name.gameObject.SetActive(true);
+    }
+
 	public void TaggedNotStatic()
 	{
 		Debug.Log(_player.Name + ": ive been tagged!");

@@ -42,6 +42,7 @@ public class SmokeBomb : Ability
         returnMat = renderer.material;
         renderer.material = disappearMat;
         face.GetComponent<Renderer>().material = disappearMat;
+        playerRef.GetComponent<Character>().HideName();
         currentTime = 0;
         GameObject smoke = Instantiate(smokePrefab, new Vector3(playerRef.transform.position.x, playerRef.transform.position.y + 1f, playerRef.transform.position.z),
             playerRef.transform.rotation);
@@ -57,6 +58,7 @@ public class SmokeBomb : Ability
     {
         renderer.material = returnMat;
         face.GetComponent<Renderer>().material = returnMat;
+        playerRef.GetComponent<Character>().ShowName();
         matSet = false;
         shouldUpdate = false;
         activated = false;
