@@ -16,9 +16,10 @@ MonoBehaviour:
   activated: 0
   shouldUpdate: 0
   abilityName: Decoy
-  cooldown: 2
+  cooldown: 8
   onCooldown: 0
   decoyObj: {fileID: 6473249712739781426, guid: b2890871a54ccf24e8cf60037022608c, type: 3}
   spawnLocation: {fileID: 0}
   decoySpeed: 6
   decoyUpTime: 5
+  numOfDecoys: 4

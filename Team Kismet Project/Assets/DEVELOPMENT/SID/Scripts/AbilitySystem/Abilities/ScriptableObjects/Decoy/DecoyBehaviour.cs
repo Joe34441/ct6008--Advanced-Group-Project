@@ -22,6 +22,8 @@ public class DecoyBehaviour : MonoBehaviour
     [SerializeField] private Text nameText;
     [SerializeField] private GameObject body;
 
+    private float rotationSmoothVelocity;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,12 @@ public class DecoyBehaviour : MonoBehaviour
                 moveDirection = gameObject.transform.forward;
             }
             decoyController.Move(moveDirection * moveSpeed * runner.DeltaTime);
+
+            //calculate the direction the player should move in based on the camera direction and input
+            float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+            //calculate the angle that the player should rotate to when moving, and smoothly rotate the player over time
+            float rotationAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSmoothVelocity, 0.025f);
+            transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
         }
     }
 

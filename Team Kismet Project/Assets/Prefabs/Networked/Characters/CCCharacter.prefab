@@ -376,6 +376,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d277d169fe7eeb94c997118732c37dba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraRayLayer:
+    serializedVersion: 2
+    m_Bits: 375
   movementDisabled: 0
   jumpPower: 1.5
   gravityScale: 1
