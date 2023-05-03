@@ -789,7 +789,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Selected Character : <name>'
+  m_Text: 'Selected Character : Miyamoto Musashi'
 --- !u!222 &783688335
 CanvasRenderer:
   m_ObjectHideFlags: 0
