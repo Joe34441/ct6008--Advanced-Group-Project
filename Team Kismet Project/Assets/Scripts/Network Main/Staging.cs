@@ -12,6 +12,7 @@ public class Staging : MonoBehaviour
 	[SerializeField] private Text _sessionInfo;
 	[SerializeField] private Text _playerName;
 	[SerializeField] private GameObject _playerReady;
+	[SerializeField] private Text _titleText;
 
 	private bool canStart = false;
 
@@ -47,6 +48,7 @@ public class Staging : MonoBehaviour
 			//sb.AppendLine($"Map: {s.Props.StartMap}");
 		}
 		_sessionInfo.text = sb.ToString();
+		_titleText.text = "Room: " + s.Info.Name + ", Code: <code>";
 	}
 
 	void Update()
