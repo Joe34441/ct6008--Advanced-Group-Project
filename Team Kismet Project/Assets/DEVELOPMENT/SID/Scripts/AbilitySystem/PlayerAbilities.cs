@@ -71,10 +71,8 @@ public class PlayerAbilities : MonoBehaviour
             //abilityOne = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityOne, 1);
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            AssignAbility(abilityManager.decoy, 2);
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            AssignAbility(abilityManager.smokeBomb, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
