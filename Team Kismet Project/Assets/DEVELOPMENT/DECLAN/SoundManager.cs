@@ -1,32 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
-{
-    /* Briefly going to just describe this a little and what I plan on turning this into
-     
-        Essentially the goal is to create a list with all sound effects required in the game and have it be part of a sound manager prefab once complete
-        Ideally this audio manager doesn't get destroyed on scene load, instead it'll destroy *itself* if it detects it is a duplicate when initialised
-        It's a gross singleton class but it works because it was the easiest way I could think of to implement the "sound clip/id pair list" under the prefab instance
-        Going forward I want to get this to work with particles and have it clean up after itself better, at which point it'll be feature complete.
-        
-        It's still gross because it's at a weird point in development (sorry)
-    */
-    
-    /* 
-    -----------------------------------------------------------
-
-    Music and sound effects are managed sort of seperately but that's just done so music is essentially managed under a seperate list natively.
-    I might combine these later if it feels weird during implementation, I'm just kind of feeling out how to structure this concept because there's more redundant code than I would want
-
-    --------------------------------------------------------------
-    */
-
-    // -- Variables and stuff --
-    // One instance of soundManager per scene (kind of a singleton class but also not really)
+public class SoundManager : MonoBehaviour {
+    // One instance of soundManager per scene
     public static SoundManager current;
     public static bool ready = false;
+    public static float masterVolume = 1f;
 
     // Definition of sound - stringID pair class
     [System.Serializable]
@@ -35,17 +16,30 @@ public class SoundManager : MonoBehaviour
         public AudioClip sound;
         public float volume = 1f;
     }
+    // Definition of sound category list
+    [System.Serializable]
+    public class SoundCategory {
+        public string ID;
+        public List<AudioSource> audioSources;
+        private float volumeActual = 1f;
+        public float volume {
+            get { return volumeActual; }
+            set {
+                volumeActual = value;
+                foreach (AudioSource currentSource in audioSources) {
+                    currentSource.volume = volumeActual;
+                }
+            }
+        }
+    }
 
     // List of registered sounds.. Editable in inspector
     //[Header("Registered sounds")]
     [SerializeField] private List<AudioClipPair> registeredSounds;
-    [SerializeField] private List<List<AudioSource>> soundCategories;
+    public List<SoundCategory> soundCategories;
 
     // List of currently playing sound effects
-    private List<AudioSource> currentSounds;
-    // List of currently playing music - kept seperate so stopAllSounds won't affect it
-    private List<AudioSource> currentMusic;
-
+    public List<AudioSource> currentSounds;
 
     // ==== Functions ====
     // Start function - singleton management
@@ -53,43 +47,29 @@ public class SoundManager : MonoBehaviour
         // Prevent multiple instances of the sound system from existing at once
         if (ready) {
             Destroy(this);
-        }
-        else {
-            current = this;
+        } else {
+            ready = true;
+            SoundManager.current = this;
             currentSounds = new List<AudioSource>();
-            currentMusic = new List<AudioSource>();
         }
+        DontDestroyOnLoad(this.gameObject);
     }
 
-    // === Private functions used below to spawn an audio source ===
-    // Base function used as more of a failsafe - always should add component to list
+    // === Private function used below to spawn an audio source ===
     private AudioSource CreateAudioSource(string soundID) {
         GameObject audioSourceObj = new GameObject(soundID);
         AudioSource audioSourceComp = audioSourceObj.AddComponent<AudioSource>();
         audioSourceComp.clip = GetClipFromID(soundID);
+        audioSourceComp.volume = masterVolume;
 
-        currentSounds.Add(audioSourceComp);
-        return audioSourceComp;
-    }
-
-    // Overload which allows a list to be specified. These are used for stuff like muting all sounds/music or whatever.
-    private AudioSource CreateAudioSource(string soundID, List<AudioSource> listToAddTo) {
-        GameObject audioSourceObj = new GameObject(soundID);
-        AudioSource audioSourceComp = audioSourceObj.AddComponent<AudioSource>();
-
-        audioSourceComp.clip = GetClipFromID(soundID);
-        audioSourceComp.Play();
-
-        listToAddTo.Add(audioSourceComp);
         currentSounds.Add(audioSourceComp);
         return audioSourceComp;
     }
 
     // Gets an audio clip from the library using the audio ID
     private AudioClip GetClipFromID(string soundID) {
-        foreach( AudioClipPair pair in registeredSounds) {
+        foreach (AudioClipPair pair in registeredSounds) {
             if (pair.ID.Equals(soundID)) {
-                Debug.Log("got it");
                 return pair.sound;
             }
         }
@@ -99,8 +79,22 @@ public class SoundManager : MonoBehaviour
         return currentSounds[0].clip;
     }
 
+    // For cleanup
+    private IEnumerator cleanUpSound(AudioSource source, List<AudioSource> list) {
+        yield return new WaitForSeconds(source.clip.length);
+        list.Remove(source);
+        currentSounds.Remove(source);
+        Destroy(source);
+    }
+
+    private IEnumerator cleanUpSound(AudioSource source) {
+        yield return new WaitForSeconds(source.clip.length);
+        currentSounds.Remove(source);
+        Destroy(source);
+    }
+
     // === Public functions used to play sounds ====
-    // These first few will probably be used the most
+    // Plays a sound at the camera
     public AudioSource PlaySound(string soundID) {
         AudioSource audioSourceComp = CreateAudioSource(soundID);
         GameObject audioSourceObj = audioSourceComp.gameObject;
@@ -112,24 +106,149 @@ public class SoundManager : MonoBehaviour
 
         return audioSourceComp;
     }
+    // Same as above, but adds to a category as well
+    public AudioSource PlaySound(string soundID, SoundCategory categoryToAddTo) {
+        AudioSource audioSourceComp = PlaySound(soundID);
+        categoryToAddTo.audioSources.Add(audioSourceComp);
+        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
+        return audioSourceComp;
+    }
+    // Same again but auto cleanup can be enabled
+    public AudioSource PlaySound(string soundID, bool cleanUpSelf) {
+        AudioSource audioSourceComp = PlaySound(soundID);
 
-   public AudioSource PlaySound(string soundID, GameObject emitter) {
+        if (cleanUpSelf) {
+            try {
+                var clean = cleanUpSound(audioSourceComp);
+                StartCoroutine(clean);
+            }
+            catch (NullReferenceException ex) {
+                Debug.LogError(ex.ToString());
+            }
+        }
+
+        return audioSourceComp;
+    }
+
+    public AudioSource PlaySound(string soundID, SoundCategory categoryToAddTo, bool cleanUpSelf) {
+        AudioSource audioSourceComp = PlaySound(soundID, categoryToAddTo);
+        categoryToAddTo.audioSources.Add(audioSourceComp);
+        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
+
+        if (cleanUpSelf) {
+            try {
+                var clean = cleanUpSound(audioSourceComp, categoryToAddTo.audioSources);
+                StartCoroutine(clean);
+            }
+            catch (NullReferenceException ex) {
+                Debug.LogError(ex.ToString());
+            }
+        }
+
+        return audioSourceComp;
+    }
+
+    // --- Plays a sound, parenting it to a given gameobject ---
+    public AudioSource PlaySound(string soundID, GameObject emitter) {
         AudioSource audioSourceComp = CreateAudioSource(soundID);
         GameObject audioSourceObj = audioSourceComp.gameObject;
 
-        // Default to play at camera position
+        // Play at given object
         audioSourceObj.transform.position = emitter.transform.position;
         audioSourceObj.transform.parent = emitter.transform;
 
         return audioSourceComp;
     }
+    // Same as above, but adds to a category as well
+    public AudioSource PlaySound(string soundID, GameObject emitter, SoundCategory categoryToAddTo) {
+        AudioSource audioSourceComp = PlaySound(soundID, emitter);
+        categoryToAddTo.audioSources.Add(audioSourceComp);
+        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
+        return audioSourceComp;
+    }
+    // Same again but auto cleanup can be enabled
+    public AudioSource PlaySound(string soundID, GameObject emitter, bool cleanUpSelf) {
+        AudioSource audioSourceComp = PlaySound(soundID, emitter);
 
+        if (cleanUpSelf) {
+            try {
+                var clean = cleanUpSound(audioSourceComp);
+                StartCoroutine(clean);
+            }
+            catch (NullReferenceException ex) {
+                Debug.LogError(ex.ToString());
+            }
+        }
+
+        return audioSourceComp;
+    }
+
+    public AudioSource PlaySound(string soundID, GameObject emitter, SoundCategory categoryToAddTo, bool cleanUpSelf) {
+        AudioSource audioSourceComp = PlaySound(soundID, emitter, categoryToAddTo);
+        categoryToAddTo.audioSources.Add(audioSourceComp);
+        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
+
+        if (cleanUpSelf) {
+            try {
+                var clean = cleanUpSound(audioSourceComp,categoryToAddTo.audioSources);
+                StartCoroutine(clean);
+            }
+            catch (NullReferenceException ex) {
+                Debug.LogError(ex.ToString());
+            }
+        }
+
+        return audioSourceComp;
+    }
+
+    // --- Plays a sound at a defined position ---
     public AudioSource PlaySound(string soundID, Vector3 position) {
         AudioSource audioSourceComp = CreateAudioSource(soundID);
         GameObject audioSourceObj = audioSourceComp.gameObject;
 
         // Play wherever
         audioSourceObj.transform.position = position;
+
+        return audioSourceComp;
+    }
+    // Same as above, but adds to a category as well
+    public AudioSource PlaySound(string soundID, Vector3 position, SoundCategory categoryToAddTo) {
+        AudioSource audioSourceComp = PlaySound(soundID, position);
+        categoryToAddTo.audioSources.Add(audioSourceComp);
+        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
+        return audioSourceComp;
+    }
+    // Same again but auto cleanup can be enabled
+    public AudioSource PlaySound(string soundID, Vector3 position, bool cleanUpSelf) {
+        AudioSource audioSourceComp = PlaySound(soundID, position);
+
+        if (cleanUpSelf) {
+            try {
+                var clean = cleanUpSound(audioSourceComp);
+                StartCoroutine(clean);
+            }
+            catch (NullReferenceException ex) {
+                Debug.LogError(ex.ToString());
+            }
+        }
+
+        return audioSourceComp;
+    }
+
+    public AudioSource PlaySound(string soundID, Vector3 position, SoundCategory categoryToAddTo, bool cleanUpSelf) {
+        AudioSource audioSourceComp = PlaySound(soundID, position, categoryToAddTo);
+        categoryToAddTo.audioSources.Add(audioSourceComp);
+        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
+
+        if (cleanUpSelf) {
+            try {
+                var clean = cleanUpSound(audioSourceComp, categoryToAddTo.audioSources);
+                StartCoroutine(clean);
+            }
+            catch (NullReferenceException ex) {
+                Debug.LogError(ex.ToString());
+            }
+        }
 
         return audioSourceComp;
     }
@@ -162,44 +281,23 @@ public class SoundManager : MonoBehaviour
         foreach (AudioSource currentSource in currentSourceList) {
             Destroy(currentSource.gameObject);
         }
+        currentSourceList.Clear();
     }
 
     public void RemoveAllSounds() {
         RemoveAllSounds(currentSounds);
     }
 
-    // == Play and pause music == //
-    public AudioSource PlayMusic(string MusicID) {
-        GameObject audioSourceObj = new GameObject(MusicID);
-        AudioSource audioSourceComp = audioSourceObj.AddComponent<AudioSource>();
-
-        audioSourceComp.clip = GetClipFromID(MusicID);
-        audioSourceComp.Play();
-
-        // Default to play at camera position
-        audioSourceObj.transform.position = Camera.main.transform.position;
-        audioSourceObj.transform.parent = Camera.main.transform;
-
-        // Add to current
-        currentMusic.Add(audioSourceComp);
-
-        return audioSourceComp;
-    }
-
-    public void PlayMusic() {
-        foreach (AudioSource currentSource in currentMusic) {
-            currentSource.Play();
+    // == Get a sound category list from its ID
+    public int GetCategoryIndexFromID(string categoryID) {
+        foreach (SoundCategory thisCategory in soundCategories) {
+            if (thisCategory.ID.Equals(categoryID)) {
+                return soundCategories.IndexOf(thisCategory);
+            }
         }
-    }
 
-    public void PauseMusic() {
-        foreach (AudioSource currentSource in currentMusic) {
-            currentSource.Pause();
-        }
-    }
-    public void RemoveMusic() {
-        foreach (AudioSource currentSource in currentMusic) {
-            Destroy(currentSource.gameObject);
-        }
+        // Catch for if none is found
+        Debug.LogError("No category for given ID " + categoryID);
+        return 0;
     }
 }
