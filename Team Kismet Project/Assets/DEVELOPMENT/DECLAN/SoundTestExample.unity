@@ -608,9 +608,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSingletonVersion: 1
-  registeredSounds: []
+  persistBetweenScenes: 1
+  registeredSounds:
+  - ID: SFX
+    registeredSounds:
+    - ID: beep
+      sound: {fileID: 8300000, guid: 1827f347983d71149af425acadf74ebf, type: 3}
+      volume: 0.2
+      cleanSelf: 1
   soundCategories:
-  - ID: 
+  - ID: Music
+    audioSources: []
+  - ID: Sound Effects
     audioSources: []
   currentSounds: []
 --- !u!1 &2070905346

@@ -76,55 +76,48 @@ public class SoundManager : MonoBehaviour {
         foreach(AudioSource source in currentSounds) {
             Destroy(source.gameObject);
         }
-        currentSounds.Clear();
     }
 
     // === Private function used below to spawn an audio source ===
     private AudioSource CreateAudioSource(string soundID) {
+        // Get sound properties from library
+        AudioClipPair soundProperties = GetClipPairFromID(soundID);
         // Create object and audio source
         GameObject audioSourceObj = new GameObject(soundID);
         AudioSource audioSourceComp = audioSourceObj.AddComponent<AudioSource>();
-        audioSourceComp.clip = GetClipFromID(soundID);
-        audioSourceComp.volume = masterVolume;
+        audioSourceComp.clip = soundProperties.sound;
+        audioSourceComp.volume = soundProperties.volume * masterVolume;
+
         // Create soundObject script attachment
         SoundObject soundObject = audioSourceObj.AddComponent<SoundObject>();
-        soundObject.Setup(this);
+        soundObject.destroyWhenDone = soundProperties.cleanSelf;
+        soundObject.Ready(this);
 
         return audioSourceComp;
     }
 
     // Gets an audio clip from the library using the audio ID
     private AudioClip GetClipFromID(string soundID) {
+        return GetClipPairFromID(soundID).sound;
+    }
+
+    // Gets an audio clip's properties from the library using the audio ID
+    private AudioClipPair GetClipPairFromID(string soundID) {
         foreach (SoundRegisterCategory category in registeredSounds) {
             foreach (AudioClipPair pair in category.registeredSounds) {
                 if (pair.ID.Equals(soundID)) {
-                    return pair.sound;
+                    return pair;
                 }
             }
         }
-        
 
         // Catch for if none is found
-        Debug.LogError("No sound for given ID " + soundID);
-        return currentSounds[0].clip;
-    }
-
-    // For cleanup
-    private IEnumerator cleanUpSound(AudioSource source, List<AudioSource> list) {
-        yield return new WaitForSeconds(source.clip.length);
-        list.Remove(source);
-        currentSounds.Remove(source);
-        Destroy(source);
-    }
-
-    private IEnumerator cleanUpSound(AudioSource source) {
-        yield return new WaitForSeconds(source.clip.length);
-        currentSounds.Remove(source);
-        Destroy(source);
+        Debug.LogError("No data for given ID " + soundID);
+        return registeredSounds[0].registeredSounds[0];
     }
 
     // === Public functions used to play sounds ====
-    // Plays a sound at the camera
+    // --- Plays a sound at the camera / In 2D space --- 
     public AudioSource PlaySound(string soundID) {
         AudioSource audioSourceComp = CreateAudioSource(soundID);
         GameObject audioSourceObj = audioSourceComp.gameObject;
@@ -139,41 +132,7 @@ public class SoundManager : MonoBehaviour {
     // Same as above, but adds to a category as well
     public AudioSource PlaySound(string soundID, SoundCategory categoryToAddTo) {
         AudioSource audioSourceComp = PlaySound(soundID);
-        categoryToAddTo.audioSources.Add(audioSourceComp);
-        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
-        return audioSourceComp;
-    }
-    // Same again but auto cleanup can be enabled
-    public AudioSource PlaySound(string soundID, bool cleanUpSelf) {
-        AudioSource audioSourceComp = PlaySound(soundID);
-
-        if (cleanUpSelf) {
-            try {
-                var clean = cleanUpSound(audioSourceComp);
-                StartCoroutine(clean);
-            }
-            catch (NullReferenceException ex) {
-                Debug.LogError(ex.ToString());
-            }
-        }
-
-        return audioSourceComp;
-    }
-
-    public AudioSource PlaySound(string soundID, SoundCategory categoryToAddTo, bool cleanUpSelf) {
-        AudioSource audioSourceComp = PlaySound(soundID, categoryToAddTo);
-        categoryToAddTo.audioSources.Add(audioSourceComp);
-        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
-
-        if (cleanUpSelf) {
-            try {
-                var clean = cleanUpSound(audioSourceComp, categoryToAddTo.audioSources);
-                StartCoroutine(clean);
-            }
-            catch (NullReferenceException ex) {
-                Debug.LogError(ex.ToString());
-            }
-        }
+        audioSourceComp.GetComponent<SoundObject>().AddToCategory(categoryToAddTo);
 
         return audioSourceComp;
     }
@@ -192,42 +151,8 @@ public class SoundManager : MonoBehaviour {
     // Same as above, but adds to a category as well
     public AudioSource PlaySound(string soundID, GameObject emitter, SoundCategory categoryToAddTo) {
         AudioSource audioSourceComp = PlaySound(soundID, emitter);
-        categoryToAddTo.audioSources.Add(audioSourceComp);
-        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
-        return audioSourceComp;
-    }
-    // Same again but auto cleanup can be enabled
-    public AudioSource PlaySound(string soundID, GameObject emitter, bool cleanUpSelf) {
-        AudioSource audioSourceComp = PlaySound(soundID, emitter);
-
-        if (cleanUpSelf) {
-            try {
-                var clean = cleanUpSound(audioSourceComp);
-                StartCoroutine(clean);
-            }
-            catch (NullReferenceException ex) {
-                Debug.LogError(ex.ToString());
-            }
-        }
-
-        return audioSourceComp;
-    }
-
-    public AudioSource PlaySound(string soundID, GameObject emitter, SoundCategory categoryToAddTo, bool cleanUpSelf) {
-        AudioSource audioSourceComp = PlaySound(soundID, emitter, categoryToAddTo);
-        categoryToAddTo.audioSources.Add(audioSourceComp);
-        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
-
-        if (cleanUpSelf) {
-            try {
-                var clean = cleanUpSound(audioSourceComp,categoryToAddTo.audioSources);
-                StartCoroutine(clean);
-            }
-            catch (NullReferenceException ex) {
-                Debug.LogError(ex.ToString());
-            }
-        }
-
+        audioSourceComp.GetComponent<SoundObject>().AddToCategory(categoryToAddTo);
+        
         return audioSourceComp;
     }
 
@@ -244,64 +169,28 @@ public class SoundManager : MonoBehaviour {
     // Same as above, but adds to a category as well
     public AudioSource PlaySound(string soundID, Vector3 position, SoundCategory categoryToAddTo) {
         AudioSource audioSourceComp = PlaySound(soundID, position);
-        categoryToAddTo.audioSources.Add(audioSourceComp);
-        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
-        return audioSourceComp;
-    }
-    // Same again but auto cleanup can be enabled
-    public AudioSource PlaySound(string soundID, Vector3 position, bool cleanUpSelf) {
-        AudioSource audioSourceComp = PlaySound(soundID, position);
-
-        if (cleanUpSelf) {
-            try {
-                var clean = cleanUpSound(audioSourceComp);
-                StartCoroutine(clean);
-            }
-            catch (NullReferenceException ex) {
-                Debug.LogError(ex.ToString());
-            }
-        }
+        audioSourceComp.GetComponent<SoundObject>().AddToCategory(categoryToAddTo);
 
         return audioSourceComp;
     }
 
-    public AudioSource PlaySound(string soundID, Vector3 position, SoundCategory categoryToAddTo, bool cleanUpSelf) {
-        AudioSource audioSourceComp = PlaySound(soundID, position, categoryToAddTo);
-        categoryToAddTo.audioSources.Add(audioSourceComp);
-        audioSourceComp.volume = masterVolume * categoryToAddTo.volume;
-
-        if (cleanUpSelf) {
-            try {
-                var clean = cleanUpSound(audioSourceComp, categoryToAddTo.audioSources);
-                StartCoroutine(clean);
-            }
-            catch (NullReferenceException ex) {
-                Debug.LogError(ex.ToString());
-            }
-        }
-
-        return audioSourceComp;
-    }
-
-
-    // == Play all sounds in list ==
+    // === Managing sound categories/lists ===
+    // Play all sounds in list
     public void PlayAllSounds(List<AudioSource> currentSourceList) {
         foreach (AudioSource currentSource in currentSourceList) {
             currentSource.Play();
         }
     }
-
     public void PlayAllSounds() {
         PlayAllSounds(currentSounds);
     }
 
-    // == Pause all sounds in list ==
+    // Pause all sounds in list
     public void PauseAllSounds(List<AudioSource> currentSourceList) {
         foreach (AudioSource currentSource in currentSourceList) {
             currentSource.Pause();
         }
     }
-
     public void PauseAllSounds() {
         PauseAllSounds(currentSounds);
     }
@@ -312,7 +201,6 @@ public class SoundManager : MonoBehaviour {
             Destroy(currentSource.gameObject);
         }
     }
-
     public void RemoveAllSounds() {
         RemoveAllSounds(currentSounds);
     }

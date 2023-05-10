@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class SoundObject : MonoBehaviour
 {
+    // Public variabled modified by soundmanager class during creation process
+    public List<AudioSource> listToRemoveFrom = new List<AudioSource>();
+    public bool destroyWhenDone;
+
+    // Private variables
     private SoundManager creator;
-    private List<AudioSource> listToRemoveFrom = new List<AudioSource>();
     private AudioSource audioSource;
-    private bool destroyWhenDone;
 
     // Start is called before the first frame update
-    public void Setup(SoundManager thisCreator)
+    public void Ready(SoundManager thisCreator)
     {
         // Add to current sound list of creator
         creator = thisCreator;
@@ -18,24 +21,25 @@ public class SoundObject : MonoBehaviour
 
         // Destroy when done
         if (destroyWhenDone) {
-            IEnumerator cleanUp() {
-                yield return new WaitForSeconds(audioSource.clip.length);
-                Destroy(this.gameObject);
-            }
-
             StartCoroutine("cleanUp");
         }
     }
 
-    public void AddToCategory(List<AudioSource> categorySources) {
+    public void AddToCategory(SoundManager.SoundCategory category) {
         // Add to category sound list of creator
-        listToRemoveFrom = categorySources;
-        categorySources.Add(audioSource);
+        listToRemoveFrom = category.audioSources;
+        category.audioSources.Add(audioSource);
+        audioSource.volume = SoundManager.masterVolume * category.volume;
+    }
+
+    IEnumerator cleanUp() {
+        yield return new WaitForSeconds(audioSource.clip.length);
+        Destroy(this.gameObject);
     }
 
     private void OnDestroy() {
         // Remove item from currentSounds list of the soundManager
-
+        creator.currentSounds.Remove(audioSource);
         // Remove item from category list if applicable
         listToRemoveFrom.Remove(audioSource);
     }
