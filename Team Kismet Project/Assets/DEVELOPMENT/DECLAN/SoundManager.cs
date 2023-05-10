@@ -4,18 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour {
-    // One instance of soundManager per scene
+    // Do we want a singleton version of the class?
+    [SerializeField] private bool isSingletonVersion = false;
+    [SerializeField] private bool persistBetweenScenes = true;
     public static SoundManager current;
     public static bool ready = false;
+
     public static float masterVolume = 1f;
 
     // Definition of sound - stringID pair class
     [System.Serializable]
-    private class AudioClipPair {
+    public class AudioClipPair {
         public string ID;
         public AudioClip sound;
         public float volume = 1f;
+        public bool cleanSelf;
     }
+
+    // This is required to get nested lists to show in the inspector
+    [System.Serializable]
+    public class SoundRegisterCategory {
+        public string ID;
+        public List<AudioClipPair> registeredSounds;
+    }
+
     // Definition of sound category list
     [System.Serializable]
     public class SoundCategory {
@@ -35,44 +47,62 @@ public class SoundManager : MonoBehaviour {
 
     // List of registered sounds.. Editable in inspector
     //[Header("Registered sounds")]
-    [SerializeField] private List<AudioClipPair> registeredSounds;
+    [SerializeField] private List<SoundRegisterCategory> registeredSounds;
     public List<SoundCategory> soundCategories;
 
     // List of currently playing sound effects
     public List<AudioSource> currentSounds;
 
     // ==== Functions ====
-    // Start function - singleton management
+    // Start function - is this the singleton version or not
     void Start() {
-        // Prevent multiple instances of the sound system from existing at once
-        if (ready) {
-            Destroy(this);
-        } else {
-            ready = true;
-            SoundManager.current = this;
-            currentSounds = new List<AudioSource>();
+        // Management of singleton versions
+        if (isSingletonVersion) {
+            // Prevent multiple instances of the sound system from existing at once
+            if (ready) {
+                Destroy(this);
+            } else {
+                ready = true;
+                SoundManager.current = this;
+                currentSounds = new List<AudioSource>();
+                // Keep this between scenes
+                DontDestroyOnLoad(this.gameObject);
+            }
         }
-        DontDestroyOnLoad(this.gameObject);
+    }
+
+    // Destroy function, remove all created audio sources
+    private void OnDestroy() {
+        foreach(AudioSource source in currentSounds) {
+            Destroy(source.gameObject);
+        }
+        currentSounds.Clear();
     }
 
     // === Private function used below to spawn an audio source ===
     private AudioSource CreateAudioSource(string soundID) {
+        // Create object and audio source
         GameObject audioSourceObj = new GameObject(soundID);
         AudioSource audioSourceComp = audioSourceObj.AddComponent<AudioSource>();
         audioSourceComp.clip = GetClipFromID(soundID);
         audioSourceComp.volume = masterVolume;
+        // Create soundObject script attachment
+        SoundObject soundObject = audioSourceObj.AddComponent<SoundObject>();
+        soundObject.Setup(this);
 
-        currentSounds.Add(audioSourceComp);
         return audioSourceComp;
     }
 
     // Gets an audio clip from the library using the audio ID
     private AudioClip GetClipFromID(string soundID) {
-        foreach (AudioClipPair pair in registeredSounds) {
-            if (pair.ID.Equals(soundID)) {
-                return pair.sound;
+        foreach (SoundRegisterCategory category in registeredSounds) {
+            foreach (AudioClipPair pair in category.registeredSounds) {
+                if (pair.ID.Equals(soundID)) {
+                    return pair.sound;
+                }
             }
         }
+        
 
         // Catch for if none is found
         Debug.LogError("No sound for given ID " + soundID);
@@ -281,7 +311,6 @@ public class SoundManager : MonoBehaviour {
         foreach (AudioSource currentSource in currentSourceList) {
             Destroy(currentSource.gameObject);
         }
-        currentSourceList.Clear();
     }
 
     public void RemoveAllSounds() {

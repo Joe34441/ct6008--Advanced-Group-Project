@@ -572,7 +572,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1600300095}
-  - component: {fileID: 1600300094}
+  - component: {fileID: 1600300096}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -580,22 +580,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1600300094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600300093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 105faeca4772b19419254b2c120ba6c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  registeredSounds:
-  - ID: beep
-    sound: {fileID: 8300000, guid: 1827f347983d71149af425acadf74ebf, type: 3}
-    volume: 1
 --- !u!4 &1600300095
 Transform:
   m_ObjectHideFlags: 0
@@ -611,6 +595,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1600300096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600300093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740a3a4f08c003f41acfe7b27110fba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSingletonVersion: 1
+  registeredSounds: []
+  soundCategories:
+  - ID: 
+    audioSources: []
+  currentSounds: []
 --- !u!1 &2070905346
 GameObject:
   m_ObjectHideFlags: 0
