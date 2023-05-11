@@ -34,6 +34,8 @@ public class PlayerCharacterController : MonoBehaviour
 
     private Vector3 moveDirection = Vector3.zero;
 
+    public Animator animator;
+
     //original -
 
     //private float moveSpeed = 0;
@@ -72,6 +74,7 @@ public class PlayerCharacterController : MonoBehaviour
         if (jumping)
         {
             verticalMovement.y += PerformJump(deltaTime);
+            animator.SetTrigger("StartJump");
             if (!superJump)
             {
 
@@ -90,6 +93,10 @@ public class PlayerCharacterController : MonoBehaviour
             verticalMovement.y += -4f;
             velocity.y += -9.81f * gravityScale * deltaTime;
         }
+        else if(grounded)
+        {
+            animator.SetTrigger("Landing");
+        }
 
         if (movementDisabled)
         {
@@ -101,9 +108,11 @@ public class PlayerCharacterController : MonoBehaviour
         {
             //skip movement calculations, but move by zero to keep colliders active for this frame
             characterController.Move(Vector3.zero);
+            animator.SetBool("Running", false);
             return;
         }
 
+        animator.SetBool("Running", true);
         Vector3 directionMovement = Vector3.zero;
         float rotationAngle = transform.eulerAngles.y;
         //update x/z movement and rotation
