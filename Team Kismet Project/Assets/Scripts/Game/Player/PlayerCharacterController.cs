@@ -14,6 +14,7 @@ public class PlayerCharacterController : MonoBehaviour
     [SerializeField] private LayerMask cameraRayLayer;
 
     private bool grounded;
+    private bool lateGrounded;
 
     private bool tryJump;
     private bool jumping;
@@ -49,6 +50,7 @@ public class PlayerCharacterController : MonoBehaviour
     public void PerformMove(CharacterController characterController, Transform cameraReference, Transform groundCheckReference, Vector3 movement, float acceleration, float deceleration, float deltaTime)
     {
         //update grounded
+        lateGrounded = grounded;
         grounded = Physics.CheckSphere(groundCheckReference.position, 0.2f, whatIsGround);
 
         //update jumping bool
@@ -59,6 +61,7 @@ public class PlayerCharacterController : MonoBehaviour
             {
                 jumpTimer = 0;
                 jumping = true;
+                animator.SetTrigger("StartJump");
             }
         }
         if (grounded && tryJump && !jumping)
@@ -66,6 +69,7 @@ public class PlayerCharacterController : MonoBehaviour
             jumpTimer = 0;
             jumping = true;
             tryJump = false;
+            animator.SetTrigger("StartJump");
         }
 
         Vector3 verticalMovement = Vector3.zero;
@@ -74,7 +78,7 @@ public class PlayerCharacterController : MonoBehaviour
         if (jumping)
         {
             verticalMovement.y += PerformJump(deltaTime);
-            animator.SetTrigger("StartJump");
+            
             if (!superJump)
             {
 
@@ -93,9 +97,13 @@ public class PlayerCharacterController : MonoBehaviour
             verticalMovement.y += -4f;
             velocity.y += -9.81f * gravityScale * deltaTime;
         }
-        else if(grounded)
+        else if(grounded && !lateGrounded)
         {
-            animator.SetTrigger("Landing");
+            animator.SetBool("Landing",true);
+        }
+        else
+        {
+            animator.SetBool("Landing", false);
         }
 
         if (movementDisabled)

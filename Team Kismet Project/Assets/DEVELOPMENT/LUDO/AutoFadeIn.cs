@@ -28,6 +28,8 @@ public class AutoFadeIn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //If the text is set to fadeIn, LERP the colour towards fadeTo, which is set to White by default.
+        //Otherwise, fade towards transparent instead. The reason transparent has an alpha of -0.5f is to make the appearance smoother.
         if (fadeIn)
         {
             textFade.color = Color.Lerp(textFade.color, fadeTo, Time.deltaTime * fadeSpeed);
