@@ -5,11 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - HUDHandler
+  - AbilityManager
+  - ProjectileLocation
+  - CameraReference
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Roof
   - Water
   - UI
   - Ground

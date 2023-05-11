@@ -274,6 +274,7 @@ public class Character : NetworkTransform
 			else
 			{
 				_playerAbilities.ReleaseOne();
+				
 			}
 
 			if (inputData.GetButton(ButtonFlag.NUM2))

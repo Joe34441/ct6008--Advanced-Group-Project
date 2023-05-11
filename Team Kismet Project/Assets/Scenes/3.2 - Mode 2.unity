@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2968992, g: 0.63375103, b: 0.99371284, a: 1}
+  m_IndirectSpecularColor: {r: 0.40966842, g: 0.7666028, b: 0.9799803, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4859,11 +4859,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 749b51cabb877ca41be19c434e707db7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 53.579353
+      value: 55.9047
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 749b51cabb877ca41be19c434e707db7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 46.945446
+      value: 51.611824
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 749b51cabb877ca41be19c434e707db7, type: 3}
       propertyPath: m_LocalScale.z
@@ -15742,7 +15742,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1437595748}
   - component: {fileID: 1437595747}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Roof Collision
   m_TagString: Untagged
   m_Icon: {fileID: 0}

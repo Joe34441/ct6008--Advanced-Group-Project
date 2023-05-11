@@ -39,7 +39,7 @@ public class HUDHandler : MonoBehaviour
     private bool cooldownsEngaged = false;
 
     private Image tempImage;
-    private float goalTime = 150.0f;
+    private float goalTime = 180.0f;
 
     private KeyValuePair<int, string> localPlayerID;
     private List<KeyValuePair<int, string>> otherPlayerIDs = new List<KeyValuePair<int, string>>();
@@ -140,21 +140,22 @@ public class HUDHandler : MonoBehaviour
 
     public void TriggerCooldown(int abilityNumber, float cooldownTime)
     {
-        if(abilityNumber == 1)
-        {
-            cooldown1 = 0;
-            cooldownMax1 = cooldownTime;
-        }
-        else if (abilityNumber == 2)
-        {
-            cooldown2 = 0;
-            cooldownMax2 = cooldownTime;
-        }
-        else if (abilityNumber == 3)
-        {
-            cooldown3 = 0;
-            cooldownMax3 = cooldownTime;
-        }
+
+            if (abilityNumber == 1)
+            {
+                cooldown1 = 0;
+                cooldownMax1 = cooldownTime;
+            }
+            else if (abilityNumber == 2)
+            {
+                cooldown2 = 0;
+                cooldownMax2 = cooldownTime;
+            }
+            else if (abilityNumber == 3)
+            {
+                cooldown3 = 0;
+                cooldownMax3 = cooldownTime;
+            }
     }
 
     private void UpdateClocks(int playerID, float score, float deltaTime)

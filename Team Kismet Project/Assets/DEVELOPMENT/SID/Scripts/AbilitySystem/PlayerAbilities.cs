@@ -37,13 +37,15 @@ public class PlayerAbilities : MonoBehaviour
 
         for(int i = 1; i <= 3; i++)
         {
-            int ranNum = 997 * ((playerID + 3) * 3);
+            int ranNum = (103 + App.Instance.Session.Props.RoomName.Length) * ((playerID + 3) * 3);
 
             int randomChoice = ranNum % currentList.Count;
             //int randomChoice = Random.Range(0, currentList.Count);
 
             AssignAbility(currentList[randomChoice], i);
             currentList.RemoveAt(randomChoice);
+
+            
         }
 
         //if(playerID == 0)
