@@ -31,6 +31,7 @@ public class Character : NetworkTransform
 	[SerializeField] private float _cameraPositionLerpRate;
 	[SerializeField] private float _cameraRotationLerpRate;
 
+	private IntroCutscene _introCutscene;
 	public static Character LocalCharacter { get; protected set; }
 
 	private Player _player;
@@ -122,6 +123,7 @@ public class Character : NetworkTransform
 		_playerCharacterController = GetComponent<PlayerCharacterController>();
 		_playerAbilities = GetComponent<PlayerAbilities>();
 		_hudHandler = GameObject.FindGameObjectWithTag("HUDHandler").GetComponent<HUDHandler>();
+		_introCutscene = GameObject.FindGameObjectWithTag("CutsceneManager").GetComponent<IntroCutscene>();
 
 		if (Object.HasInputAuthority)
 		{
@@ -352,6 +354,7 @@ public class Character : NetworkTransform
 			{
 				startedIntro = true;
 				_hudHandler.AddPlayer(Runner.LocalPlayer.PlayerId, thisPlayerRef.PlayerId, _player.Name.ToString());
+				if (Object.HasInputAuthority) _introCutscene.PlayIntro(thisPlayerRef.PlayerId, 10);
 			}
 			if (introTimer < introTime)
 			{
@@ -363,6 +366,11 @@ public class Character : NetworkTransform
 			{
 				introTimer = 0;
 				finishedIntro = true;
+				if (Object.HasInputAuthority)
+                {
+					Camera.main.transform.position = _cameraReference.position;
+					Camera.main.transform.rotation = _cameraReference.rotation;
+				}
 				_hudHandler.EndIntro();
 			}
 		}
