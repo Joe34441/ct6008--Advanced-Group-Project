@@ -154,12 +154,15 @@ public class Character : NetworkTransform
 	{
 		if (Object.HasInputAuthority)
 		{
-			float _distance = _playerCharacterController.GetCameraDistance(_cameraReference);
-			currentDistance = Mathf.Lerp(currentDistance, _distance, Runner.DeltaTime * 25);
-			_playerCharacterController.SetCamPosition(_cameraReference, currentDistance);
-			//Camera.main.transform.position = _cameraReference.position;
-			//Camera.main.transform.rotation = _cameraReference.rotation;
-			_playerCharacterController.UpdateCamera(_cameraReference, _cameraPositionLerpRate, _cameraRotationLerpRate);
+			if (!_introCutscene.playingIntro)
+            {
+				float _distance = _playerCharacterController.GetCameraDistance(_cameraReference);
+				currentDistance = Mathf.Lerp(currentDistance, _distance, Runner.DeltaTime * 25);
+				_playerCharacterController.SetCamPosition(_cameraReference, currentDistance);
+				//Camera.main.transform.position = _cameraReference.position;
+				//Camera.main.transform.rotation = _cameraReference.rotation;
+				_playerCharacterController.UpdateCamera(_cameraReference, _cameraPositionLerpRate, _cameraRotationLerpRate);
+			}
 		}
 	}
 
