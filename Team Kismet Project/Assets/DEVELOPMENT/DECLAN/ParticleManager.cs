@@ -10,7 +10,7 @@ public class ParticleManager : MonoBehaviour
     public static ParticleManager current;
     public static bool singletonReady = false;
 
-    // Definition of sound - stringID pair class
+    // Definition of prefab - stringID pair class
     [System.Serializable]
     public class PrefabProperties {
         public string ID;
@@ -25,19 +25,19 @@ public class ParticleManager : MonoBehaviour
         public List<PrefabProperties> registeredParticles;
     }
 
-    // Definition of sound category list
+    // Definition of particle category list
     [System.Serializable]
     public class ParticleCategory {
         public string ID;
         public List<GameObject> emitters;
     }
 
-    // List of registered sounds.. Editable in inspector
-    //[Header("Registered sounds")]
-    [SerializeField] private List<RegisterCategory> registeredObjects;
+    // List of registered prefab objects.. Editable in inspector
+    // Header would go here if applicablee
+    [SerializeField] private List<RegisterCategory> registeredObjectCategories;
     public List<ParticleCategory> particleCategories;
 
-    // List of currently playing sound effects
+    // List of currently placed objects
     public List<GameObject> currentEmitters;
 
     // ==== Functions ====
@@ -45,7 +45,7 @@ public class ParticleManager : MonoBehaviour
     void Start() {
         // Management of singleton versions
         if (isSingletonVersion) {
-            // Prevent multiple instances of the sound system from existing at once
+            // Prevent multiple instances of the system from existing at once
             if (singletonReady) {
                 Destroy(this);
             } else {
@@ -58,14 +58,14 @@ public class ParticleManager : MonoBehaviour
         }
     }
 
-    // Destroy function, remove all created audio sources
+    // Destroy function, remove all created prefabs
     private void OnDestroy() {
         foreach (GameObject source in currentEmitters) {
             Destroy(source.gameObject);
         }
     }
 
-    // === Private function used below to spawn aparticle emitter ===
+    // === Private function used below to spawn a particle emitter ===
     private GameObject CreatePrefabOfParticle(string particleID) {
         // Get prefab properties from library
         PrefabProperties properties = GetProperties(particleID);
@@ -74,6 +74,8 @@ public class ParticleManager : MonoBehaviour
 
         // Create particleObject script attachment
         ParticleObject particleObject = thisEmitter.AddComponent<ParticleObject>();
+        particleObject.destroyAfterTime = properties.cleanUpTime;
+        particleObject.Ready(this);
 
         return thisEmitter;
     }
@@ -83,9 +85,9 @@ public class ParticleManager : MonoBehaviour
         return GetProperties(partcleID).prefab;
     }
 
-    // Gets an amitter's properties from the library using the ID
+    // Gets an emitter's properties from the library using the ID
     private PrefabProperties GetProperties(string particleID) {
-        foreach (RegisterCategory category in registeredObjects) {
+        foreach (RegisterCategory category in registeredObjectCategories) {
             foreach (PrefabProperties properties in category.registeredParticles) {
                 if (properties.ID.Equals(particleID)) {
                     return properties;
@@ -95,15 +97,13 @@ public class ParticleManager : MonoBehaviour
 
         // Catch for if none is found
         Debug.LogError("No data for given ID " + particleID);
-        return registeredObjects[0].registeredParticles[0];
+        return registeredObjectCategories[0].registeredParticles[0];
     }
 
     // === Public functions used to manage particle creation ====
     // --- Probably won't be used a whole lot but here for the sake of it --- 
     public GameObject CreateParticle(string particleID) {
         GameObject newEmitter = CreatePrefabOfParticle(particleID);
-
-        //
 
         return newEmitter;
     }
@@ -160,7 +160,7 @@ public class ParticleManager : MonoBehaviour
         RemoveAll(currentEmitters);
     }
 
-    // == Get a sound category list from its ID
+    // == Get a sound category list from its ID (Unused function unported to new system)
     /*
     public int GetCategoryIndexFromID(string categoryID) {
         foreach (SoundCategory thisCategory in soundCategories) {

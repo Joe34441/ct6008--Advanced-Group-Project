@@ -18,7 +18,7 @@ public class ParticleObject : MonoBehaviour
         creator.currentEmitters.Add(gameObject);
 
         // Destroy when done
-        if (destroyAfterTime <= 0f) {
+        if (destroyAfterTime >= 0f) {
             StartCoroutine("cleanUp");
         }
     }

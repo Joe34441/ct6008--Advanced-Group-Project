@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class ButtonMakesSound : MonoBehaviour
 {
-    public void OnPress() {
+    public void OnMakeSound() {
         SoundManager.current.PlaySound("beep");
+    }
+
+    public void OnMakeParticle() {
+        ParticleManager.current.CreateParticle("TestPrefab", new Vector3(0f,0f,0f));
     }
 }
