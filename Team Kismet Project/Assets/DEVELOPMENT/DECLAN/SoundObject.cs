@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SoundObject : MonoBehaviour
 {
-    // Public variabled modified by soundmanager class during creation process
+    // Public variables modified by soundmanager class during creation process
     public List<AudioSource> listToRemoveFrom = new List<AudioSource>();
     public bool destroyWhenDone;
 
