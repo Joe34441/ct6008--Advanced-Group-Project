@@ -15,7 +15,8 @@ public class ParticleManager : MonoBehaviour
     public class PrefabProperties {
         public string ID;
         public GameObject prefab;
-        public float cleanUpTime;
+        public float emissionTime;
+        public int immediateEmissionCount;
     }
 
     // This is required to get nested lists to show in the inspector
@@ -81,7 +82,8 @@ public class ParticleManager : MonoBehaviour
 
         // Create particleObject script attachment
         ParticleObject particleObject = thisEmitter.AddComponent<ParticleObject>();
-        particleObject.destroyAfterTime = properties.cleanUpTime;
+        particleObject.emissionTime = properties.emissionTime;
+        particleObject.immediateEmissionCount = properties.immediateEmissionCount;
         particleObject.Ready(this);
 
         return thisEmitter;
