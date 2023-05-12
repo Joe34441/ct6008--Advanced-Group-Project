@@ -41,20 +41,20 @@ public class SoundController : MonoBehaviour
 
     public void SetCategoryVolume(System.Single newVolume) {
         UpdateSoundManager();
-        int categoryIndex = soundManager.GetCategoryIndexFromID(managedCategory);
-        foreach (AudioSource currentSource in soundManager.soundCategories[categoryIndex].audioSources) {
-            currentSource.volume = (currentSource.volume / soundManager.soundCategories[categoryIndex].volume) * newVolume;
+        SoundManager.SoundCategory category = soundManager.GetCategoryFromID(managedCategory);
+        foreach (AudioSource currentSource in category.audioSources) {
+            currentSource.volume = (currentSource.volume / category.volume) * newVolume;
         }
-        soundManager.soundCategories[categoryIndex].volume = newVolume;
+        category.volume = newVolume;
     }
 
     public void SetCategoryVolume(string categoryID, float newVolume) {
         UpdateSoundManager();
-        int categoryIndex = soundManager.GetCategoryIndexFromID(managedCategory);
-        foreach (AudioSource currentSource in soundManager.soundCategories[categoryIndex].audioSources)
+        SoundManager.SoundCategory category = soundManager.GetCategoryFromID(managedCategory);
+        foreach (AudioSource currentSource in category.audioSources)
         {
-            currentSource.volume = (currentSource.volume / soundManager.soundCategories[categoryIndex].volume) * newVolume;
+            currentSource.volume = (currentSource.volume / category.volume) * newVolume;
         }
-        soundManager.soundCategories[categoryIndex].volume = newVolume;
+        category.volume = newVolume;
     }
 }

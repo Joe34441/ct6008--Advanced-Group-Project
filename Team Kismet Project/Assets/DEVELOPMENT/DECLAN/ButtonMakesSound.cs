@@ -11,4 +11,8 @@ public class ButtonMakesSound : MonoBehaviour
     public void OnMakeParticle() {
         ParticleManager.current.CreateParticle("TestPrefab", new Vector3(0f,0f,0f));
     }
+
+    public void OnDoEffect() {
+        EffectManager.current.CreateEffect("Example");
+    }
 }

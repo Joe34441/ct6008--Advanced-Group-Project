@@ -9,7 +9,7 @@ public class PlayBackgroundMusic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        AudioSource the = SoundManager.current.PlaySound(musicID,SoundManager.current.soundCategories[SoundManager.current.GetCategoryIndexFromID("music")]);
+        AudioSource the = SoundManager.current.PlaySound(musicID,SoundManager.current.GetCategoryFromID("music"));
         the.loop = true;
     }
 }
