@@ -5,7 +5,7 @@ using UnityEngine;
 public class ButtonMakesSound : MonoBehaviour
 {
     public void OnMakeSound() {
-        SoundManager.current.PlaySound("beep");
+        SoundManager.current.PlaySound("BackSound");
     }
 
     public void OnMakeParticle() {

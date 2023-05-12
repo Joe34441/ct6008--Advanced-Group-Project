@@ -6,9 +6,9 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour {
     // Do we want a singleton version of the class?
     [SerializeField] private bool isSingletonVersion = false;
-    [SerializeField] private bool persistBetweenScenes = true;
-    public static SoundManager current;
-    public static bool ready = false;
+    [SerializeField] private bool persistBetweenScenes = false;
+    public static SoundManager current; 
+    public static bool singletonReady = false;
 
     public static float masterVolume = 1f;
 
@@ -59,22 +59,29 @@ public class SoundManager : MonoBehaviour {
         // Management of singleton versions
         if (isSingletonVersion) {
             // Prevent multiple instances of the sound system from existing at once
-            if (ready) {
+            if (singletonReady) {
                 Destroy(this);
             } else {
-                ready = true;
+                singletonReady = true;
                 SoundManager.current = this;
                 currentSounds = new List<AudioSource>();
-                // Keep this between scenes
-                DontDestroyOnLoad(this.gameObject);
             }
+        }
+        // Persisting between scenes
+        if (persistBetweenScenes) {
+            DontDestroyOnLoad(this.gameObject);
         }
     }
 
     // Destroy function, remove all created audio sources
     private void OnDestroy() {
+        // Remove all audio sources maanged by this object
         foreach(AudioSource source in currentSounds) {
             Destroy(source.gameObject);
+        }
+        // Allow another singleton to take over if applicable
+        if (isSingletonVersion) {
+            singletonReady = false;
         }
     }
 
@@ -206,15 +213,15 @@ public class SoundManager : MonoBehaviour {
     }
 
     // == Get a sound category list from its ID
-    public int GetCategoryIndexFromID(string categoryID) {
+    public SoundCategory GetCategoryFromID(string categoryID) {
         foreach (SoundCategory thisCategory in soundCategories) {
             if (thisCategory.ID.Equals(categoryID)) {
-                return soundCategories.IndexOf(thisCategory);
+                return thisCategory;
             }
         }
 
         // Catch for if none is found
-        Debug.LogError("No category for given ID " + categoryID);
-        return 0;
+        Debug.LogError("No sound category for given ID " + categoryID);
+        return soundCategories[0];
     }
 }

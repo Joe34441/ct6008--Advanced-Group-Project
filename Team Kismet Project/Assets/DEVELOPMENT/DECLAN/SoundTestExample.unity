@@ -401,7 +401,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1059368513}
         m_TargetAssemblyTypeName: ButtonMakesSound, Assembly-CSharp
-        m_MethodName: OnMakeParticle
+        m_MethodName: OnMakeSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -498,7 +498,11 @@ MonoBehaviour:
     - ID: TestPrefab
       prefab: {fileID: 6148012927774360301, guid: 9ce611a1df4fecc4d87686f0b2fa9a39, type: 3}
       cleanUpTime: 2
-  particleCategories: []
+  particleCategories:
+  - ID: HitEffects
+    emitters: []
+  - ID: Environment
+    emitters: []
   currentEmitters: []
 --- !u!4 &1073283764
 Transform:
@@ -626,6 +630,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1600300095}
+  - component: {fileID: 1600300096}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -648,6 +653,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1600300096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600300093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740a3a4f08c003f41acfe7b27110fba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSingletonVersion: 1
+  persistBetweenScenes: 1
+  registeredSounds:
+  - ID: Music
+    registeredSounds: []
+  - ID: Sound Effects
+    registeredSounds:
+    - ID: BackSound
+      sound: {fileID: 8300000, guid: 1827f347983d71149af425acadf74ebf, type: 3}
+      volume: 1
+      cleanSelf: 1
+  soundCategories:
+  - ID: Music
+    audioSources: []
+  - ID: Sound Effects
+    audioSources: []
+  currentSounds: []
 --- !u!1 &2070905346
 GameObject:
   m_ObjectHideFlags: 0

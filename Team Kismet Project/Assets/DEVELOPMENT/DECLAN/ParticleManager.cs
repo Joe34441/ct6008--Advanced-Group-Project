@@ -52,16 +52,23 @@ public class ParticleManager : MonoBehaviour
                 singletonReady = true;
                 ParticleManager.current = this;
                 currentEmitters = new List<GameObject>();
-                // Keep this between scenes
-                DontDestroyOnLoad(this.gameObject);
             }
+        }
+        // Persisting between scenes
+        if (persistBetweenScenes) {
+            DontDestroyOnLoad(this.gameObject);
         }
     }
 
     // Destroy function, remove all created prefabs
     private void OnDestroy() {
+        // remove all emitters managed by this manager
         foreach (GameObject source in currentEmitters) {
             Destroy(source.gameObject);
+        }
+        // Allow another singleton to take over if applicable
+        if (isSingletonVersion) {
+            singletonReady = false;
         }
     }
 
@@ -160,18 +167,16 @@ public class ParticleManager : MonoBehaviour
         RemoveAll(currentEmitters);
     }
 
-    // == Get a sound category list from its ID (Unused function unported to new system)
-    /*
-    public int GetCategoryIndexFromID(string categoryID) {
-        foreach (SoundCategory thisCategory in soundCategories) {
+    // == Get a category list from its ID 
+    public ParticleCategory GetCategoryFromID(string categoryID) {
+        foreach (ParticleCategory thisCategory in particleCategories) {
             if (thisCategory.ID.Equals(categoryID)) {
-                return soundCategories.IndexOf(thisCategory);
+                return thisCategory;
             }
         }
 
         // Catch for if none is found
-        Debug.LogError("No category for given ID " + categoryID);
-        return 0;
+        Debug.LogError("No particle category for given ID " + categoryID);
+        return particleCategories[0];
     }
-    */
 }
