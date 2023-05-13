@@ -241,25 +241,25 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 5557403412687567327, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -7212626598409564403, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -4300377063070383823, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -5016220900242228026, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -701834426553284146, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: 141001637490051504, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -1179530722988111522, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: 7963331137316136968, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: 1010101663406019766, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -5435062490763800042, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -7299835113568168588, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -8667158411825384707, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: 1800232946202379687, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -995750197257138674, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -6117069354952886889, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -1506706657450380957, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: -1022500349900523273, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: 3609405841597086321, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
-  - {fileID: 2980226539593407056, guid: 396afc32b7f4f8c42b65e860894797dc, type: 3}
+  - {fileID: 2100000, guid: fe6cf3bd8f7866b45bc864992d516f2d, type: 2}
+  - {fileID: 2100000, guid: 005baf2f93e697145a17af9d3b368e1c, type: 2}
+  - {fileID: 2100000, guid: da0bd9ed18d44cf46895f717d1ec356e, type: 2}
+  - {fileID: 2100000, guid: 54990a551cf71ab48a10cb90c0bbc306, type: 2}
+  - {fileID: 2100000, guid: c6e217e75c7b7d14e905b50844192bd4, type: 2}
+  - {fileID: 2100000, guid: 04bbda536c47be542aac1600b5c8619d, type: 2}
+  - {fileID: 2100000, guid: fc0a1286ba4a60447a194fee0c21dccc, type: 2}
+  - {fileID: 2100000, guid: 845107a07d37508479b827cf31e59c9b, type: 2}
+  - {fileID: 2100000, guid: 91d4997a13dd51849bee37699edca594, type: 2}
+  - {fileID: 2100000, guid: ebf8b41e2da46854b84b81c2df690112, type: 2}
+  - {fileID: 2100000, guid: 78e6dfd45caaab94bbfeeb516cf8c718, type: 2}
+  - {fileID: 2100000, guid: 255bdd5afe49d704295fcbed36890bda, type: 2}
+  - {fileID: 2100000, guid: 7bd9b58581f1b2b4e9773e5554bc7b8a, type: 2}
+  - {fileID: 2100000, guid: ed4f52f43777460429f8248019894ea5, type: 2}
+  - {fileID: 2100000, guid: ff1e94e0bd01c7245a34fed95a66877a, type: 2}
+  - {fileID: 2100000, guid: fb35ae7638ab1e940b123d771eca75bb, type: 2}
+  - {fileID: 2100000, guid: 6702c7b5c2f3be4408e957a86318bb58, type: 2}
+  - {fileID: 2100000, guid: 42f342ff93b778b4a9d877a724791932, type: 2}
+  - {fileID: 2100000, guid: 76c1a6e0066dbab41a31470edbe4ce30, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -959,6 +959,7 @@ Transform:
   - {fileID: 5038711485942101632}
   - {fileID: 496896597907013429}
   - {fileID: 7674969415943728448}
+  - {fileID: 2058159384793879988}
   m_Father: {fileID: 1982709573041226210}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1526,6 +1527,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 320
   animator: {fileID: 4345143616588727559}
+  grappleConnection: {fileID: 6920377940914903918}
 --- !u!114 &397597289601070434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2271,6 +2273,37 @@ Transform:
   m_Children:
   - {fileID: 4685679504572960446}
   m_Father: {fileID: 4770044248632927974}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6920377940914903918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2058159384793879988}
+  m_Layer: 0
+  m_Name: GrappleConnection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2058159384793879988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6920377940914903918}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4108384999956776055}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7108368614371163654
