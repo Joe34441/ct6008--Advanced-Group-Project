@@ -243,6 +243,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 98e7fc6a9f1f03444b3c18edaa69cfa7, type: 2}
   - {fileID: 2100000, guid: 8b246de1c9a30a045a29b03aa84fc284, type: 2}
   - {fileID: 2100000, guid: 96c0509d7ea08024fa8c801bfeca8358, type: 2}
+  id: 0
 --- !u!137 &6661308334768292761
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -1517,6 +1518,7 @@ MonoBehaviour:
   _cameraPositionOffset: 10
   _cameraPositionLerpRate: 0.1
   _cameraRotationLerpRate: 0.1
+  matSetter: {fileID: 2851259754354782506}
   camRaycastReference: {fileID: 26631113310054572}
   badlocaltagboolstatecheckthingbutpublic: 1
   _GameOver:

@@ -39,6 +39,7 @@ public class Character : NetworkTransform
 	private CharacterController _characterController;
 	private PlayerAbilities _playerAbilities;
 	private HUDHandler _hudHandler;
+	[SerializeField] private MaterialSetter matSetter;
 
 	public GameObject camRaycastReference;
 
@@ -124,6 +125,27 @@ public class Character : NetworkTransform
 		_playerAbilities = GetComponent<PlayerAbilities>();
 		_hudHandler = GameObject.FindGameObjectWithTag("HUDHandler").GetComponent<HUDHandler>();
 		_introCutscene = GameObject.FindGameObjectWithTag("CutsceneManager").GetComponent<IntroCutscene>();
+
+		if (Object.InputAuthority == 0)
+		{
+			matSetter.newColour = Color.magenta;
+			matSetter.SetMats();
+		}
+		if (Object.InputAuthority == 1)
+		{
+			matSetter.newColour = Color.cyan;
+			matSetter.SetMats();
+		}
+		if (Object.InputAuthority == 2)
+		{
+			matSetter.newColour = Color.green;
+			matSetter.SetMats();
+		}
+		if (Object.InputAuthority == 3)
+		{
+			matSetter.newColour = Color.yellow;
+			matSetter.SetMats();
+		}
 
 		if (Object.HasInputAuthority)
 		{
