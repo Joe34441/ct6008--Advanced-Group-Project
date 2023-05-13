@@ -17,64 +17,48 @@ public class IntroCutscene : MonoBehaviour
 
     private List<GameObject> subscenePoints = new List<GameObject>();
 
-    private int activeSubscene = 0;
+    private int activeSubscene = 1;
 
     private bool finishedIntro = false;
     public bool playingIntro = false;
 
-    private float totalCutsceneTime;
-
     private float cutsceneSubTime;
     private float cutsceneSubTimer;
 
-    private float cutsceneTransitionSubTime = 0.5f;
-    private float custsceneTransitionSubTimer;
+    private float cutsceneTransitionSubTime = 0.35f;
 
     private bool startedSubscene1;
     private bool startedSubscene2;
     private bool startedSubscene3;
 
+    private Vector3 startPos;
+    private Quaternion startRot;
+
+    private int pointIndex = 0;
+
+    private bool switchedPointIndex = false;
+
+    private bool startedIntro = false;
+
     private void Start()
     {
-        foreach (Transform transform in firstSubscenePoints.transform)
-        {
-            transform.GetComponent<MeshRenderer>().enabled = false;
-        }
-
-        foreach (Transform transform in secondSubscenePoints.transform)
-        {
-            transform.GetComponent<MeshRenderer>().enabled = false;
-        }
-
-        //foreach (GameObject obj in finalSubscenePoints)
-        //{
-        //    foreach (Transform transform in obj.transform)
-        //    {
-        //        transform.GetComponent<MeshRenderer>().enabled = false;
-        //    }
-        //}
+        DisableReferenceMeshRenderer(firstSubscenePoints.transform);
+        DisableReferenceMeshRenderer(secondSubscenePoints.transform);
 
         foreach (GameObject obj in finalSubscenePoints)
         {
-            foreach (Transform trans1 in obj.transform.GetComponentsInChildren<Transform>())
-            {
-                if (transform.childCount > 0)
-                {
-                    foreach (Transform trans2 in trans1.transform.GetComponentsInChildren<Transform>())
-                    {
-                        MeshRenderer mr = trans2.GetComponent<MeshRenderer>();
-                        if (mr != null) mr.enabled = false;
-                    }
-                }
-                MeshRenderer mr2 = trans1.GetComponent<MeshRenderer>();
-                if (mr2 != null) mr2.enabled = false;
-            }
+            DisableReferenceMeshRenderer(obj.transform);
         }
+
+        Vector4 colour = cover.color;
+        colour.w = 1;
+        cover.color = colour;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!startedIntro) return;
         if (finishedIntro) return;
         if (!playingIntro) return;
 
@@ -84,75 +68,55 @@ public class IntroCutscene : MonoBehaviour
     public void PlayIntro(int playerID, float timeToPlay)
     {
         playingIntro = true;
-        totalCutsceneTime = timeToPlay;
-        cutsceneSubTime = (timeToPlay - 1) / 3;
-        Debug.Log("sub time: " + cutsceneSubTime);
+        startedIntro = true;
+        activeSubscene = 1;
+        cutsceneSubTime = (timeToPlay - (cutsceneTransitionSubTime * 2)) / 3;
         cutscenePoints = finalSubscenePoints[playerID];
 
-        Invoke("ShutOff", timeToPlay);
+        Invoke("ShutOff", timeToPlay + cutsceneTransitionSubTime);
     }
 
     private void Cutscene()
     {
-        if (activeSubscene == 0)
+        TransitionEffect();
+        PrepareLerp();
+        PerformLerp(pointIndex);
+    }
+
+    private void TransitionEffect()
+    {
+        if (cutsceneSubTimer <= cutsceneTransitionSubTime)
         {
-            if (!startedSubscene1)
-            {
-                subscenePoints.Clear();
-                foreach (Transform transform in firstSubscenePoints.transform)
-                {
-                    if (transform.parent == firstSubscenePoints.transform) subscenePoints.Add(transform.gameObject);
-                }
-
-                Camera.main.transform.position = subscenePoints[0].transform.position;
-                Camera.main.transform.rotation = subscenePoints[0].transform.rotation;
-
-                startedSubscene1 = true;
-            }
-
-            PerformLerp(1);
-            //Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, subscenePoints[1].transform.position, Time.deltaTime / cutsceneSubTime);
-            //Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, subscenePoints[1].transform.rotation, Time.deltaTime / cutsceneSubTime);
-
-            if (cutsceneSubTimer < cutsceneSubTime) cutsceneSubTimer += Time.deltaTime;
-            else
-            {
-                activeSubscene = 1;
-            }
+            Vector4 colour = cover.color;
+            colour.w = Mathf.Lerp(1, 0, cutsceneSubTimer / cutsceneTransitionSubTime);
+            cover.color = colour;
         }
-        else if (activeSubscene == 1)
+        else if (cutsceneSubTimer >= cutsceneSubTime - cutsceneTransitionSubTime)
         {
-            if (!startedSubscene2)
-            {
-                subscenePoints.Clear();
-                foreach (Transform transform in secondSubscenePoints.transform)
-                {
-                    if (transform.parent == secondSubscenePoints.transform) subscenePoints.Add(transform.gameObject);
-                }
-
-                Camera.main.transform.position = subscenePoints[0].transform.position;
-                Camera.main.transform.rotation = subscenePoints[0].transform.rotation;
-
-                startedSubscene2 = true;
-            }
-
-            PerformLerp(1);
-            //Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, subscenePoints[1].transform.position, Time.deltaTime / cutsceneSubTime);
-            //Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, subscenePoints[1].transform.rotation, Time.deltaTime / cutsceneSubTime);
-
-            if (cutsceneSubTimer < cutsceneSubTime) cutsceneSubTimer += Time.deltaTime;
-            else
-            {
-                activeSubscene = 1;
-            }
-
+            Vector4 colour = cover.color;
+            colour.w = Mathf.Lerp(0, 1, (cutsceneSubTimer - cutsceneSubTime + cutsceneTransitionSubTime) / cutsceneTransitionSubTime);
+            cover.color = colour;
+        }
+        else if (cover.color.a != 0)
+        {
+            Vector4 colour = cover.color;
+            colour.w = 0;
+            cover.color = colour;
         }
     }
 
     private void PerformLerp(int index)
     {
-        Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, subscenePoints[index].transform.position, Time.deltaTime / cutsceneSubTime);
-        Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, subscenePoints[index].transform.rotation, Time.deltaTime / cutsceneSubTime);
+        if (activeSubscene == 0) return;
+
+        float lerpTime;
+
+        if (subscenePoints.Count == 2) lerpTime = cutsceneSubTimer / cutsceneSubTime;
+        else if (index == 1) lerpTime = cutsceneSubTimer / (cutsceneSubTime / 2);
+        else lerpTime = (2 * cutsceneSubTimer - cutsceneSubTime) / cutsceneSubTime; //(cutsceneSubTimer - (cutsceneSubTime / 2)) / (cutsceneSubTime / 2);
+
+        Camera.main.transform.position = Vector3.Lerp(startPos, subscenePoints[index].transform.position, lerpTime);
+        Camera.main.transform.rotation = Quaternion.Lerp(startRot, subscenePoints[index].transform.rotation, lerpTime);
     }
 
     private void ShutOff()
@@ -160,5 +124,97 @@ public class IntroCutscene : MonoBehaviour
         Destroy(cover.gameObject);
         playingIntro = false;
         finishedIntro = true;
+    }
+
+    private void PrepareSubScene(Transform point)
+    {
+        subscenePoints.Clear();
+        foreach (Transform transform in point)
+        {
+            if (transform.parent == point) subscenePoints.Add(transform.gameObject);
+        }
+
+        startPos = subscenePoints[0].transform.position;
+        startRot = subscenePoints[0].transform.rotation;
+
+        Camera.main.transform.position = startPos;
+        Camera.main.transform.rotation = startRot;
+
+        pointIndex = 1;
+
+        switchedPointIndex = false;
+    }
+
+    private void PrepareLerp()
+    {
+        if (activeSubscene == 1)
+        {
+            if (!startedSubscene1)
+            {
+                PrepareSubScene(firstSubscenePoints.transform);
+                startedSubscene1 = true;
+            }
+
+            if (cutsceneSubTimer < cutsceneSubTime) cutsceneSubTimer += Time.deltaTime;
+            else
+            {
+                activeSubscene = 2;
+                cutsceneSubTimer = 0;
+            }
+        }
+        else if (activeSubscene == 2)
+        {
+            if (!startedSubscene2)
+            {
+                PrepareSubScene(secondSubscenePoints.transform);
+                startedSubscene2 = true;
+            }
+
+            if (cutsceneSubTimer < cutsceneSubTime) cutsceneSubTimer += Time.deltaTime;
+            else
+            {
+                activeSubscene = 3;
+                cutsceneSubTimer = 0;
+            }
+
+            if (!switchedPointIndex)
+            {
+                if (cutsceneSubTimer > cutsceneSubTime / 2)
+                {
+                    switchedPointIndex = true;
+                    pointIndex = 2;
+                    startPos = Camera.main.transform.position;
+                    startRot = Camera.main.transform.rotation;
+                }
+            }
+        }
+        else if (activeSubscene == 3)
+        {
+            if (!startedSubscene3)
+            {
+                PrepareSubScene(cutscenePoints.transform);
+                startedSubscene3 = true;
+            }
+
+            if (cutsceneSubTimer < cutsceneSubTime) cutsceneSubTimer += Time.deltaTime;
+            else
+            {
+                activeSubscene = 0;
+                cutsceneSubTimer = 0;
+            }
+        }
+        else if (activeSubscene == 0)
+        {
+            cutsceneSubTimer += Time.deltaTime;
+        }
+    }
+
+    private void DisableReferenceMeshRenderer(Transform transform)
+    {
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<MeshRenderer>().enabled = false;
+            child.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+        }
     }
 }
