@@ -6,10 +6,12 @@ public class ParticleObject : MonoBehaviour
 {
     // Public variables modified by soundmanager class during creation process
     public List<GameObject> listToRemoveFrom = new List<GameObject>();
-    public float destroyAfterTime = -1f;
+    public float emissionTime = -1f;
+    public int immediateEmissionCount;
 
     // Private variables
     private ParticleManager creator;
+    private ParticleSystem particle;
 
     // Start is called before the first frame update
     public void Ready(ParticleManager thisCreator) {
@@ -17,8 +19,11 @@ public class ParticleObject : MonoBehaviour
         creator = thisCreator;
         creator.currentEmitters.Add(gameObject);
 
+        // Emit immediate emission amount
+        particle.Emit(immediateEmissionCount);
+
         // Destroy when done
-        if (destroyAfterTime >= 0f) {
+        if (emissionTime >= 0f) {
             StartCoroutine("cleanUp");
         }
     }
@@ -29,7 +34,13 @@ public class ParticleObject : MonoBehaviour
     }
 
     IEnumerator cleanUp() {
-        yield return new WaitForSeconds(destroyAfterTime);
+        // While there are still active particles from this object, don't destroy it, but turn it off after emissionTime expires
+        yield return new WaitForSeconds(emissionTime);
+
+        // Stop producing new particles and then wait until they're all gone
+        particle.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+        yield return new WaitUntil(() => !particle.IsAlive());
+
         Destroy(this.gameObject);
     }
 
@@ -43,5 +54,6 @@ public class ParticleObject : MonoBehaviour
     // Adds self to category list
     void Awake() {
         listToRemoveFrom.Add(gameObject);
+        particle = GetComponent<ParticleSystem>();
     }
 }
