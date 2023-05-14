@@ -36,7 +36,7 @@ public class PlayerCharacterController : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
 
     public Animator animator;
-
+    public GameObject grappleConnection;
     //original -
 
     //private float moveSpeed = 0;

@@ -88,8 +88,10 @@ public class Character : NetworkTransform
 
 		return;
 
-		if (self.IsTagged) self._playerMeshRenderer.material = self._playerTaggedMaterial;
-		else self._playerMeshRenderer.material = self._playerNotTaggedMaterial;
+		//if (self.IsTagged) self._playerMeshRenderer.material = self._playerTaggedMaterial;
+		//else self._playerMeshRenderer.material = self._playerNotTaggedMaterial;
+		if (self.IsTagged) self._playerMeshRenderer.enabled = true;
+		else self._playerMeshRenderer.enabled = false;
 	}
 
 
@@ -167,8 +169,10 @@ public class Character : NetworkTransform
 		if (tagMeshToggle != IsTagged)
 		{
 			tagMeshToggle = IsTagged;
-			if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
-			else _playerMeshRenderer.material = _playerNotTaggedMaterial;
+			//if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
+			//else _playerMeshRenderer.material = _playerNotTaggedMaterial;
+			if (IsTagged) _playerMeshRenderer.enabled = true;
+			else _playerMeshRenderer.enabled = false;
 		}
 	}
 
@@ -459,9 +463,11 @@ public class Character : NetworkTransform
             badlocaltaggedcheck = IsTagged;
             badlocaltagboolstatecheckthing = true;
             badlocaltagboolstatecheckthingbutpublic = false;
-            if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
-            else _playerMeshRenderer.material = _playerNotTaggedMaterial;
-        }
+            //if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
+            //else _playerMeshRenderer.material = _playerNotTaggedMaterial;
+			if (IsTagged) _playerMeshRenderer.enabled = true;
+			else _playerMeshRenderer.enabled = false;
+		}
 
         if (badlocaltagboolstatecheckthing)
         {
