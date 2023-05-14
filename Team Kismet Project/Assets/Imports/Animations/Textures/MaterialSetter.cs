@@ -11,9 +11,11 @@ public class MaterialSetter : MonoBehaviour
 
     public int id;
 
+    private SkinnedMeshRenderer _renderer;
+
     private void Awake()
     {
-        SkinnedMeshRenderer _renderer = GetComponent<SkinnedMeshRenderer>();
+        _renderer = GetComponent<SkinnedMeshRenderer>();
         for(int i = 2; i <= 8; i++)
         {
             matsToChange[i - 2] = _renderer.materials[i];
@@ -32,6 +34,22 @@ public class MaterialSetter : MonoBehaviour
         for (int i = 0; i < matsToChange.Count; i++)
         {
             matsToChange[i].SetColor("_New_Colour", newColour);
+        }
+    }
+
+    public void SetTagged()
+    {
+        for(int i = 0; i < _renderer.materials.Length; i++)
+        {
+            _renderer.materials[i].SetInt("_IsTagged", 1);
+        }
+    }
+
+    public void SetUnTagged()
+    {
+        for (int i = 0; i < _renderer.materials.Length; i++)
+        {
+            _renderer.materials[i].SetInt("_IsTagged", 0);
         }
     }
 
