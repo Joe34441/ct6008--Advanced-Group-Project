@@ -14,8 +14,6 @@ public class Decoy : Ability
 
     public float numOfDecoys = 4;
 
-    //public float numberOfDecoys = 1;
-
     public override void ActivateAbility()
     {
 
@@ -24,7 +22,6 @@ public class Decoy : Ability
             currentDecoy = playerRef.GetComponent<Character>().GetRunner().Spawn(decoyObj, spawnLocation.transform.position, playerRef.transform.rotation, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority).gameObject;
 
             Vector3 randomPosition = Random.insideUnitSphere * 5;
-            //Vector3 direction = (playerRef.transform.position - randomPosition).normalized;
             randomPosition.y = 0;
             randomPosition.Normalize();
             currentDecoy.GetComponent<DecoyBehaviour>().BeginMoving(randomPosition, decoySpeed, playerRef.GetComponent<Character>().GetRunner(), decoyUpTime);

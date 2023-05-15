@@ -9,6 +9,7 @@ public class GrappleHook : Ability
     [SerializeField] private bool offline = false;
 
     public float maxGrappleDistance = 20.0f;
+    public float minGrappleDistance = 3.0f;
     public LayerMask hitList;
     public GameObject cablePrefab;
     private Vector3 connectionPoint;

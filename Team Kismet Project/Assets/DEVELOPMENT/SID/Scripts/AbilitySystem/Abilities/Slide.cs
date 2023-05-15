@@ -15,13 +15,16 @@ public class Slide : Ability
     private float timeRef;
     private float slideTimer = 0.5f;
 
+    private Animator animator;
+
     public override void ActivateAbility()
     {
+        //early out if not moving or movement is disabled
+        if (!playerController.moving || playerController.movementDisabled) return;
         timeRef = Time.time;
         returnSpeed = playerController.moveSpeed;
         playerController.moveSpeed = slideSpeed;
-        playerBody.transform.localScale += new Vector3(0, -0.5f, 0);
-        playerBody.transform.position += new Vector3(0, -0.5f, 0);
+        animator.SetTrigger("Sliding");
 
         shouldUpdate = true;
         activated = true;
@@ -30,8 +33,6 @@ public class Slide : Ability
     public override void DeactivateAbility()
     {
         playerController.moveSpeed = returnSpeed;
-        playerBody.transform.localScale += new Vector3(0, 0.5f, 0);
-        playerBody.transform.position += new Vector3(0, 0.5f, 0);
 
         shouldUpdate = false;
         activated = false;
@@ -43,13 +44,14 @@ public class Slide : Ability
         
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController, float _slideSpeed)
+    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController, float _slideSpeed, Animator _animator)
     {
         playerRef = _playerRef;
         playerCamera = _camera;
         playerController = _playerController;
         slideSpeed = _slideSpeed;
         playerBody = playerController.GetPlayerBody();
+        animator = _animator;
     }
 
     public override void Released()

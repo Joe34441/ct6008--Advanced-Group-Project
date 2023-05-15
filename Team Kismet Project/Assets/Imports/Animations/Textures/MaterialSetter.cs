@@ -53,6 +53,16 @@ public class MaterialSetter : MonoBehaviour
         }
     }
 
+    public void SetInvisible()
+    {
+
+    }
+
+    public void SetVisible()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {

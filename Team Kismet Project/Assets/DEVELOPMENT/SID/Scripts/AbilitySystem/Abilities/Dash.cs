@@ -13,11 +13,15 @@ public class Dash : Ability
     private float timeRef;
     private float dashTimer = 0.25f;
 
+    private Animator animator;
+
     public override void ActivateAbility()
     {
+        //early out if not moving or movement is disabled
+        if (!playerController.moving || playerController.movementDisabled) return;
         timeRef = Time.time;
         playerController.moveSpeed = dashSpeed;
-        
+        animator.SetTrigger("Rolling");
         activated = true;
         shouldUpdate = true;
     }
@@ -35,13 +39,14 @@ public class Dash : Ability
         
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController, float _dashSpeed)
+    public void Initialize(GameObject _playerRef, Camera _camera, PlayerCharacterController _playerController, float _dashSpeed, Animator _animator)
     {
         playerRef = _playerRef;
         playerCamera = _camera;
         playerController = _playerController;
         dashSpeed = _dashSpeed;
         returnSpeed = playerController.moveSpeed;
+        animator = _animator;   
     }
 
     public override void Released()

@@ -16,6 +16,8 @@ public class Sprint : Ability
 
     public override void ActivateAbility()
     {
+        //early out if the player isnt moving or if movement is disabled
+        if (!playerController.moving || playerController.movementDisabled) return;
         playerController.moveSpeed = sprintSpeed;
         timeRef = Time.time;    
         activated = true;

@@ -22,6 +22,7 @@ public class PlayerCharacterController : MonoBehaviour
     private float jumpTime = 0.5f;
 
     [HideInInspector] public bool movementDisabled = false;
+    [HideInInspector] public bool moving = false;
 
     private Vector3 velocity;
     public float jumpPower = 3.0f;
@@ -36,7 +37,7 @@ public class PlayerCharacterController : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
 
     public Animator animator;
-    public GameObject grappleConnection;
+    
     //original -
 
     //private float moveSpeed = 0;
@@ -108,6 +109,7 @@ public class PlayerCharacterController : MonoBehaviour
 
         if (movementDisabled)
         {
+            animator.SetBool("Running", false);
             return;
         }
 
@@ -116,11 +118,13 @@ public class PlayerCharacterController : MonoBehaviour
         {
             //skip movement calculations, but move by zero to keep colliders active for this frame
             characterController.Move(Vector3.zero);
+            moving = false;
             animator.SetBool("Running", false);
             return;
         }
 
         animator.SetBool("Running", true);
+        moving = true;
         Vector3 directionMovement = Vector3.zero;
         float rotationAngle = transform.eulerAngles.y;
         //update x/z movement and rotation
