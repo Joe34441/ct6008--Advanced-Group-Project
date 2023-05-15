@@ -75,7 +75,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            AssignAbility(abilityManager.dash, 3);
+            AssignAbility(abilityManager.smokeBomb, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -110,7 +110,7 @@ public class PlayerAbilities : MonoBehaviour
                 {
                     SmokeBomb smokeAbility = ScriptableObject.CreateInstance<SmokeBomb>();
                     smokeAbility.Initialize(gameObject, Camera.main, abilityManager.smokeBomb.smokePrefab, playerController.face, 
-                        abilityManager.smokeBomb.disappearMat, abilityManager.smokeBomb.renderTimeScale, abilityManager.smokeBomb.invisibleTimer);
+                        abilityManager.smokeBomb.disappearMat, abilityManager.smokeBomb.renderTimeScale, abilityManager.smokeBomb.invisibleTimer, _playerCharacter.GetMatSetter());
                     smokeAbility.abilityName = abilityManager.smokeBomb.abilityName;
                     smokeAbility.cooldown = abilityManager.smokeBomb.cooldown;
                     AssignAbility(smokeAbility, index);

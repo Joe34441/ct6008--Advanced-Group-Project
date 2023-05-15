@@ -55,12 +55,18 @@ public class MaterialSetter : MonoBehaviour
 
     public void SetInvisible()
     {
-
+        for (int i = 0; i < _renderer.materials.Length; i++)
+        {
+            _renderer.materials[i].SetInt("_IsInvisible", 1);
+        }
     }
 
     public void SetVisible()
     {
-
+        for (int i = 0; i < _renderer.materials.Length; i++)
+        {
+            _renderer.materials[i].SetInt("_IsInvisible", 0);
+        }
     }
 
     // Update is called once per frame

@@ -20,14 +20,17 @@ public class SmokeBomb : Ability
     private float timeRef;
     public float invisibleTimer = 3.5f;
 
+    private MaterialSetter matSetter;
+
     public override void Update()
     {
-        if(matSet)
-        {
-            currentTime += Time.deltaTime / renderTimeScale;
-            renderer.material.SetFloat("_Cutoff_Level", currentTime);
-            face.GetComponent<Renderer>().material.SetFloat("_Cutoff_Level", currentTime);
-        }
+        //if(matSet)
+        //{
+        //    currentTime += Time.deltaTime / renderTimeScale;
+        //    renderer.material.SetFloat("_Cutoff_Level", currentTime);
+        //    face.GetComponent<Renderer>().material.SetFloat("_Cutoff_Level", currentTime);
+            
+        //}
 
         if(Time.time - timeRef >= invisibleTimer)
         {
@@ -38,10 +41,7 @@ public class SmokeBomb : Ability
 
     public override void ActivateAbility()
     {
-        renderer = playerRef.GetComponentInChildren<MeshRenderer>();
-        returnMat = renderer.material;
-        renderer.material = disappearMat;
-        //face.GetComponent<Renderer>().material = disappearMat;
+        matSetter.SetInvisible();
         playerRef.GetComponent<Character>().HideName();
         currentTime = 0;
         GameObject smoke = Instantiate(smokePrefab, new Vector3(playerRef.transform.position.x, playerRef.transform.position.y + 1f, playerRef.transform.position.z),
@@ -56,9 +56,8 @@ public class SmokeBomb : Ability
 
     public override void DeactivateAbility()
     {
-        renderer.material = returnMat;
-        face.GetComponent<Renderer>().material = returnMat;
         playerRef.GetComponent<Character>().ShowName();
+        matSetter.SetVisible();
         matSet = false;
         shouldUpdate = false;
         activated = false;
@@ -76,7 +75,7 @@ public class SmokeBomb : Ability
         matSet = false;
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, GameObject _smokePrefab, GameObject _face, Material _disMat, float _renderTime, float _invisibleTime)
+    public void Initialize(GameObject _playerRef, Camera _camera, GameObject _smokePrefab, GameObject _face, Material _disMat, float _renderTime, float _invisibleTime, MaterialSetter _matSetter)
     {
         playerRef = _playerRef;
         playerCamera = _camera;
@@ -87,5 +86,6 @@ public class SmokeBomb : Ability
         renderTimeScale = _renderTime;
         invisibleTimer = _invisibleTime;
         face = _face;
+        matSetter = _matSetter;
     }
 }

@@ -120,6 +120,8 @@ public class Character : NetworkTransform
 
 	public MeshRenderer GetMeshRenderer() { return _playerMeshRenderer; }
 
+	public MaterialSetter GetMatSetter() { return matSetter; }
+
 	public override void Spawned()
 	{
 		thisPlayerRef = Object.InputAuthority;
