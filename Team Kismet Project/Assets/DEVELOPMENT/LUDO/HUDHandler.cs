@@ -244,19 +244,19 @@ public class HUDHandler : MonoBehaviour
             if(ability.name == ability1)
             {
                 ability1Object = Instantiate(ability);
-                ability1Object.transform.parent = canvas;
+                ability1Object.transform.SetParent(canvas, false);
                 ability1Object.GetComponent<RectTransform>().anchoredPosition = new Vector2(-746.6f, 268.92f);
             }
             else if (ability.name == ability2)
             {
                 ability2Object = Instantiate(ability);
-                ability2Object.transform.parent = canvas;
+                ability2Object.transform.SetParent(canvas, false);
                 ability2Object.GetComponent<RectTransform>().anchoredPosition = new Vector2(-769.1f, -16.3f);
             }
             else if (ability.name == ability3)
             {
                 ability3Object = Instantiate(ability);
-                ability3Object.transform.parent = canvas;
+                ability3Object.transform.SetParent(canvas, false);
                 ability3Object.GetComponent<RectTransform>().anchoredPosition = new Vector2(-794.0f, -291.57f);
             }
         }
