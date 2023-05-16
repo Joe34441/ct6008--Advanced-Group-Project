@@ -37,7 +37,8 @@ public class PlayerCharacterController : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
 
     public Animator animator;
-    
+    public GameObject grapplePoint;
+
     //original -
 
     //private float moveSpeed = 0;
@@ -62,7 +63,15 @@ public class PlayerCharacterController : MonoBehaviour
             {
                 jumpTimer = 0;
                 jumping = true;
-                animator.SetTrigger("StartJump");
+                
+                if(superJump)
+                {
+                    animator.SetTrigger("HighJump");
+                }
+                else
+                {
+                    animator.SetTrigger("StartJump");
+                }
             }
         }
         if (grounded && tryJump && !jumping)
@@ -70,7 +79,15 @@ public class PlayerCharacterController : MonoBehaviour
             jumpTimer = 0;
             jumping = true;
             tryJump = false;
-            animator.SetTrigger("StartJump");
+            if(superJump)
+            {
+                animator.SetTrigger("HighJump");
+            }
+            else
+            {
+                animator.SetTrigger("StartJump");
+            }
+            
         }
 
         Vector3 verticalMovement = Vector3.zero;
@@ -89,6 +106,7 @@ public class PlayerCharacterController : MonoBehaviour
             {
 
                 velocity.y = Mathf.Sqrt(jumpPower * -4f * -9.81f);
+                
             }
 
         }

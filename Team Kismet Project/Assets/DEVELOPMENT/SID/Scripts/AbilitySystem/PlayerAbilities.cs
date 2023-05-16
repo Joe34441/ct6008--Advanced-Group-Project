@@ -75,7 +75,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            AssignAbility(abilityManager.smokeBomb, 3);
+            //AssignAbility(abilityManager.grapple, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -100,7 +100,8 @@ public class PlayerAbilities : MonoBehaviour
                 {
                     GrappleHook grappleAbility = ScriptableObject.CreateInstance<GrappleHook>();
                     grappleAbility.Initialize(gameObject, Camera.main, _playerCharacter.GetCameraReference(), playerController, abilityManager.grapple.hitList,
-                        abilityManager.grapple.cablePrefab, abilityManager.grapple.grappleSpeed, abilityManager.grapple.maxGrappleDistance);
+                        abilityManager.grapple.cablePrefab, abilityManager.grapple.grappleSpeed, abilityManager.grapple.maxGrappleDistance, playerController.animator,
+                        playerController.grapplePoint);
                     grappleAbility.abilityName = abilityManager.grapple.abilityName;
                     grappleAbility.cooldown = abilityManager.grapple.cooldown;
                     AssignAbility(grappleAbility, index);

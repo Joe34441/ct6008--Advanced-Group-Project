@@ -25,6 +25,8 @@ public class GrappleHook : Ability
     private float timeSinceStart;
 
     private GameObject raycastRef;
+    private Animator animator;
+    private GameObject grapplePoint;
 
     public override void Update()
     {
@@ -32,7 +34,7 @@ public class GrappleHook : Ability
         {
             if (grappleCable)
             {
-                grappleCable.transform.position = playerRef.transform.position;
+                grappleCable.transform.position = grapplePoint.transform.position;
                 timeSinceStart += Time.deltaTime;
                 float travelPercent = timeSinceStart / travelTime;
                 if (travelPercent >= 0.9f)
@@ -43,6 +45,7 @@ public class GrappleHook : Ability
                 }
                 //playerController.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
                 playerRef.transform.position = Vector3.Lerp(startPoint, connectionPoint, travelPercent);
+                playerRef.transform.rotation = Quaternion.LookRotation(connectionPoint);
             }
         }
     }
@@ -57,9 +60,11 @@ public class GrappleHook : Ability
         if (Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
         {
             connectionPoint = hit.point;
+            //early out if the grapple is too close to the player
+            if (Vector3.Distance(raycastRef.transform.position, connectionPoint) < minGrappleDistance) return;
             //currentCable is a gameobject, grappleCable is the actual cable class itself
             currentCable = Instantiate(cablePrefab);
-            currentCable.transform.position = playerRef.transform.position;
+            currentCable.transform.position = grapplePoint.transform.position;
             grappleCable = currentCable.GetComponentInChildren<CableComponent>();
             grappleCable.SetEndLocation(connectionPoint);
 
@@ -76,7 +81,8 @@ public class GrappleHook : Ability
             travelTime = distanceToGrapple / grappleSpeed;
 
             timeSinceStart = 0;
-
+            animator.SetTrigger("StartGrapple");
+            animator.SetBool("Grappling", true);
             connected = true;
             shouldUpdate = true;
             activated = true;
@@ -97,7 +103,7 @@ public class GrappleHook : Ability
         //}
     }
 
-    public void Initialize(GameObject _playerRef, Camera _camera, Transform _cameraRef, PlayerCharacterController _playerController, LayerMask _hitList, GameObject _cablePrefab, float _grappleSpeed, float _grappleDistance)
+    public void Initialize(GameObject _playerRef, Camera _camera, Transform _cameraRef, PlayerCharacterController _playerController, LayerMask _hitList, GameObject _cablePrefab, float _grappleSpeed, float _grappleDistance, Animator _animator, GameObject _grapplePoint)
     {
         playerRef = _playerRef;
         playerCamera = _camera;
@@ -109,6 +115,8 @@ public class GrappleHook : Ability
         playerController = _playerController;
         raycastRef = playerRef.GetComponent<Character>().camRaycastReference;
         onCooldown = false;
+        animator = _animator;
+        grapplePoint = _grapplePoint;
     }
 
     public override void Released()
@@ -124,6 +132,7 @@ public class GrappleHook : Ability
 
         playerController.movementDisabled = false;
 
+        animator.SetBool("Grappling", false);
         shouldUpdate = false;
         onCooldown = true;
         activated = false;
