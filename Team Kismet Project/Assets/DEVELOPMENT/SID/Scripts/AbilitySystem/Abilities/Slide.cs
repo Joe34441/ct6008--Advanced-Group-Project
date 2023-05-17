@@ -13,7 +13,7 @@ public class Slide : Ability
     private PlayerCharacterController playerController;
 
     private float timeRef;
-    private float slideTimer = 0.5f;
+    private float slideTimer = 0.75f;
 
     private Animator animator;
 
@@ -25,6 +25,8 @@ public class Slide : Ability
         returnSpeed = playerController.moveSpeed;
         playerController.moveSpeed = slideSpeed;
         animator.SetTrigger("Sliding");
+        var particle = EffectManager.current.CreateEffect("SlideWoosh", playerRef);
+        particle.particle.transform.rotation = playerRef.transform.rotation;
 
         shouldUpdate = true;
         activated = true;

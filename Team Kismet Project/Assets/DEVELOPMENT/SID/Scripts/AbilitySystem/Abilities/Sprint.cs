@@ -22,6 +22,8 @@ public class Sprint : Ability
         timeRef = Time.time;    
         activated = true;
         shouldUpdate = true;
+        EffectManager.current.CreateEffect("SpeedWoosh", playerRef.transform.position, playerRef.transform.rotation);
+        playerCamera.fieldOfView = 67;
     }
 
     public override void DeactivateAbility()
@@ -30,6 +32,7 @@ public class Sprint : Ability
         shouldUpdate = false;
         activated = false;
         onCooldown = true;
+        playerCamera.fieldOfView = 60;
     }
 
     public override void Initialize(GameObject _playerRef, Camera _camera)

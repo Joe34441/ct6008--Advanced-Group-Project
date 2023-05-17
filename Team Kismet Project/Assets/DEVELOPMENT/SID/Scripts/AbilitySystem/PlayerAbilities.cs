@@ -168,7 +168,7 @@ public class PlayerAbilities : MonoBehaviour
             case AbilityTypes.DoubleJump:
                 {
                     DoubleJump doubleJump = ScriptableObject.CreateInstance<DoubleJump>();
-                    doubleJump.Initialize(gameObject, Camera.main, playerController);
+                    doubleJump.Initialize(gameObject, Camera.main, playerController, playerController.animator);
                     doubleJump.abilityName = abilityManager.doubleJump.abilityName;
                     doubleJump.cooldown = abilityManager.doubleJump.cooldown;
                     AssignAbility(doubleJump, index);

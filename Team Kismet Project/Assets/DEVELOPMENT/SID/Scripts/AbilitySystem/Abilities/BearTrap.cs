@@ -110,6 +110,7 @@ public class BearTrap : Ability
         //playerRef.GetComponent<Character>().GetPlayer().Runner.Spawn(trapPrefab, trapLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
         playerRef.GetComponent<Character>().GetRunner().Spawn(trapPrefab, trapLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
         onCooldown = true;
+        EffectManager.current.CreateEffect("TrapOpen", trapLocation);
         DeactivateAbility();
     }
 

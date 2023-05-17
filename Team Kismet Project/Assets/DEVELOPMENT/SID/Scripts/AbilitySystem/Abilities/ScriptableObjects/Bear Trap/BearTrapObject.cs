@@ -44,6 +44,7 @@ public class BearTrapObject : MonoBehaviour
             other.gameObject.GetComponent<PlayerCharacterController>().movementDisabled = true;
             other.gameObject.GetComponent<PlayerAbilities>().abilitiesEnabled = false;
             activated = true;
+            EffectManager.current.CreateEffect("TrapClosed", transform.position);
 
             trappedPlayer = other.gameObject;
 

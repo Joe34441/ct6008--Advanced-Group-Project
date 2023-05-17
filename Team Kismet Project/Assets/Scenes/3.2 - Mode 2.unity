@@ -129,7 +129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38008
+  m_Name: pb_Mesh196534
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -429,7 +429,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh37942
+  m_Name: pb_Mesh196468
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -5385,7 +5385,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38402
+  m_Name: pb_Mesh196928
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6419,7 +6419,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38694
+  m_Name: pb_Mesh197220
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -8350,7 +8350,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 24.83, y: 5.449951}
+  m_AnchoredPosition: {x: 17, y: 5.449951}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &787666601
@@ -8456,7 +8456,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38370
+  m_Name: pb_Mesh196896
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -9758,7 +9758,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38448
+  m_Name: pb_Mesh196974
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -13733,7 +13733,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38206
+  m_Name: pb_Mesh196732
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -17734,7 +17734,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38494
+  m_Name: pb_Mesh197020
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -18028,7 +18028,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38348
+  m_Name: pb_Mesh196874
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -20162,6 +20162,168 @@ Transform:
   m_Father: {fileID: 148777699}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1903168647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1903168650}
+  - component: {fileID: 1903168649}
+  - component: {fileID: 1903168648}
+  - component: {fileID: 1903168651}
+  m_Layer: 0
+  m_Name: Particle & Sound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1903168648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903168647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740a3a4f08c003f41acfe7b27110fba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSingletonVersion: 1
+  persistBetweenScenes: 0
+  registeredSounds:
+  - ID: General
+    registeredSounds:
+    - ID: SmokePoof
+      sound: {fileID: 8300000, guid: 3998682cbc8381344b2c53ddb17dd596, type: 3}
+      volume: 1
+      cleanSelf: 1
+    - ID: Trap Open
+      sound: {fileID: 8300000, guid: 5642fd567e32dbe44b1501677c74618f, type: 3}
+      volume: 1
+      cleanSelf: 1
+    - ID: Trap Closed
+      sound: {fileID: 8300000, guid: 9ce8cc1720260a147a51777193be1dd9, type: 3}
+      volume: 1
+      cleanSelf: 1
+    - ID: Highwoosh
+      sound: {fileID: 8300000, guid: 3aef4799c5a0b7642b6d5d269cd42e05, type: 3}
+      volume: 1
+      cleanSelf: 1
+    - ID: Speedwoosh
+      sound: {fileID: 8300000, guid: 3aef4799c5a0b7642b6d5d269cd42e05, type: 3}
+      volume: 0.4
+      cleanSelf: 1
+    - ID: SlideFabric
+      sound: {fileID: 8300000, guid: bf2ffa7a437378342a3681ee799cb5e9, type: 3}
+      volume: 1
+      cleanSelf: 1
+    - ID: Tag
+      sound: {fileID: 8300000, guid: db2c341147ae3a94caad6723ecd534b5, type: 3}
+      volume: 1
+      cleanSelf: 1
+  soundCategories: []
+  currentSounds: []
+--- !u!114 &1903168649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903168647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f495d277803c80a4894e7837d1e2ab81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSingletonVersion: 1
+  persistBetweenScenes: 0
+  registeredObjectCategories:
+  - ID: General
+    registeredParticles:
+    - ID: SmokePoof
+      prefab: {fileID: 2925341705421215863, guid: b5835c76747a33c499b9993deb513286, type: 3}
+      emissionTime: 0
+      immediateEmissionCount: 50
+    - ID: TrapParticles
+      prefab: {fileID: 2604989215548116494, guid: 620172625ca0f6a46984489bbd0e6bdf, type: 3}
+      emissionTime: 0
+      immediateEmissionCount: 15
+    - ID: HighjumpSmoke
+      prefab: {fileID: 4004114760429955901, guid: 881448ae5bca33a44b9c4ec101a68d54, type: 3}
+      emissionTime: 0
+      immediateEmissionCount: 50
+    - ID: SpeedParticles
+      prefab: {fileID: 5314861122214739878, guid: f960e19ae8f12dd4b8623557fbe857c2, type: 3}
+      emissionTime: 0
+      immediateEmissionCount: 50
+    - ID: SlideParticles
+      prefab: {fileID: 7785687242299048149, guid: 3dbc4b8913c5fdc429623be0d5fe3a78, type: 3}
+      emissionTime: 1
+      immediateEmissionCount: 0
+    - ID: TagSparks
+      prefab: {fileID: 2925341705421215863, guid: f8e09146cc778554c855f1ceb5b59c83, type: 3}
+      emissionTime: 0
+      immediateEmissionCount: 25
+  particleCategories: []
+  currentEmitters: []
+--- !u!4 &1903168650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903168647}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1903168651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903168647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 163a2c238ff843e42b3aa461f96d48c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSingletonVersion: 1
+  persistBetweenScenes: 0
+  soundManager: {fileID: 1903168648}
+  particleManager: {fileID: 1903168649}
+  registeredEffects:
+  - effectID: SmokePoof
+    soundID: SmokePoof
+    particleID: SmokePoof
+  - effectID: TrapOpen
+    soundID: Trap Open
+    particleID: TrapParticles
+  - effectID: TrapClosed
+    soundID: Trap Closed
+    particleID: TrapParticles
+  - effectID: HighWoosh
+    soundID: Highwoosh
+    particleID: HighjumpSmoke
+  - effectID: SpeedWoosh
+    soundID: Speedwoosh
+    particleID: SpeedParticles
+  - effectID: SlideWoosh
+    soundID: SlideFabric
+    particleID: SlideParticles
+  - effectID: Tag
+    soundID: Tag
+    particleID: TagSparks
 --- !u!1001 &1905832884
 PrefabInstance:
   m_ObjectHideFlags: 0

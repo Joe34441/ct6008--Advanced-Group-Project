@@ -74,6 +74,18 @@ public class EffectManager : MonoBehaviour
         return newEffect;
     }
 
+    public CreatedEffect CreateEffect(string effectID, Vector3 postition, Quaternion rotation)
+    {
+        // Get effect properties
+        CreatedEffect newEffect = CreateEffect(effectID);
+
+        newEffect.particle.transform.position = postition;
+        newEffect.particle.transform.rotation = rotation;
+        newEffect.sound.transform.position = postition;
+
+        return newEffect;
+    }
+
     public CreatedEffect CreateEffect(string effectID, GameObject emitter) {
         // Get effect properties
         CreatedEffect newEffect = CreateEffect(effectID, emitter.transform.position);

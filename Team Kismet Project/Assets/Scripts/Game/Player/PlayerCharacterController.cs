@@ -119,6 +119,7 @@ public class PlayerCharacterController : MonoBehaviour
         else if(grounded && !lateGrounded)
         {
             animator.SetBool("Landing",true);
+            animator.ResetTrigger("StartJump");
         }
         else
         {

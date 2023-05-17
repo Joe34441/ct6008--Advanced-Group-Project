@@ -108,6 +108,7 @@ public class Teleport : Ability
 
         if(sendTeleport)
         {
+            EffectManager.current.CreateEffect("SmokePoof", playerRef.transform.position);
             playerRef.transform.position = teleportLocation;
 
             frameRef += 1;

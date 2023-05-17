@@ -27,6 +27,7 @@ public class Decoy : Ability
             currentDecoy.GetComponent<DecoyBehaviour>().BeginMoving(randomPosition, decoySpeed, playerRef.GetComponent<Character>().GetRunner(), decoyUpTime);
 
             currentDecoy.GetComponent<DecoyBehaviour>().SetupDecoyLook(playerRef.GetComponent<Character>().GetMeshRenderer().material, playerRef.GetComponent<Character>().GetName());
+            EffectManager.current.CreateEffect("SmokePoof", playerRef.transform.position);
         }
 
         activated = true;

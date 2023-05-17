@@ -28,6 +28,7 @@ public class SuperJump : Ability
             shouldUpdate = true;
             startedFalling = false;
             activated = true;
+            EffectManager.current.CreateEffect("HighWoosh", playerRef.transform.position);
         }
         else
         {
