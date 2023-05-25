@@ -357,7 +357,7 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
-    public void ReleaseTwo()
+    public void ReleaseTwo(int Authority, bool state)
     {
         if(abilityTwo.activated)
         {
@@ -372,13 +372,22 @@ public class PlayerAbilities : MonoBehaviour
         if (abilityTwo.onCooldown && !hasResetTwo)
         {
             Invoke("ResetTwo", abilityTwo.cooldown);
-            hud.TriggerCooldown(2, abilityTwo.cooldown);
+
+            if (state && Authority == 3)
+            {
+                hud.TriggerCooldown(2, abilityTwo.cooldown);
+            }
+            else if (!state)
+            {
+                hud.TriggerCooldown(2, abilityTwo.cooldown);
+            }
+            
             hasResetTwo = true;
         }
 
     }
 
-    public void ReleaseThree()
+    public void ReleaseThree(int Authority, bool state)
     {
         try //***********************************************************************************************************************************************************************************
         {
@@ -395,7 +404,16 @@ public class PlayerAbilities : MonoBehaviour
             if (abilityThree.onCooldown && !hasResetThree)
             {
                 Invoke("ResetThree", abilityThree.cooldown);
-                hud.TriggerCooldown(3, abilityThree.cooldown);
+
+                if (state && Authority == 3)
+                {
+                    hud.TriggerCooldown(3, abilityThree.cooldown);
+                }
+                else if (!state)
+                {
+                    hud.TriggerCooldown(3, abilityThree.cooldown);
+                }
+                
                 hasResetThree = true;
             }
         }
