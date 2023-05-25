@@ -327,7 +327,7 @@ public class Character : NetworkTransform
 
 			if (inputData.GetButton(ButtonFlag.NUM1))
 			{
-				_playerAbilities.ActivateOne(Object.InputAuthority);
+				_playerAbilities.ActivateOne();
 			}
 			else
 			{

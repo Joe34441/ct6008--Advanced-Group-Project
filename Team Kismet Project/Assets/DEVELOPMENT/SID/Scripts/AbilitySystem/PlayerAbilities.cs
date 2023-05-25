@@ -269,7 +269,7 @@ public class PlayerAbilities : MonoBehaviour
         //abilityTwo.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
     }
 
-    public void ActivateOne(int playerID)
+    public void ActivateOne()
     {
         if(abilitiesEnabled)
         {
