@@ -269,7 +269,7 @@ public class PlayerAbilities : MonoBehaviour
         //abilityTwo.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
     }
 
-    public void ActivateOne()
+    public void ActivateOne(int playerID)
     {
         if(abilitiesEnabled)
         {
@@ -329,7 +329,7 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
-    public void ReleaseOne()
+    public void ReleaseOne(int Authority)
     {
         if(abilityOne.activated)
         {
@@ -344,7 +344,11 @@ public class PlayerAbilities : MonoBehaviour
         if(abilityOne.onCooldown && !hasResetOne)
         {
             Invoke("ResetOne", abilityOne.cooldown);
-            hud.TriggerCooldown(1, abilityOne.cooldown);
+            if (Authority == 0)
+            {
+                hud.TriggerCooldown(1, abilityOne.cooldown);
+            }
+
             hasResetOne = true;
         }
     }

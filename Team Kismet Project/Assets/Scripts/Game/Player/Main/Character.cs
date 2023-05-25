@@ -327,11 +327,11 @@ public class Character : NetworkTransform
 
 			if (inputData.GetButton(ButtonFlag.NUM1))
 			{
-				_playerAbilities.ActivateOne();
+				_playerAbilities.ActivateOne(Object.InputAuthority);
 			}
 			else
 			{
-				_playerAbilities.ReleaseOne();
+				_playerAbilities.ReleaseOne(Object.InputAuthority);
 				
 			}
 
