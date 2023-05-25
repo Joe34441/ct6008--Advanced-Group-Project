@@ -331,7 +331,7 @@ public class Character : NetworkTransform
 			}
 			else
 			{
-				_playerAbilities.ReleaseOne(Object.InputAuthority, Object.HasStateAuthority());
+				_playerAbilities.ReleaseOne(Object.InputAuthority, Object.HasStateAuthority);
 				
 			}
 
