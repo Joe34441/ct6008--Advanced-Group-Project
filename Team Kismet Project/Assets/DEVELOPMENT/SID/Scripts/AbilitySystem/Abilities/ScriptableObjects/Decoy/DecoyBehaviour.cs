@@ -23,6 +23,8 @@ public class DecoyBehaviour : MonoBehaviour
     [SerializeField] private GameObject body;
 
     private float rotationSmoothVelocity;
+    [SerializeField] private Animator animator;
+    [SerializeField] private MaterialSetter matSetter;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +49,7 @@ public class DecoyBehaviour : MonoBehaviour
                 moveDirection = gameObject.transform.forward;
             }
             decoyController.Move(moveDirection * moveSpeed * runner.DeltaTime);
-
+            animator.SetBool("Running", true);
             //calculate the direction the player should move in based on the camera direction and input
             float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
             //calculate the angle that the player should rotate to when moving, and smoothly rotate the player over time
@@ -65,9 +67,35 @@ public class DecoyBehaviour : MonoBehaviour
         Destroy(gameObject, _upTime);
     }
 
-    public void SetupDecoyLook(Material _decoyMat, string _name)
+    public void SetupDecoyLook(int playerIndex, string _name, bool isTagged)
     {
-        body.GetComponent<MeshRenderer>().material = _decoyMat;
+        if(playerIndex == 0)
+        {
+            matSetter.newColour = Color.magenta;
+        }
+        else if(playerIndex == 1)
+        {
+            matSetter.newColour = Color.cyan;
+        }
+        else if(playerIndex == 2)
+        {
+            matSetter.newColour = Color.green;
+        }
+        else if(playerIndex == 3)
+        {
+            matSetter.newColour = Color.yellow;
+        }
+        matSetter.SetMats();
+
+        if(isTagged)
+        {
+            matSetter.SetTagged();
+        }
+        else
+        {
+            matSetter.SetUnTagged();
+        }
+
         nameText.text = _name;
     }
 }

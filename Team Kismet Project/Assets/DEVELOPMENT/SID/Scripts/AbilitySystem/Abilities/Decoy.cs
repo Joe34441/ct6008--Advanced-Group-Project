@@ -26,7 +26,7 @@ public class Decoy : Ability
             randomPosition.Normalize();
             currentDecoy.GetComponent<DecoyBehaviour>().BeginMoving(randomPosition, decoySpeed, playerRef.GetComponent<Character>().GetRunner(), decoyUpTime);
 
-            currentDecoy.GetComponent<DecoyBehaviour>().SetupDecoyLook(playerRef.GetComponent<Character>().GetMeshRenderer().material, playerRef.GetComponent<Character>().GetName());
+            currentDecoy.GetComponent<DecoyBehaviour>().SetupDecoyLook(playerRef.GetComponent<Character>().Object.InputAuthority, playerRef.GetComponent<Character>().GetName(), playerRef.GetComponent<Character>().IsTagged);
             EffectManager.current.CreateEffect("SmokePoof", playerRef.transform.position);
         }
 
