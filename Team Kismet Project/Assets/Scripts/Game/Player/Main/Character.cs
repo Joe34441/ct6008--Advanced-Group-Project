@@ -341,7 +341,7 @@ public class Character : NetworkTransform
 			}
 			else
 			{
-				_playerAbilities.ReleaseTwo();
+				_playerAbilities.ReleaseTwo(Object.InputAuthority, Object.HasStateAuthority);
 			}
 
 			if (inputData.GetButton(ButtonFlag.NUM3))
@@ -350,7 +350,7 @@ public class Character : NetworkTransform
 			}
 			else
 			{
-				_playerAbilities.ReleaseThree();
+				_playerAbilities.ReleaseThree(Object.InputAuthority, Object.HasStateAuthority);
 			}
 
 			//KEEP FOR SPAWNING TEMPLATE ******************************************************************************************************************************************************************
