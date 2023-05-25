@@ -329,7 +329,7 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
-    public void ReleaseOne(int Authority, int state)
+    public void ReleaseOne(int Authority, bool state)
     {
         if(abilityOne.activated)
         {
@@ -344,8 +344,12 @@ public class PlayerAbilities : MonoBehaviour
         if(abilityOne.onCooldown && !hasResetOne)
         {
             Invoke("ResetOne", abilityOne.cooldown);
-            if (Authority == state)
+            if (state && Authority == 3)
             {
+                hud.TriggerCooldown(1, abilityOne.cooldown);
+            }
+            else if(!state)
+            { 
                 hud.TriggerCooldown(1, abilityOne.cooldown);
             }
 
