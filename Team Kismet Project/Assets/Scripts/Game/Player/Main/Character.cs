@@ -86,15 +86,19 @@ public class Character : NetworkTransform
 	{
 		Character self = changed.Behaviour;
 
+		if (self.IsTagged) 
+		{ 
+			self.matSetter.SetTagged(); 
+			EffectManager.current.CreateEffect("Tag", self.transform.position);
+		}
+		else self.matSetter.SetUnTagged();
+
 		return;
 
 		//if (self.IsTagged) self._playerMeshRenderer.material = self._playerTaggedMaterial;
 		//else self._playerMeshRenderer.material = self._playerNotTaggedMaterial;
 		//if (self.IsTagged) self._playerMeshRenderer.enabled = true;
 		//else self._playerMeshRenderer.enabled = false;
-		if (self.IsTagged) { self.matSetter.SetTagged(); EffectManager.current.CreateEffect("Tag", self.transform.position); }
-		else self.matSetter.SetUnTagged();
-
 	}
 
 
@@ -178,7 +182,15 @@ public class Character : NetworkTransform
 			//else _playerMeshRenderer.material = _playerNotTaggedMaterial;
 			//if (IsTagged) _playerMeshRenderer.enabled = true;
 			//else _playerMeshRenderer.enabled = false;
-			if (IsTagged) matSetter.SetTagged();
+
+			//if (IsTagged) matSetter.SetTagged();
+			//else matSetter.SetUnTagged();
+
+			if (IsTagged) 
+			{ 
+				matSetter.SetTagged(); 
+				//EffectManager.current.CreateEffect("Tag", transform.position); 
+			}
 			else matSetter.SetUnTagged();
 		}
 	}
@@ -474,8 +486,8 @@ public class Character : NetworkTransform
 			//else _playerMeshRenderer.material = _playerNotTaggedMaterial;
 			//if (IsTagged) _playerMeshRenderer.enabled = true;
 			//else _playerMeshRenderer.enabled = false;
-			if (IsTagged) matSetter.SetTagged();
-			else matSetter.SetUnTagged();
+			//if (IsTagged) matSetter.SetTagged();
+			//else matSetter.SetUnTagged();
 		}
 
         if (badlocaltagboolstatecheckthing)

@@ -46,7 +46,7 @@ public class SmokeBomb : Ability
         currentTime = 0;
         GameObject smoke = Instantiate(smokePrefab, new Vector3(playerRef.transform.position.x, playerRef.transform.position.y + 1f, playerRef.transform.position.z),
             playerRef.transform.rotation);
-        Destroy(smoke, 3);
+        Destroy(smoke, 0.5f);
         EffectManager.current.CreateEffect("SmokePoof", playerRef.transform.position);
         timeRef = Time.time;
         matSet = true;

@@ -13,6 +13,10 @@ public class Staging : MonoBehaviour
 	[SerializeField] private Text _playerName;
 	[SerializeField] private GameObject _playerReady;
 	[SerializeField] private Text _titleText;
+	[SerializeField] private GameObject _readyCheck;
+	[SerializeField] private GameObject _readyCross;
+	[SerializeField] private Text _readyHintText;
+	[SerializeField] private GameObject _nameInput;
 
 	private bool canStart = false;
 
@@ -48,7 +52,7 @@ public class Staging : MonoBehaviour
 			//sb.AppendLine($"Map: {s.Props.StartMap}");
 		}
 		_sessionInfo.text = sb.ToString();
-		_titleText.text = "Room: " + s.Info.Name + ", Code: <code>";
+		_titleText.text = "Room: " + s.Info.Name + ", Code: J3B8DA"; //examplar code
 	}
 
 	void Update()
@@ -119,8 +123,23 @@ public class Staging : MonoBehaviour
 	public void OnToggleIsReady()
 	{
 		Player ply = App.Instance.GetPlayer();
-		_playerReady.SetActive(!ply.Ready);
+		//_playerReady.SetActive(!ply.Ready);
 		ply.RPC_SetIsReady(!ply.Ready);
+
+		if (ply.Ready)
+		{
+			_readyCheck.SetActive(true);
+			_readyCross.SetActive(false);
+			_readyHintText.text = "Waiting for host to start";
+			_readyHintText.color = new Vector4(0, 0.75f, 0, 1);
+		}
+		else
+        {
+			_readyCheck.SetActive(false);
+			_readyCross.SetActive(true);
+			_readyHintText.text = "You have not readied up";
+			_readyHintText.color = new Vector4(0.75f, 0, 0, 1);
+        }
 	}
 
 	public void OnNameChanged(string name)
@@ -136,6 +155,11 @@ public class Staging : MonoBehaviour
 
 		_playerName.text = "Player Setup : " + name;
 	}
+
+	public void OnSetName()
+    {
+		OnNameChanged(_nameInput.GetComponent<InputField>().text);
+    }
 	
 	public void OnColorUpdated()
 	{

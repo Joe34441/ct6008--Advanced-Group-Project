@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2968992, g: 0.63375103, b: 0.99371284, a: 1}
+  m_IndirectSpecularColor: {r: 0.29688978, g: 0.63378966, b: 0.9937137, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6270,7 +6270,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 10
 --- !u!222 &622706625
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -17931,8 +17931,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1437595746}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24, y: 24.53, z: 5.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -24, y: 27.03, z: 5.25}
+  m_LocalScale: {x: 1, y: 5.532082, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -20248,7 +20248,7 @@ MonoBehaviour:
     - ID: SmokePoof
       prefab: {fileID: 2925341705421215863, guid: b5835c76747a33c499b9993deb513286, type: 3}
       emissionTime: 0
-      immediateEmissionCount: 50
+      immediateEmissionCount: 250
     - ID: TrapParticles
       prefab: {fileID: 2604989215548116494, guid: 620172625ca0f6a46984489bbd0e6bdf, type: 3}
       emissionTime: 0
