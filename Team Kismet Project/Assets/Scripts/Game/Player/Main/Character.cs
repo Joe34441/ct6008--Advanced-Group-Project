@@ -86,6 +86,12 @@ public class Character : NetworkTransform
 	{
 		Character self = changed.Behaviour;
 
+		if (self.IsTagged) 
+		{ 
+			self.matSetter.SetTagged(); 
+			EffectManager.current.CreateEffect("Tag", self.transform.position);
+		}
+		else self.matSetter.SetUnTagged();
 
 		return;
 
@@ -93,9 +99,6 @@ public class Character : NetworkTransform
 		//else self._playerMeshRenderer.material = self._playerNotTaggedMaterial;
 		//if (self.IsTagged) self._playerMeshRenderer.enabled = true;
 		//else self._playerMeshRenderer.enabled = false;
-		if (self.IsTagged) { self.matSetter.SetTagged(); EffectManager.current.CreateEffect("Tag", self.transform.position); }
-		else self.matSetter.SetUnTagged();
-
 	}
 
 
@@ -186,7 +189,7 @@ public class Character : NetworkTransform
 			if (IsTagged) 
 			{ 
 				matSetter.SetTagged(); 
-				EffectManager.current.CreateEffect("Tag", transform.position); 
+				//EffectManager.current.CreateEffect("Tag", transform.position); 
 			}
 			else matSetter.SetUnTagged();
 		}
