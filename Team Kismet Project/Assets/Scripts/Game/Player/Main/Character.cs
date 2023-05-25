@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Fusion;
+using System;
 
 // Visual representation of a Player - the Character is instantiated by the map once it's loaded.
 // Movement is handled in PlayerCharacterController.cs
@@ -76,6 +77,8 @@ public class Character : NetworkTransform
 
 	private float currentDistance;
 
+	private DateTime tagTime;
+
 	[Networked] public NetworkBool GameOver { get; set; }
 	[Networked] public float Score { get; set; }
 
@@ -92,9 +95,9 @@ public class Character : NetworkTransform
 			EffectManager.current.CreateEffect("Tag", self.transform.position);
 		}
 		else self.matSetter.SetUnTagged();
-
+		
 		return;
-
+		
 		//if (self.IsTagged) self._playerMeshRenderer.material = self._playerTaggedMaterial;
 		//else self._playerMeshRenderer.material = self._playerNotTaggedMaterial;
 		//if (self.IsTagged) self._playerMeshRenderer.enabled = true;
@@ -170,6 +173,8 @@ public class Character : NetworkTransform
 
 			IsTagged = true;
 		}
+
+		tagTime = DateTime.UtcNow;
 	}
 
 	private void Update()
@@ -254,8 +259,11 @@ public class Character : NetworkTransform
 
                 if (_playerTagTrigger.tryTag)
                 {
-					if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
-                    else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
+					if ((DateTime.UtcNow - tagTime).TotalSeconds >= 0.5f)
+                    {
+						if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
+						else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
+					}
                 }
 
                 //if (tagMeshToggle != IsTagged)
@@ -521,6 +529,8 @@ public class Character : NetworkTransform
 		if (tagged != PlayerRef.None && tagger != PlayerRef.None)
 		{
 			_playerTagTrigger.ToggleCollider();
+
+			tagTime = DateTime.UtcNow;
 			//_playerTagTrigger.tryTag = false;
 			//_player.RPC_Tag(tagged, tagger);
 

@@ -74,8 +74,8 @@ public class PlayerTagTrigger : MonoBehaviour
     {
         tryTag = false;
         otherCharacter = null;
-        GetComponent<BoxCollider>().enabled = false;
-        Invoke("EnableCollider", 0.75f);
+        //GetComponent<BoxCollider>().enabled = false;
+        //Invoke("EnableCollider", 0.75f);
     }
 
     private void EnableCollider()
