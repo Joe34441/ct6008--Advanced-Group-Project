@@ -50,16 +50,9 @@ public class Character : NetworkTransform
 	public Player GetPlayer() { return _player; }
 	public NetworkRunner GetRunner() { return Runner; }
 
-	private bool badlocaltaggedcheck = false;
-	private float badlocaltagtimer = 0;
-	private float badlocaltagtime = 1.0f;
-	private bool badlocaltagboolstatecheckthing = false;
-	public bool badlocaltagboolstatecheckthingbutpublic = true;
+	private float tagcooldownTime = 0.5f;
+	private float tagCooldownTimer = 0;
 
-	//private float tagCooldownTime = 0.75f;
-	//private float tagCooldownTimer = 0;
-	//private bool tagOnCooldown = false;
-	//private bool tagOther = false;
 	private bool tagMeshToggle = false;
 
 	private bool firstFUNTick = true;
@@ -97,13 +90,7 @@ public class Character : NetworkTransform
 		else self.matSetter.SetUnTagged();
 		
 		return;
-		
-		//if (self.IsTagged) self._playerMeshRenderer.material = self._playerTaggedMaterial;
-		//else self._playerMeshRenderer.material = self._playerNotTaggedMaterial;
-		//if (self.IsTagged) self._playerMeshRenderer.enabled = true;
-		//else self._playerMeshRenderer.enabled = false;
 	}
-
 
 	public string GetName() { return _name.text; }
 
@@ -209,8 +196,6 @@ public class Character : NetworkTransform
 				float _distance = _playerCharacterController.GetCameraDistance(_cameraReference);
 				currentDistance = Mathf.Lerp(currentDistance, _distance, Runner.DeltaTime * 25);
 				_playerCharacterController.SetCamPosition(_cameraReference, currentDistance);
-				//Camera.main.transform.position = _cameraReference.position;
-				//Camera.main.transform.rotation = _cameraReference.rotation;
 				_playerCharacterController.UpdateCamera(_cameraReference, _cameraPositionLerpRate, _cameraRotationLerpRate);
 			}
 		}
@@ -229,9 +214,8 @@ public class Character : NetworkTransform
 
 		if (GameOver) return;
 
-		//if (Runner.IsLastTick) CheckTag();
-
-		if (Object.HasStateAuthority) //host only stuff
+		//host only stuff
+		if (Object.HasStateAuthority)
 		{
 			if (!GameOver) GameOver = _hudHandler.IsGameOver(Score);
 
@@ -249,32 +233,18 @@ public class Character : NetworkTransform
 			{
 				CheckTag();
 
-				//if (tagOther)
-    //            {
-				//	Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
-
-				//	//if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
-				//	//else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
-				//}
-
-                if (_playerTagTrigger.tryTag)
+				PlayerTagTrigger otherPlayerTagTrigger = _playerTagTrigger.otherCharacter.GetComponentInChildren<PlayerTagTrigger>();
+				if (_playerTagTrigger.tryTag && !_playerTagTrigger.isTagOnCooldown && !otherPlayerTagTrigger.isTagOnCooldown)
                 {
-					if ((DateTime.UtcNow - tagTime).TotalSeconds >= 0.5f)
-                    {
-						if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
-						else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
+					if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false;
+					else
+					{
+						_playerTagTrigger.isTagOnCooldown = true;
+						otherPlayerTagTrigger.isTagOnCooldown = true;
+
+						Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
 					}
-                }
-
-                //if (tagMeshToggle != IsTagged)
-				//{
-				//	tagMeshToggle = IsTagged;
-				//	if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
-				//	else _playerMeshRenderer.material = _playerNotTaggedMaterial;
-				//}
-
-				//if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
-				//else _playerMeshRenderer.material = _playerNotTaggedMaterial;
+				}
 
 				if (!IsTagged)
 				{
@@ -332,7 +302,6 @@ public class Character : NetworkTransform
 			else
 			{
 				_playerAbilities.ReleaseOne(Object.InputAuthority, Object.HasStateAuthority);
-				
 			}
 
 			if (inputData.GetButton(ButtonFlag.NUM2))
@@ -361,7 +330,7 @@ public class Character : NetworkTransform
 			//		Vector3 forward = transform.forward;
 			//		Vector3 spawnPos = transform.position;
 			//		spawnPos.y += 2;
-
+			//
 			//		ballSpawnDelay = TickTimer.CreateFromSeconds(Runner, 0.5f);
 			//		Runner.Spawn(_prefabPhysxBall, spawnPos + forward, Quaternion.LookRotation(forward), Object.InputAuthority,
 			//		  (runner, o) =>
@@ -372,13 +341,8 @@ public class Character : NetworkTransform
 			//	}
 			//	else if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
 			//}
+			//*********************************************************************************************************************************************************************************************
 		}
-
-		//if (_playerTagTrigger.tryTag)
-		//      {
-		//	if (_playerTagTrigger.otherCharacter.thisPlayerRef == _playerTagTrigger.myCharacter.thisPlayerRef) _playerTagTrigger.tryTag = false; //runner.localplayer
-		//	else Tag(_playerTagTrigger.myCharacter, _playerTagTrigger.otherCharacter);
-		//      }
 
 		//perform movement
 		_playerCharacterController.PerformMove(_characterController, _cameraReference, _groundCheckReference, movementDirection, _moveAcceleration, _moveDeceleration, Runner.DeltaTime);
@@ -464,48 +428,13 @@ public class Character : NetworkTransform
 
 	private void CheckTag()
 	{
-        //if (IsTagged)
-        //      {
-        //	if (tagOnCooldown)
-        //	{
-        //		if (tagCooldownTimer < tagCooldownTime) tagCooldownTimer += Runner.DeltaTime;
-        //		else
-        //		{
-        //			tagCooldownTimer = 0;
-        //			tagOnCooldown = false;
-        //		}
-        //	}
-
-        //	if (_playerTagTrigger.tryTag)
-        //	{
-        //		tagOther = true;
-        //		_playerTagTrigger.tryTag = false;
-        //		_playerTagTrigger.taggableCharacter = null;
-        //	}
-        //}
-
-
-        if (IsTagged != badlocaltaggedcheck)
+		if (_playerTagTrigger.isTagOnCooldown)
         {
-            badlocaltaggedcheck = IsTagged;
-            badlocaltagboolstatecheckthing = true;
-            badlocaltagboolstatecheckthingbutpublic = false;
-			//if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
-			//else _playerMeshRenderer.material = _playerNotTaggedMaterial;
-			//if (IsTagged) _playerMeshRenderer.enabled = true;
-			//else _playerMeshRenderer.enabled = false;
-			//if (IsTagged) matSetter.SetTagged();
-			//else matSetter.SetUnTagged();
-		}
-
-        if (badlocaltagboolstatecheckthing)
-        {
-            if (badlocaltagtimer < badlocaltagtime) badlocaltagtimer += Runner.DeltaTime;
-            else
+			if (tagCooldownTimer < tagcooldownTime) tagCooldownTimer += Runner.DeltaTime;
+			else
             {
-                badlocaltagtimer = 0;
-                badlocaltagboolstatecheckthing = false;
-                badlocaltagboolstatecheckthingbutpublic = true;
+				tagCooldownTimer = 0;
+				_playerTagTrigger.isTagOnCooldown = false;
             }
         }
     }
@@ -528,21 +457,12 @@ public class Character : NetworkTransform
 
 		if (tagged != PlayerRef.None && tagger != PlayerRef.None)
 		{
-			_playerTagTrigger.ToggleCollider();
-
-			tagTime = DateTime.UtcNow;
-			//_playerTagTrigger.tryTag = false;
-			//_player.RPC_Tag(tagged, tagger);
-
 			//get Player from PlayerRefs
 			Player taggedPlayer = App.Instance.GetPlayer(tagged);
 			Player taggerPlayer = App.Instance.GetPlayer(tagger);
 			//set IsTagged on Player Character
 			App.Instance.Session.Map.GetCharacter(taggedPlayer).IsTagged = true;
 			App.Instance.Session.Map.GetCharacter(taggerPlayer).IsTagged = false;
-
-			//have a "canbetagged" bool, cannot tag if its false
-			//in FUN, inrcement taggedCooldownTimer till >= taggedCooldownTime, then set canbetagged to true
 		}
 	}
 }
