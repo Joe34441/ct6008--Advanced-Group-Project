@@ -9,6 +9,7 @@ TagManager:
   - AbilityManager
   - ProjectileLocation
   - CameraReference
+  - CutsceneManager
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Ground
   - Player
   - Pillar
-  - 
+  - PostProcessing
   - 
   - 
   - 
