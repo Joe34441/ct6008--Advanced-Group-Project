@@ -108,6 +108,25 @@ public class Staging : MonoBehaviour
 			_sessionRefresh = 2.0f;
 		}
 		_sessionRefresh -= Time.deltaTime;
+
+		bool playerReady = App.Instance.GetPlayer().Ready;
+		if (playerReady != _readyCheck.activeInHierarchy)
+        {
+			if (playerReady)
+            {
+				_readyCheck.SetActive(true);
+				_readyCross.SetActive(false);
+				_readyHintText.text = "Waiting for host to start";
+				_readyHintText.color = new Vector4(0, 0.75f, 0, 1);
+			}
+			else
+            {
+				_readyCheck.SetActive(false);
+				_readyCross.SetActive(true);
+				_readyHintText.text = "You have not readied up";
+				_readyHintText.color = new Vector4(0.75f, 0, 0, 1);
+			}
+        }
 	}
 
 	public void OnStart()

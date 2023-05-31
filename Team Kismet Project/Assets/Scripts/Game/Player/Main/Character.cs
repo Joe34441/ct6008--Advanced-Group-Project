@@ -72,6 +72,8 @@ public class Character : NetworkTransform
 
 	private DateTime tagTime;
 
+	private bool introTimerEnded = false;
+
 	[Networked] public NetworkBool GameOver { get; set; }
 	[Networked] public float Score { get; set; }
 
@@ -100,17 +102,9 @@ public class Character : NetworkTransform
 
 	public void TaggedNotStatic() { Debug.Log(_player.Name + ": ive been tagged!"); }
 
-	public void Tagged()
-	{
-		Debug.Log(_player.Name + ": ive been tagged!");
-		IsTagged = true;
-	}
+	public void Tagged() { IsTagged = true; }
 
-	public void UnTagged()
-	{
-		Debug.Log(_player.Name + ": ive been untagged!");
-		IsTagged = false;
-	}
+	public void UnTagged() { IsTagged = false; }
 
 	public MeshRenderer GetMeshRenderer() { return _playerMeshRenderer; }
 
@@ -127,26 +121,12 @@ public class Character : NetworkTransform
 		_hudHandler = GameObject.FindGameObjectWithTag("HUDHandler").GetComponent<HUDHandler>();
 		_introCutscene = GameObject.FindGameObjectWithTag("CutsceneManager").GetComponent<IntroCutscene>();
 
-		if (Object.InputAuthority == 0)
-		{
-			matSetter.newColour = Color.magenta;
-			matSetter.SetMats();
-		}
-		if (Object.InputAuthority == 1)
-		{
-			matSetter.newColour = Color.cyan;
-			matSetter.SetMats();
-		}
-		if (Object.InputAuthority == 2)
-		{
-			matSetter.newColour = Color.green;
-			matSetter.SetMats();
-		}
-		if (Object.InputAuthority == 3)
-		{
-			matSetter.newColour = Color.yellow;
-			matSetter.SetMats();
-		}
+		if (Object.InputAuthority == 0) matSetter.newColour = Color.magenta;
+		if (Object.InputAuthority == 1) matSetter.newColour = Color.cyan;
+		if (Object.InputAuthority == 2) matSetter.newColour = Color.green;
+		if (Object.InputAuthority == 3) matSetter.newColour = Color.yellow;
+
+		matSetter.SetMats();
 
 		if (Object.HasInputAuthority)
 		{
@@ -166,24 +146,28 @@ public class Character : NetworkTransform
 
 	private void Update()
 	{
-		//any local stuff
+		//any local logic
 		if (tagMeshToggle != IsTagged)
 		{
 			tagMeshToggle = IsTagged;
-			//if (IsTagged) _playerMeshRenderer.material = _playerTaggedMaterial;
-			//else _playerMeshRenderer.material = _playerNotTaggedMaterial;
-			//if (IsTagged) _playerMeshRenderer.enabled = true;
-			//else _playerMeshRenderer.enabled = false;
 
-			//if (IsTagged) matSetter.SetTagged();
-			//else matSetter.SetUnTagged();
-
-			if (IsTagged) 
-			{ 
-				matSetter.SetTagged(); 
-				//EffectManager.current.CreateEffect("Tag", transform.position); 
-			}
+			if (IsTagged) matSetter.SetTagged(); 
 			else matSetter.SetUnTagged();
+		}
+
+		//update intro countdown timer
+		if (!introTimerEnded)
+        {
+			Session session = App.Instance.Session;
+			if (session.Object == null || !session.Object.IsValid)
+            {
+				introTimerEnded = true;
+				return;
+            }
+			else if (session.PostLoadCountDown.IsRunning && Object.HasInputAuthority)
+            {
+				session.Map.GetCountdownMessage().text = Mathf.CeilToInt(session.PostLoadCountDown.RemainingTime(Runner) ?? 0).ToString();
+			}
 		}
 	}
 

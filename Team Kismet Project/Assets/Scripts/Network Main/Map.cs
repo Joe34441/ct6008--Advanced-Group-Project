@@ -15,10 +15,9 @@ public class Map : SimulationBehaviour, ISpawned
 	private Dictionary<Player, Character> _playerCharacters = new Dictionary<Player, Character>();
 	//private Dictionary<Player, Controller> _playerCharacters = new Dictionary<Player, Controller>();
 
-	public Character GetCharacter(Player player)
-    {
-		return _playerCharacters[player];
-    }
+	public Character GetCharacter(Player player) { return _playerCharacters[player]; }
+
+	public Text GetCountdownMessage() { return _countdownMessage; }
 
 	public void Spawned()
 	{
@@ -70,8 +69,9 @@ public class Map : SimulationBehaviour, ISpawned
 			return;
 		if (session.PostLoadCountDown.Expired(Runner))
 			_countdownMessage.gameObject.SetActive(false);
-		else if (session.PostLoadCountDown.IsRunning)
-			_countdownMessage.text = Mathf.CeilToInt(session.PostLoadCountDown.RemainingTime(Runner)??0 ).ToString();
+		//else if (session.PostLoadCountDown.IsRunning)
+			//_countdownMessage.text = Mathf.CeilToInt(session.PostLoadCountDown.RemainingTime(Runner) ?? 0).ToString();
+
 	}
 
 	/// <summary>
