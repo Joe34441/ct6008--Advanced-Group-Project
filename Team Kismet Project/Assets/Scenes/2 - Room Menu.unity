@@ -2624,88 +2624,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
---- !u!1 &1894440911
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1894440912}
-  - component: {fileID: 1894440914}
-  - component: {fileID: 1894440913}
-  m_Layer: 5
-  m_Name: Text (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1894440912
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1894440911}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1907583119}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 357.55, y: -17.1}
-  m_SizeDelta: {x: -735.1, y: -27.100002}
-  m_Pivot: {x: 0.5, y: 1}
---- !u!114 &1894440913
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1894440911}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 25
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 2
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 'Red = Tagged
-
-    Green = Untagged'
---- !u!222 &1894440914
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1894440911}
-  m_CullTransparentMesh: 1
 --- !u!1 &1894693162
 GameObject:
   m_ObjectHideFlags: 0
@@ -2818,7 +2736,6 @@ RectTransform:
   m_Children:
   - {fileID: 2103760180}
   - {fileID: 2009810490}
-  - {fileID: 1894440912}
   m_Father: {fileID: 7128048567364554022}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3018,9 +2935,12 @@ MonoBehaviour:
     Use your randomly assigned abilities to
     remain untagged and gain points!
 
-
     You are competing with all other players
-    in the lobby, first to fill their timer wins!'
+    in the lobby, first to fill their timer wins!
+
+
+    Tagged players can be identified
+    by the red hue.'
 --- !u!222 &2009810492
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4965,8 +4885,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7128048566143710936}
   m_HandleRect: {fileID: 7128048566143710937}
   m_Direction: 2
-  m_Value: 1.0000005
-  m_Size: 0.7809114
+  m_Value: 0.9999995
+  m_Size: 0.7810495
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
