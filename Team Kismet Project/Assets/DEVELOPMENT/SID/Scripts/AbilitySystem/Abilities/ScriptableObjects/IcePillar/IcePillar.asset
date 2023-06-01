@@ -22,5 +22,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 119
   placementRange: 20
-  placementIndicator: {fileID: 4258684206005247554, guid: 0e35a413924c2c64491444dea664830c, type: 3}
-  pillarPrefab: {fileID: 3517672003874885077, guid: c05738eec3c0dc54a9d84a9633b2f63c, type: 3}
+  placementIndicator: {fileID: 3572136196848454677, guid: a7323f90ceeeff24eab25b7ee0970613, type: 3}
+  pillarPrefab: {fileID: 2957190463835881769, guid: 977ca0083175f414d869dc57fba90628, type: 3}

@@ -35,9 +35,16 @@ public class PlayerAbilities : MonoBehaviour
     {
         List<Ability> currentList = new List<Ability>(list);
 
-        for(int i = 1; i <= 3; i++)
+        int currentPlayerNameLength = App.Instance.GetPlayer(playerID).Name.Length;
+        if (currentPlayerNameLength == 0) currentPlayerNameLength = 1;
+
+
+        for (int i = 1; i <= 3; i++)
         {
-            int ranNum = (103 + App.Instance.Session.Props.RoomName.Length) * ((playerID + 3) * 3);
+            int ranNum = (103 + (App.Instance.Session.Props.RoomName.Length + currentPlayerNameLength) * ((playerID + 3) * (3 - (i - 1))));
+
+            //System.Random prng = new System.Random(103 + (App.Instance.Session.Props.RoomName.Length + currentPlayerNameLength) * ((playerID + 3) * 3));
+            //int ranNum = prng.Next();
 
             int randomChoice = ranNum % currentList.Count;
             //int randomChoice = Random.Range(0, currentList.Count);
@@ -75,7 +82,7 @@ public class PlayerAbilities : MonoBehaviour
             //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            //AssignAbility(abilityManager.grapple, 3);
+            AssignAbility(abilityManager.icePillar, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************

@@ -869,10 +869,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2828.09716796875,
-            "y": 279.94036865234377,
-            "width": 110.0,
-            "height": 34.00006103515625
+            "x": -2828.0,
+            "y": 166.00001525878907,
+            "width": 128.0,
+            "height": 100.99995422363281
         }
     },
     "m_Slots": [
@@ -1317,10 +1317,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -656.0,
-            "y": 500.0,
+            "x": -918.0,
+            "y": 514.0,
             "width": 208.0,
-            "height": 127.0
+            "height": 127.00006103515625
         }
     },
     "m_Slots": [
@@ -1477,10 +1477,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -529.09716796875,
-            "y": 138.94036865234376,
-            "width": 208.0,
-            "height": 302.0
+            "x": -534.9999389648438,
+            "y": 134.0,
+            "width": 207.99990844726563,
+            "height": 302.0000305175781
         }
     },
     "m_Slots": [
@@ -1565,8 +1565,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -687.0,
-            "y": 344.0,
+            "x": -685.0,
+            "y": 198.00003051757813,
             "width": 145.0,
             "height": 34.0
         }
@@ -1755,8 +1755,8 @@
     "m_ObjectId": "8757ee601e074e549814ccd6e9c202e6",
     "m_Title": "Blend Layers + Add Colour",
     "m_Position": {
-        "x": 40.0,
-        "y": 40.0
+        "x": -1232.0001220703125,
+        "y": -230.0
     }
 }
 
@@ -2057,10 +2057,10 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "r": 0.0,
-        "g": 0.0,
-        "b": 0.0,
-        "a": 0.0
+        "r": 0.5882353186607361,
+        "g": 0.43529415130615237,
+        "b": 0.20000001788139344,
+        "a": 1.0
     },
     "isMainColor": false,
     "m_ColorMode": 0

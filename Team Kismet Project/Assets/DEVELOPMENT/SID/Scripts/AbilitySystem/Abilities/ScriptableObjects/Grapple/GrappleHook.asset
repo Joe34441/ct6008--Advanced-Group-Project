@@ -20,6 +20,7 @@ MonoBehaviour:
   onCooldown: 0
   offline: 0
   maxGrappleDistance: 50
+  minGrappleDistance: 6
   hitList:
     serializedVersion: 2
     m_Bits: 119

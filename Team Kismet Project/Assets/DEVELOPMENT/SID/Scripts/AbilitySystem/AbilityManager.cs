@@ -46,17 +46,18 @@ public class AbilityManager : MonoBehaviour
 
     private void PopulateList()
     {
-        abilities.Add(grapple);
-        abilities.Add(smokeBomb);
+        abilities.Add(doubleJump);
         abilities.Add(teleport);
         abilities.Add(superJump);
+        abilities.Add(decoy);
         abilities.Add(bearTrap);
         abilities.Add(sprint);
+        abilities.Add(grapple);
+        abilities.Add(smokeBomb);
         abilities.Add(dash);
-        abilities.Add(doubleJump);
         abilities.Add(slide);
         abilities.Add(icePillar);
         //abilities.Add(shuriken);
-        abilities.Add(decoy);
+
     }
 }
