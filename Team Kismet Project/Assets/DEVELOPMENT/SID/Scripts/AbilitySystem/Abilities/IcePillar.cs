@@ -94,10 +94,9 @@ public class IcePillar : Ability
 
     public override void Released()
     {
-        GameObject pillar = playerRef.GetComponent<Character>().GetRunner().Spawn(pillarPrefab, pillarLocation, 
-            new Quaternion(playerRef.transform.rotation.x, playerRef.transform.rotation.y, 0, 1), 
-            playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority).gameObject;
+        GameObject pillar = playerRef.GetComponent<Character>().GetRunner().Spawn(pillarPrefab, pillarLocation, new Quaternion(0, playerRef.transform.rotation.y, 0, 1), playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority).gameObject;
         pillar.transform.LookAt(playerRef.transform);
+        pillar.transform.rotation = new Quaternion(0, pillar.transform.rotation.y, 0, 1);
         pillar.transform.Rotate(new Vector3(0, 90, 0));
         //pillar.transform.rotation.Set(pillar.transform.rotation.x, pillar.transform.rotation.y, , pillar.transform.rotation.w);
         onCooldown = true;
