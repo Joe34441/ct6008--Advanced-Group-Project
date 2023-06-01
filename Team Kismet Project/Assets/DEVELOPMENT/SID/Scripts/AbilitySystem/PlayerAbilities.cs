@@ -83,7 +83,7 @@ public class PlayerAbilities : MonoBehaviour
             SetAbilityValues(abilityTwo, 2);
             //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             
-            AssignAbility(abilityManager.icePillar, 3);
+            //AssignAbility(abilityManager.icePillar, 3);
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
