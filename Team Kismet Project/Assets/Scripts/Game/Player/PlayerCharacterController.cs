@@ -133,6 +133,7 @@ public class PlayerCharacterController : MonoBehaviour
         if (movementDisabled)
         {
             animator.SetBool("Running", false);
+            animator.SetBool("Landing", true);
             return;
         }
 

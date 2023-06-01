@@ -35,7 +35,7 @@ public class DecoyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        grounded = Physics.CheckSphere(groundCheckLocation.position, 0.2f);
+        grounded = Physics.CheckSphere(groundCheckLocation.position, 0.2f, whatIsGround);
         if(!grounded)
         {
             velocity.y += gravity;

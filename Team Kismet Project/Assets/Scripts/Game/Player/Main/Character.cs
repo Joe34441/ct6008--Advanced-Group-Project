@@ -403,6 +403,12 @@ public class Character : NetworkTransform
 				Debug.Log("Returning to lobby room");
 				Cursor.visible = true;
 				Cursor.lockState = CursorLockMode.None;
+
+				Player ply = App.Instance.GetPlayer();
+				string playerID = App.Instance.GetPlayerID(ply);
+				if (playerID != null) NameList.UnassignPlayerName(playerID);
+				App.Instance.Disconnect();
+
 				Runner.SetActiveScene((int)MapIndex.LobbyRoom);
 			}
 			return true;

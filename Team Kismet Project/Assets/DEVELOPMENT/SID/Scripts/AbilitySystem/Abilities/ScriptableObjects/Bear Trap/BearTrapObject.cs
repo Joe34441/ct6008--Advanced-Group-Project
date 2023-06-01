@@ -39,8 +39,8 @@ public class BearTrapObject : MonoBehaviour
     {
         if(other.gameObject.tag == "Player" && !activated)
         {
-            leftTrap.transform.rotation = new Quaternion(-40, 0, 0, 1);
-            rightTrap.transform.rotation = new Quaternion(-140, 0, 0, 1);
+            leftTrap.transform.localRotation = new Quaternion(-40, 0, 0, 1);
+            rightTrap.transform.localRotation = new Quaternion(-140, 0, 0, 1);
             other.gameObject.GetComponent<PlayerCharacterController>().movementDisabled = true;
             other.gameObject.GetComponent<PlayerAbilities>().abilitiesEnabled = false;
             activated = true;
