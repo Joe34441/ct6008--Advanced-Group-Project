@@ -20,11 +20,7 @@ public class GameModePanel : MonoBehaviour
 
 	public void ShowServerBrowser()
     {
-		if (App.Instance.ConnectionStatus != ConnectionStatus.InLobby)
-		{
-			//some text for user - "please wait a moment and try again" etc, client is not connected to server lobby
-			return;
-		}
+		if (App.Instance.ConnectionStatus != ConnectionStatus.InLobby) return;
 
 		_sessionsPanel.NewShow();
 	}

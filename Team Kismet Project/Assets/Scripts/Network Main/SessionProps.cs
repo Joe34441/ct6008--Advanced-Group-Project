@@ -4,8 +4,6 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using Fusion;
 
-//public enum PlayMode { CaptureTheFlag, DeathMatch, KingOfTheHill}
-
 public enum PlayMode { Mode1, Mode2 }
 
 
@@ -17,10 +15,6 @@ public class SessionProps
 	public PlayMode PlayMode;
 	public MapIndex StartMap;
 	public bool SkipStaging;
-
-	/// <summary>
-	/// Support code that allow conversion of the above fields to and from the SessionProperty dictionary needed by Fusion
-	/// </summary>
 
 	public SessionProps()
 	{
@@ -49,19 +43,15 @@ public class SessionProps
 	
 	private object ConvertFromSessionProp(SessionProperty sp, Type toType)
 	{
-		if (toType == typeof(bool))
-			return (int) sp == 1;
-		if (sp.IsString)
-			return (string) sp;
+		if (toType == typeof(bool)) return (int) sp == 1;
+		if (sp.IsString) return (string) sp;
 		return (int) sp;
 	}
 
 	private SessionProperty ConvertToSessionProp(object value)
 	{
-		if (value is string)
-			return SessionProperty.Convert(value);
-		if(value is bool b)
-			return b ? 1 : 0;
+		if (value is string) return SessionProperty.Convert(value);
+		if(value is bool b) return b ? 1 : 0;
 		return (int) value;
 	}
 }

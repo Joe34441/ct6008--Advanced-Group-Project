@@ -27,14 +27,12 @@ namespace GameUI.Intro
 
 		public void OnDecreaseMaxPlayers()
 		{
-			if(_maxPly>2)
-				_maxPly--;
+			if(_maxPly>2) _maxPly--;
 			UpdateUI();
 		}
 		public void OnIncreaseMaxPlayers()
 		{
-			if(_maxPly<16)
-				_maxPly++;
+			if(_maxPly<16) _maxPly++;
 			UpdateUI();
 		}
 
@@ -46,14 +44,14 @@ namespace GameUI.Intro
 		private void UpdateUI()
 		{
 			_textMaxPlayers.text = $"Max Players: {_maxPly}";
-			if(!_toggleMap1.isOn && !_toggleMap2.isOn)
-				_toggleMap1.isOn = true;
-			if(string.IsNullOrWhiteSpace(_inputName.text))
-				_inputName.text = "Room1";
+
+			if(!_toggleMap1.isOn && !_toggleMap2.isOn) _toggleMap1.isOn = true;
+			if(string.IsNullOrWhiteSpace(_inputName.text)) _inputName.text = "Room1";
 		}
 		
 		public void OnCreateSession()
 		{
+			//create the session props
 			SessionProps props = new SessionProps();
 			props.StartMap = _toggleMap1.isOn ? MapIndex.Urban : MapIndex.Dojo;
 			props.PlayMode = _playMode;

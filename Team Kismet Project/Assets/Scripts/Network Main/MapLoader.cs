@@ -4,19 +4,14 @@ using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum MapIndex {
+public enum MapIndex
+{
 	LobbyRoom,
 	GameOver,
 	Urban,
 	Dojo
 };
 
-/// <summary>
-/// MapLoader handles the transition from one game scene to the next by showing a load screen,
-/// loading the required scene and then collecting all network objects in that scene and passing
-/// them to Fusion.
-/// </summary>
- 
 public class MapLoader : NetworkSceneManagerBase
 {
 	[SerializeField] private GameObject _loadScreen;
@@ -54,12 +49,13 @@ public class MapLoader : NetworkSceneManagerBase
 				path = _maps[newScene - (int)MapIndex.Urban];
 				break;
 		}	
+
 		yield return SceneManager.LoadSceneAsync(path, LoadSceneMode.Single);
 		var loadedScene = SceneManager.GetSceneByPath( path );
 		Debug.Log($"Loaded scene {path}: {loadedScene}");
 		sceneObjects = FindNetworkObjects(loadedScene, disable: false);
 
-		// Delay one frame
+		//delay for one frame
 		yield return null;
 		finished(sceneObjects);
 

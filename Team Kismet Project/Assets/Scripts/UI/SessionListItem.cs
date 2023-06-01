@@ -3,7 +3,6 @@ using Fusion;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 	public class SessionListItem : GridCell
 	{
 		[SerializeField] private Text _name;
@@ -16,6 +15,7 @@ using UnityEngine.UI;
 
 		public void Setup(SessionInfo info, Action<SessionInfo> onJoin)
 		{
+			//set the session information
 			_info = info;
 			_name.text = $"{info.Name} ({info.Region})";
 			_map.text = $"Map {new SessionProps(info.Properties).StartMap}";

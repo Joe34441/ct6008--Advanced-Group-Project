@@ -1,11 +1,6 @@
 using System.Collections.Generic;
 using Fusion;
 
-/// <summary>
-/// Session gets created when a game session starts and exists in only one instance.
-/// It survives scene loading and can be used to control game-logic inside a session, across scenes.
-/// </summary>
-
 public class Session : NetworkBehaviour
 {
 	[Networked] public TickTimer PostLoadCountDown { get; set; }
@@ -21,10 +16,8 @@ public class Session : NetworkBehaviour
 		if (Object.HasStateAuthority && (Runner.CurrentScene == 0 || Runner.CurrentScene == SceneRef.None))
 		{
 			SessionProps props = new SessionProps(Runner.SessionInfo.Properties);
-			if (props.SkipStaging)
-				LoadMap(props.StartMap);
-			else
-				Runner.SetActiveScene((int)MapIndex.LobbyRoom);
+			if (props.SkipStaging) LoadMap(props.StartMap);
+			else Runner.SetActiveScene((int)MapIndex.LobbyRoom);
 		}
 	}
 
@@ -44,7 +37,9 @@ public class Session : NetworkBehaviour
 		{
 			PostLoadCountDown = TickTimer.None;
 			foreach (Player player in App.Instance.Players)
+            {
 				player.InputEnabled = true;
+			}
 		}
 	}
 
@@ -52,7 +47,10 @@ public class Session : NetworkBehaviour
 	{
 		_finishedLoading.Clear();
 		foreach (Player player in App.Instance.Players)
+        {
 			player.InputEnabled = false;
+		}
+
 		Runner.SetActiveScene((int)mapIndex);
 	}
 }

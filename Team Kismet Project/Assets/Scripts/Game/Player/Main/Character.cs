@@ -5,8 +5,8 @@ using UnityEngine.UI;
 using Fusion;
 using System;
 
-// Visual representation of a Player - the Character is instantiated by the map once it's loaded.
-// Movement is handled in PlayerCharacterController.cs
+//visual representation of a Player - the Character is instantiated by the map once it's loaded.
+//movement is handled in PlayerCharacterController.cs
 public class Character : NetworkTransform
 {
 	[SerializeField] private Text _name;
@@ -76,7 +76,6 @@ public class Character : NetworkTransform
 
 	[Networked] public NetworkBool GameOver { get; set; }
 	[Networked] public float Score { get; set; }
-
 
 	[Networked(OnChanged = nameof(OnTagged))]
 	public bool IsTagged { get; set; }

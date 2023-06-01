@@ -25,6 +25,7 @@ public class OldPlayer : NetworkBehaviour
     {
         if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.R))
         {
+            //attempt to send the text message "hello" with RPCs on button press
             RPC_SendMessage("Hello");
         }
     }
@@ -109,16 +110,6 @@ public class OldPlayer : NetworkBehaviour
     {
         material.color = Color.Lerp(material.color, Color.blue, Time.deltaTime);
     }
-
-
-
-
-
-
-
-
-
-
 
     [SerializeField] public Character CharacterPrefab;
     [Networked] public NetworkString<_32> Name { get; set; }

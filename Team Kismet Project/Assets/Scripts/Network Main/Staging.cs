@@ -26,12 +26,6 @@ public class Staging : MonoBehaviour
 
 	private bool completedInitialPlayerSetp = false;
 
-	private void Awake()
-	{
-		//App.Instance.GetPlayer()?.RPC_SetIsReady(false);
-		//_playerReady.SetActive(false);
-	}
-
     private void OnEnable()
     {
 		completedInitialPlayerSetp = false;
@@ -46,13 +40,13 @@ public class Staging : MonoBehaviour
 		StringBuilder sb = new StringBuilder();
 		if (s != null)
 		{
-			sb.AppendLine($"Lobby Name: {s.Info.Name}"); //session name:
+			sb.AppendLine($"Lobby Name: {s.Info.Name}");
 			sb.AppendLine($"Region: {s.Info.Region}");
 			sb.AppendLine($"Game Type: {s.Props.PlayMode}");
 			//sb.AppendLine($"Map: {s.Props.StartMap}");
 		}
 		_sessionInfo.text = sb.ToString();
-		_titleText.text = "Room: " + s.Info.Name + ", Code: J3B8DA"; //examplar code
+		_titleText.text = "Room: " + s.Info.Name + ", Code: J3B8DA"; //examplar lobby code
 	}
 
 	void Update()
@@ -131,18 +125,14 @@ public class Staging : MonoBehaviour
 
 	public void OnStart()
 	{
-		Debug.Log("a");
-
 		SessionProps props = App.Instance.Session.Props;
 		if (canStart) props.StartMap = MapIndex.Dojo;
-		//if (canStart) props.StartMap = App.Instance.Session.Props.PlayMode;
 		App.Instance.Session.LoadMap(props.StartMap);
 	}
 
 	public void OnToggleIsReady()
 	{
 		Player ply = App.Instance.GetPlayer();
-		//_playerReady.SetActive(!ply.Ready);
 		ply.RPC_SetIsReady(!ply.Ready);
 
 		if (ply.Ready)
@@ -204,8 +194,11 @@ public class NameList
 {
 	private static Dictionary<string, int> assignedPlayerNames = new Dictionary<string, int>();
 
+	//default names are the nato phonetic alphabet
 	private static string[] defaultNames =
-		{ "Custom", "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliett", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "Xray", "Yankee", "Zulu" };
+		{ "Custom", "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel",
+		"India", "Juliett", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec",
+		"Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "Xray", "Yankee", "Zulu" };
 
 
 	public static void AssignPlayerName(string playerRefValue)
@@ -229,10 +222,7 @@ public class NameList
 				int randomNum = Random.Range(1, defaultNames.Length - 1);
 				foreach (KeyValuePair<string, int> item in assignedPlayerNames)
 				{
-					if (item.Value == randomNum)
-					{
-						newNumExists = true;
-					}
+					if (item.Value == randomNum) newNumExists = true;
 				}
 
 				if (!newNumExists)
@@ -277,14 +267,8 @@ public class NameList
 		{
 			if (item.Key == playerRefValue)
 			{
-				if (item.Value != 0)
-                {
-					return defaultNames[item.Value];
-                }
-				else
-                {
-					return null;
-                }
+				if (item.Value != 0) return defaultNames[item.Value];
+				else return null;
 			}
 		}
 		return null;

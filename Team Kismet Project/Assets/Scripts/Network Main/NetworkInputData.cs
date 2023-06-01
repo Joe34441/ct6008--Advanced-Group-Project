@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
+//this is the old version, see InputData.cs
+
 [System.Flags]
 public enum OldInputButton
 {
@@ -20,19 +22,4 @@ public struct NetworkInputData : INetworkInput
     public byte buttons;
 
     public Vector3 direction;
-
-    //public bool GetButton(InputButton button)
-    //{
-    //    return Buttons.IsSet(button);
-    //}
-
-    //public NetworkButtons GetButtonPressed(NetworkButtons prev)
-    //{
-    //    return Buttons.GetPressed(prev);
-    //}
-
-    //public bool AxisPressed()
-    //{
-    //    return GetButton(InputButton.LEFT) || GetButton(InputButton.RIGHT);
-    //}
 }

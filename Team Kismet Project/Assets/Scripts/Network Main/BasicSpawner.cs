@@ -6,7 +6,9 @@ using Fusion;
 using Fusion.Sockets;
 using UnityEngine.SceneManagement;
 
-public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks //OLD (?) ******************************************************************************************
+//old spawner and input collecting
+
+public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
@@ -15,17 +17,14 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks //OLD (?) ***
     {
         if (runner.IsServer)
         {
-            // Create a unique position for the player
             Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.DefaultPlayers) * 3, 1, 0);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-            // Keep track of the player avatars so we can remove it when they disconnect
             _spawnedCharacters.Add(player, networkPlayerObject);
         }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        // Find and remove the players avatar
         if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
         {
             runner.Despawn(networkObject);
@@ -57,9 +56,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks //OLD (?) ***
         if (Input.GetKey(KeyCode.P))
         {
             Scene nextScene = SceneManager.GetSceneByBuildIndex(1);
-            //SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
             SceneManager.LoadScene(1);
-            
         }
 
         if (_mouseButton0) data.buttons |= NetworkInputData.MOUSEBUTTON1;
@@ -71,19 +68,6 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks //OLD (?) ***
 
         input.Set(data);
     }
-
-    //public void OnInput(NetworkRunner runner, NetworkInput input)
-    //{
-    //    NetworkInputData currentInput = new NetworkInputData();
-
-    //    currentInput.Buttons.Set(InputButton.RESPAWN, Input.GetKey(KeyCode.R));
-    //    currentInput.Buttons.Set(InputButton.JUMP, Input.GetKey(KeyCode.Space));
-    //    currentInput.Buttons.Set(InputButton.LEFT, Input.GetKey(KeyCode.A));
-    //    currentInput.Buttons.Set(InputButton.RIGHT, Input.GetKey(KeyCode.D));
-
-    //    input.Set(currentInput);
-    //}
-
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
@@ -99,36 +83,26 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks //OLD (?) ***
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
 
-
     private NetworkRunner _runner;
 
     private void OnGUI()
     {
         if (_runner == null)
         {
-            if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
-            {
-                StartGame(GameMode.Host, 0);
-            }
-            if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
-            {
-                StartGame(GameMode.Client, 0);
-            }
+            if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))  StartGame(GameMode.Host, 0);
+            if (GUI.Button(new Rect(0, 40, 200, 40), "Join")) StartGame(GameMode.Client, 0);
         }
     }
 
     async void StartGame(GameMode mode, int sceneNum)
     {
-        // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
 
-        // Start or join (depends on gamemode) a session with a specific name
         await _runner.StartGame(new StartGameArgs()
         {
             GameMode = mode,
             SessionName = "TestRoom",
-            //Scene = SceneManager.GetActiveScene().buildIndex,
             Scene = sceneNum,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });

@@ -15,6 +15,7 @@ public class RoomListItem : GridCell
 
 	public void Setup(SessionInfo info, Action<SessionInfo> onJoin)
 	{
+		//set the room information
 		_info = info;
 		_name.text = $"{info.Name} ({info.Region})";
 		_map.text = $"Map {new SessionProps(info.Properties).StartMap}";

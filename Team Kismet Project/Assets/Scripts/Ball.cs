@@ -5,6 +5,7 @@ using Fusion;
 
 public class Ball : NetworkBehaviour
 {
+    //basic structure of a spawned networked prefab that despawns itself after a delay
     [Networked] private TickTimer life { get; set; }
 
     public override void FixedUpdateNetwork()

@@ -20,16 +20,10 @@ public class LobbyChat : NetworkBehaviour
         _initialRect = _messageField.rectTransform;
         _sizeChange = _inputText.textComponent.fontSize - 2.5f;
     }
-    private void Start()
-    {
-        //_initialRect = _messageField.rectTransform;
-        //_sizeChange = _inputText.textComponent.fontSize - 2.5f;
-    }
 
     public void OnNewMessage(string message)
     {
         if (!Input.GetKey(KeyCode.Return)) return;
-
         if (message == "") return;
 
         Player ply = App.Instance.GetPlayer();
@@ -39,7 +33,6 @@ public class LobbyChat : NetworkBehaviour
         RPC_SendMessage(ply.Name.ToString(), message);
 
         _inputText.text = "";
-
         _inputText.ActivateInputField();
     }
 

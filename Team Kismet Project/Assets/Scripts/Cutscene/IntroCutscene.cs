@@ -51,11 +51,10 @@ public class IntroCutscene : MonoBehaviour
         }
 
         Vector4 colour = cover.color;
-        colour.w = 1;
+        colour.w = 1; //alpha
         cover.color = colour;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!startedIntro) return;
@@ -113,7 +112,7 @@ public class IntroCutscene : MonoBehaviour
 
         if (subscenePoints.Count == 2) lerpTime = cutsceneSubTimer / cutsceneSubTime;
         else if (index == 1) lerpTime = cutsceneSubTimer / (cutsceneSubTime / 2);
-        else lerpTime = (2 * cutsceneSubTimer - cutsceneSubTime) / cutsceneSubTime; //(cutsceneSubTimer - (cutsceneSubTime / 2)) / (cutsceneSubTime / 2);
+        else lerpTime = (2 * cutsceneSubTimer - cutsceneSubTime) / cutsceneSubTime;
 
         Camera.main.transform.position = Vector3.Lerp(startPos, subscenePoints[index].transform.position, lerpTime);
         Camera.main.transform.rotation = Quaternion.Lerp(startRot, subscenePoints[index].transform.rotation, lerpTime);

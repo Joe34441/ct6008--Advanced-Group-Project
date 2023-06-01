@@ -18,8 +18,8 @@ public enum ConnectionStatus
 	Started
 }
 
-// This is the main entry point for the application. App is a singleton created when the game is launched.
-// Access it anywhere using `App.Instance`
+//the main entry point for the application. App.cs is a singleton created when the game is launched.
+//accessable anywhere through App.Instance
 
 [RequireComponent(typeof(NetworkSceneManagerBase))]
 public class App : MonoBehaviour, INetworkRunnerCallbacks
@@ -61,27 +61,17 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		Application.targetFrameRate = 144;
 
-		if (_instance == null)
-			_instance = this;
+		if (_instance == null) _instance = this;
 		
-		if(_instance!=this)
-		{
-			Destroy(gameObject);
-		}
+		if(_instance!=this) Destroy(gameObject);
 		else if(_loader==null)
 		{
 			_loader = GetComponent<NetworkSceneManagerBase>();
 		
 			DontDestroyOnLoad(gameObject);
 
-			if (_autoConnect)
-			{
-				StartSession( _sharedMode ? GameMode.Shared : GameMode.AutoHostOrClient, _autoSession, false);
-			}
-			else
-			{
-				SceneManager.LoadSceneAsync( _introScene );
-			}
+			if (_autoConnect) StartSession( _sharedMode ? GameMode.Shared : GameMode.AutoHostOrClient, _autoSession, false);
+			else SceneManager.LoadSceneAsync( _introScene );
 		}
 	}
 
@@ -89,10 +79,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		foreach (KeyValuePair<PlayerRef, Player> item in _players)
 		{
-			if (item.Value == ply)
-			{
-				return item.Key.ToString();
-			}
+			if (item.Value == ply) return item.Key.ToString();
 		}
 
 		return null;
@@ -144,6 +131,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		SetConnectionStatus(ConnectionStatus.Starting);
 
 		Debug.Log($"Starting game with session {props.RoomName}, player limit {props.PlayerLimit}");
+
 		_runner.ProvideInput = mode != GameMode.Server;
 		_runner.StartGame(new StartGameArgs
 		{
@@ -184,39 +172,29 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		_players[playerRef] = player;
 		player.transform.SetParent(_runner.transform);
-		if (Session.Map != null)
-		{
-			// Late join
-			Session.Map.SpawnAvatar(player, true);
-		}
+		if (Session.Map != null) Session.Map.SpawnAvatar(player, true);
 	}
 
 	public Player GetPlayer(PlayerRef ply=default)
 	{
-		if (!_runner)
-			return null;
-		if (ply == default)
-			ply = _runner.LocalPlayer;
+		if (!_runner) return null;
+
+		if (ply == default) ply = _runner.LocalPlayer;
+
 		_players.TryGetValue(ply, out Player player);
 		return player;
 	}
 	
 	private void SetConnectionStatus(ConnectionStatus status, string reason="")
 	{
-		if (ConnectionStatus == status)
-			return;
+		if (ConnectionStatus == status)	return;
 		ConnectionStatus = status;
 
-		if (!string.IsNullOrWhiteSpace(reason) && reason != "Ok")
-		{
-			_errorBox.Show(status,reason);
-		}
+		if (!string.IsNullOrWhiteSpace(reason) && reason != "Ok") _errorBox.Show(status,reason);
 		
 		Debug.Log($"ConnectionStatus={status} {reason}");
 	}
 	
-	// Fusion Event Handlers
-
 	public void OnConnectedToServer(NetworkRunner runner)
 	{
 		Debug.Log("Connected to server");
@@ -275,15 +253,13 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		Debug.Log($"OnShutdown {reason}");
 		SetConnectionStatus(ConnectionStatus.Disconnected, reason.ToString());
 
-		if(_runner!=null && _runner.gameObject)
-			Destroy(_runner.gameObject);
+		if(_runner!=null && _runner.gameObject) Destroy(_runner.gameObject);
 
 		_players.Clear();
 		_runner = null;
 		_session = null;
 
-		if(Application.isPlaying)
-			SceneManager.LoadSceneAsync(_introScene);
+		if(Application.isPlaying) SceneManager.LoadSceneAsync(_introScene);
 	}
 
 	public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
@@ -291,15 +267,9 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		request.Accept();
 	}
 
-	private void Update() 
-	{
-		// Check events like KeyDown or KeyUp in Unity's update. They might be missed otherwise because they're only true for 1 frame
-		//_data.ButtonFlags |= Input.GetKeyDown( KeyCode.R ) ? ButtonFlag.RESPAWN : 0;
-	}
-	
 	public void OnInput(NetworkRunner runner, NetworkInput input)
 	{
-		// Persistent button flags like GetKey should be read when needed so they always have the actual state for this tick
+		//persistent button flags like GetKey should be read when needed so they always have the actual state for this tick
 		//use input.getbutton("fire1") / fire2 etc for controllers, set input mapping for gamepads
 
 		_data.ButtonFlags |= Input.GetKey(KeyCode.W) ? ButtonFlag.FORWARD : 0;
@@ -322,9 +292,9 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 
 		_data.SetLookRotation(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")));
 
-		input.Set( _data );
+		input.Set(_data);
 
-		// Clear the flags so they don't spill over into the next tick unless they're still valid input.
+		//clear the flags so they don't spill over into the next tick unless they're still valid input.
 		_data.ButtonFlags = 0;
 	}
 

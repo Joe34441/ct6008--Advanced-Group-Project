@@ -5,12 +5,12 @@ using Fusion;
 
 public class PhysxBall : NetworkBehaviour
 {
+    //basic structure of a spawned networked prefab that uses physics and despawns itself after a delay
     [Networked] private TickTimer life { get; set; }
 
     public void Init(Vector3 forward)
     {
         life = TickTimer.CreateFromSeconds(Runner, 5.0f);
-        //GetComponent<Rigidbody2D>().velocity = forward;
         GetComponent<Rigidbody>().velocity = forward;
     }
 
