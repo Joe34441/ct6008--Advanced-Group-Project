@@ -54,6 +54,10 @@ public class PlayerCharacterController : MonoBehaviour
         //update grounded
         lateGrounded = grounded;
         grounded = Physics.CheckSphere(groundCheckReference.position, 0.2f, whatIsGround);
+        animator.SetBool("Running", false);
+        animator.SetBool("HighJump", false);
+        animator.SetBool("Landing", false);
+        animator.SetBool("StartJump", false);
 
         //update jumping bool
         if (tryJump)
@@ -66,11 +70,11 @@ public class PlayerCharacterController : MonoBehaviour
                 
                 if(superJump)
                 {
-                    animator.SetTrigger("HighJump");
+                    animator.SetBool("HighJump",true);
                 }
                 else
                 {
-                    animator.SetTrigger("StartJump");
+                    animator.SetBool("StartJump",true);
                 }
             }
         }
@@ -81,11 +85,11 @@ public class PlayerCharacterController : MonoBehaviour
             tryJump = false;
             if(superJump)
             {
-                animator.SetTrigger("HighJump");
+                animator.SetBool("HighJump",true);
             }
             else
             {
-                animator.SetTrigger("StartJump");
+                animator.SetBool("StartJump",true);
             }
             
         }
@@ -119,7 +123,7 @@ public class PlayerCharacterController : MonoBehaviour
         else if(grounded && !lateGrounded)
         {
             animator.SetBool("Landing",true);
-            animator.ResetTrigger("StartJump");
+            animator.SetBool("StartJump", false);
         }
         else
         {

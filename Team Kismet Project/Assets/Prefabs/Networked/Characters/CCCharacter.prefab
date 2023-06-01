@@ -598,10 +598,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86bedbe623f4c5946a1a00cd9b4bb7a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tryTag: 0
   myCharacter: {fileID: 0}
   otherCharacter: {fileID: 0}
   taggableCharacter: {fileID: 0}
+  tryTag: 0
+  isTagOnCooldown: 0
 --- !u!65 &6249011002094513719
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1432,6 +1433,7 @@ GameObject:
   - component: {fileID: 397597289601070434}
   - component: {fileID: 4610285444781331943}
   - component: {fileID: 6188410901271086014}
+  - component: {fileID: 8651205175284110363}
   m_Layer: 7
   m_Name: CCCharacter
   m_TagString: Player
@@ -1522,7 +1524,6 @@ MonoBehaviour:
   _cameraRotationLerpRate: 0.1
   matSetter: {fileID: 2851259754354782506}
   camRaycastReference: {fileID: 26631113310054572}
-  badlocaltagboolstatecheckthingbutpublic: 1
   _GameOver:
     _value: 0
   _Score: 0
@@ -1596,6 +1597,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 1433703955198663636}
   - {fileID: 6188410901271086014}
+  - {fileID: 8651205175284110363}
   - {fileID: 2272743811261907378}
   SimulationBehaviours: []
 --- !u!114 &6188410901271086014
@@ -1632,6 +1634,35 @@ MonoBehaviour:
   rotationSpeed: 15
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
+--- !u!114 &8651205175284110363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4610285444781331945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  Animator: {fileID: 4345143616588727559}
+  SyncSettings: 15
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 000000002b1a167c7940695520e23b685928a8ced72d70c43ceef83966c12eb3e48e6236f09d878ea2c7f8a724f04e26a6bf02a35d7a021b47eb38f16dacfe3e773dc4d4d9b6d9c8c327e322c77b0377e4cb00d1a966a5630c2242dc
+  TriggerHashes: 00000000d72d70c460d4afbfe50a1892c902b9075d7a021be5b4eb1ed9b6d9c8
 --- !u!1 &4610285446266597330
 GameObject:
   m_ObjectHideFlags: 0
