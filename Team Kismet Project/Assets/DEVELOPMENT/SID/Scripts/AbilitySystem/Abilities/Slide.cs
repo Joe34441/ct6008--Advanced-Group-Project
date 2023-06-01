@@ -24,7 +24,7 @@ public class Slide : Ability
         timeRef = Time.time;
         returnSpeed = playerController.moveSpeed;
         playerController.moveSpeed = slideSpeed;
-        animator.SetTrigger("Sliding");
+        animator.SetBool("Sliding",true);
         var particle = EffectManager.current.CreateEffect("SlideWoosh", playerRef);
         particle.particle.transform.rotation = playerRef.transform.rotation;
 
@@ -35,7 +35,7 @@ public class Slide : Ability
     public override void DeactivateAbility()
     {
         playerController.moveSpeed = returnSpeed;
-
+        animator.SetBool("Sliding", false);
         shouldUpdate = false;
         activated = false;
         onCooldown = true;

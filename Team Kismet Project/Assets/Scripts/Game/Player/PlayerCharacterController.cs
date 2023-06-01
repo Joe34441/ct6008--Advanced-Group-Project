@@ -146,7 +146,7 @@ public class PlayerCharacterController : MonoBehaviour
             return;
         }
 
-        animator.SetBool("Running", true);
+        
         moving = true;
         Vector3 directionMovement = Vector3.zero;
         float rotationAngle = transform.eulerAngles.y;
@@ -158,6 +158,7 @@ public class PlayerCharacterController : MonoBehaviour
             directionMovement = Quaternion.Euler(0.0f, targetAngle, 0.0f) * Vector3.forward;
             //calculate the angle that the player should rotate to when moving, and smoothly rotate the player over time
             rotationAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSmoothVelocity, 0.1f);
+            animator.SetBool("Running", true);
         }
 
         RecordDirection(directionMovement);

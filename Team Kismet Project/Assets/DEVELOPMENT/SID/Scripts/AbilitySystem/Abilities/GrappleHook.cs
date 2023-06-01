@@ -34,6 +34,14 @@ public class GrappleHook : Ability
         {
             if (grappleCable)
             {
+                if(timeSinceStart >= 0.1f)
+                {
+                    if (animator.GetBool("StartGrapple") == true)
+                    {
+                        animator.SetBool("StartGrapple", false);
+                    }
+                }
+
                 grappleCable.transform.position = grapplePoint.transform.position;
                 timeSinceStart += Time.deltaTime;
                 float travelPercent = timeSinceStart / travelTime;
@@ -81,7 +89,8 @@ public class GrappleHook : Ability
             travelTime = distanceToGrapple / grappleSpeed;
 
             timeSinceStart = 0;
-            animator.SetTrigger("StartGrapple");
+            animator.SetBool("StartGrapple",true);
+            
             animator.SetBool("Grappling", true);
             connected = true;
             shouldUpdate = true;
