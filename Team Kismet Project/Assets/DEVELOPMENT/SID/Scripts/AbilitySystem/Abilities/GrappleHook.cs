@@ -34,6 +34,8 @@ public class GrappleHook : Ability
         {
             if (grappleCable)
             {
+                //stop the animation after a small amount of time to ensure it starts playing,
+                //will have exit time on the anim blueprint
                 if(timeSinceStart >= 0.1f)
                 {
                     if (animator.GetBool("StartGrapple") == true)
@@ -44,7 +46,9 @@ public class GrappleHook : Ability
 
                 grappleCable.transform.position = grapplePoint.transform.position;
                 timeSinceStart += Time.deltaTime;
+                //get a number between 0 and 1 to apply to the vector lerp for smooth travel along the zipline
                 float travelPercent = timeSinceStart / travelTime;
+                //end the zipline slightly early to avoid the player getting stuck
                 if (travelPercent >= 0.9f)
                 {
                     connected = false;
@@ -61,10 +65,12 @@ public class GrappleHook : Ability
     public override void ActivateAbility()
     {
         RaycastHit hit;
+        //use this obj to perfrom the raycast and avoid issues with the current camera setup
         GameObject obj = new GameObject();
         obj.transform.position = cameraReference.transform.position;
         obj.transform.LookAt(raycastRef.transform);
-        //if (Physics.Raycast(playerCamera.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
+        
+        //perform a raycast to find the end point of the zipline
         if (Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, maxGrappleDistance, hitList))
         {
             connectionPoint = hit.point;
@@ -76,19 +82,22 @@ public class GrappleHook : Ability
             grappleCable = currentCable.GetComponentInChildren<CableComponent>();
             grappleCable.SetEndLocation(connectionPoint);
 
+            //ensure the connection point is atleast at 2 on the y axis to avoid the player sinking into the floor
             if(connectionPoint.y < 2f)
             {
                 connectionPoint.y = 2f;
             }
 
+            //stop the player moving when ziplining
             playerController.movementDisabled = true;
 
             startPoint = playerRef.transform.position;
-
+            //calculate how long it will take to travel the length of the zipline
             float distanceToGrapple = Vector3.Distance(playerRef.transform.position, connectionPoint);
             travelTime = distanceToGrapple / grappleSpeed;
 
             timeSinceStart = 0;
+            //start animations
             animator.SetBool("StartGrapple",true);
             
             animator.SetBool("Grappling", true);
@@ -98,22 +107,16 @@ public class GrappleHook : Ability
         }
     }
 
+    //old initialize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         playerCamera = _camera;
         playerRef = _playerRef;
-        //if(offline)
-        //{
-        //    _playerController = _playerRef.GetComponent<ThirdPersonMovement>();
-        //}
-        //else
-        //{
-        //    playerController = _playerRef.GetComponent<PlayerController>();
-        //}
     }
 
     public void Initialize(GameObject _playerRef, Camera _camera, Transform _cameraRef, PlayerCharacterController _playerController, LayerMask _hitList, GameObject _cablePrefab, float _grappleSpeed, float _grappleDistance, Animator _animator, GameObject _grapplePoint)
     {
+        //setup all the components
         playerRef = _playerRef;
         playerCamera = _camera;
         cameraReference = _cameraRef;
@@ -130,7 +133,7 @@ public class GrappleHook : Ability
 
     public override void Released()
     {
-        //DeactivateAbility();
+        
     }
 
     public override void DeactivateAbility()
@@ -138,9 +141,9 @@ public class GrappleHook : Ability
         Destroy(currentCable);
         currentCable = null;
         grappleCable = null;
-
+        //re-enable movement
         playerController.movementDisabled = false;
-
+        //stop animations
         animator.SetBool("Grappling", false);
         shouldUpdate = false;
         onCooldown = true;

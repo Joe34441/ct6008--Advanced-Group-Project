@@ -28,6 +28,7 @@ public class DoubleJump : Ability
         activated = false;
     }
 
+    //old initialize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         

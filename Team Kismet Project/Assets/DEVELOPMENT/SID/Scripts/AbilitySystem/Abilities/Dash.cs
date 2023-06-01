@@ -20,6 +20,8 @@ public class Dash : Ability
         //early out if not moving or movement is disabled
         if (!playerController.moving || playerController.movementDisabled) return;
         timeRef = Time.time;
+        //set the move speed very high for a short duration.
+        //combined with a roll animation will create the illusion of a dash/roll
         playerController.moveSpeed = dashSpeed;
         animator.SetBool("Rolling", true);
         activated = true;
@@ -35,6 +37,7 @@ public class Dash : Ability
         onCooldown = true;
     }
 
+    //old initialize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         
@@ -57,6 +60,7 @@ public class Dash : Ability
 
     public override void Update()
     {
+        //timer for how long the dash should last
         if (Time.time - timeRef >= dashTimer)
         {
             DeactivateAbility();

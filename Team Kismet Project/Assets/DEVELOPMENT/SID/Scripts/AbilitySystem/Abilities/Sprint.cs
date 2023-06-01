@@ -18,11 +18,13 @@ public class Sprint : Ability
     {
         //early out if the player isnt moving or if movement is disabled
         if (!playerController.moving || playerController.movementDisabled) return;
+        //set move speed to sprint speed
         playerController.moveSpeed = sprintSpeed;
         timeRef = Time.time;    
         activated = true;
         shouldUpdate = true;
         EffectManager.current.CreateEffect("SpeedWoosh", playerRef.transform.position, playerRef.transform.rotation);
+        //increase field of view to make player feel like they're going quicker
         playerCamera.fieldOfView = 67;
     }
 
@@ -35,6 +37,7 @@ public class Sprint : Ability
         playerCamera.fieldOfView = 60;
     }
 
+    //old initilize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         

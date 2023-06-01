@@ -35,9 +35,11 @@ public class DecoyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //decoys need gravity too
         grounded = Physics.CheckSphere(groundCheckLocation.position, 0.2f, whatIsGround);
         if(!grounded)
         {
+            //apply gravity if not on the ground
             velocity.y += gravity;
             decoyController.Move(velocity * runner.DeltaTime);
         }
@@ -67,6 +69,7 @@ public class DecoyBehaviour : MonoBehaviour
         Destroy(gameObject, _upTime);
     }
 
+    //set the decoy colours so they blend in with the original
     public void SetupDecoyLook(int playerIndex, string _name, bool isTagged)
     {
         if(playerIndex == 0)

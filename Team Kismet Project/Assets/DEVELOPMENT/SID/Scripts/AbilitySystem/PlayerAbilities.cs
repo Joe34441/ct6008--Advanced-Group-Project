@@ -33,57 +33,32 @@ public class PlayerAbilities : MonoBehaviour
 
     public void CreateAbilityInstance(List<Ability> list, int playerID, HUDHandler _hudHandler, bool hasInput)
     {
+        //instantiate the list so that the chosen ability can be removed without effecting the other characters choices
         List<Ability> currentList = new List<Ability>(list);
 
+        //get the length of the current player's name
         int currentPlayerNameLength = App.Instance.GetPlayer(playerID).Name.Length;
         if (currentPlayerNameLength == 0) currentPlayerNameLength = 1;
 
-
         for (int i = 1; i <= 3; i++)
         {
+            //get a random number using the room name length and the current player name length - 
+            //this allows for random assignment of abilities, but ensures that the chosen ability will be the same on all clients to avoid issues. 
             int ranNum = (103 + (App.Instance.Session.Props.RoomName.Length + currentPlayerNameLength) * ((playerID + 3) * (3 - (i - 1))));
 
-            //System.Random prng = new System.Random(103 + (App.Instance.Session.Props.RoomName.Length + currentPlayerNameLength) * ((playerID + 3) * 3));
-            //int ranNum = prng.Next();
-
             int randomChoice = ranNum % currentList.Count;
-            //int randomChoice = Random.Range(0, currentList.Count);
 
             AssignAbility(currentList[randomChoice], i);
             currentList.RemoveAt(randomChoice);
-
-            
         }
-
-        //if(playerID == 0)
-        //{
-        //    AssignAbility(abilityManager.dash, 1);
-        //    AssignAbility(abilityManager.sprint, 2);
-        //    AssignAbility(abilityManager.grapple, 3);
-        //}
-        //else if(playerID == 1)
-        //{
-        //    AssignAbility(abilityManager.superJump, 1);
-        //    AssignAbility(abilityManager.sprint, 2);
-        //    AssignAbility(abilityManager.smokeBomb, 3);
-        //}
-        //else if (playerID == 2)
-        //{
-        //    AssignAbility(abilityManager.sprint, 1);
-        //    AssignAbility(abilityManager.slide, 2);
-        //    AssignAbility(abilityManager.superJump, 3);
-        //}
-
 
         try //***********************************************************************************************************************************************************************************
         {
-            //abilityOne = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            SetAbilityValues(abilityOne, 1);
-            //abilityTwo = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
-            SetAbilityValues(abilityTwo, 2);
-            //abilityThree = (Ability)ScriptableObject.CreateInstance(abilityOne.GetType());
             
-            //AssignAbility(abilityManager.icePillar, 3);
+            SetAbilityValues(abilityOne, 1);
+            
+            SetAbilityValues(abilityTwo, 2);
+
             SetAbilityValues(abilityThree, 3);
         }
         catch (System.Exception e) //************************************************************************************************************************************************************
@@ -91,6 +66,7 @@ public class PlayerAbilities : MonoBehaviour
             Debug.LogWarning("SKIPPED ERROR - " + e);
         }
 
+        //pass through the assigned abilities to the hud handler to setup the ui
         hud = _hudHandler;
         if (hasInput)
         {
@@ -102,6 +78,7 @@ public class PlayerAbilities : MonoBehaviour
 
     private void SetAbilityValues(Ability _ability, int index)
     {
+        //initialize all the abilities, passing through whatever variables are necessary for it to work correctly
         switch (_ability.abilityType)
         {
             case AbilityTypes.Grapplehook:
@@ -228,7 +205,7 @@ public class PlayerAbilities : MonoBehaviour
     }
 
 
-
+    //set the chosen ability to the correct slot
     public void AssignAbility(Ability _ability, int index)
     {
         switch (index)
@@ -255,7 +232,8 @@ public class PlayerAbilities : MonoBehaviour
                 }
         }
     }
-
+    
+    //setup all the components needed for this class
     public void Setup(int playerID, PlayerCharacterController playerCharacter, HUDHandler _hudHandler, bool hasInput)
     {
         playerController = playerCharacter;
@@ -267,29 +245,32 @@ public class PlayerAbilities : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //abilityOne.Update();
-        //abilityTwo.Update();
+
     }
 
     private void InitializeAbilities()
     {
-        //abilityOne.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
-        //abilityTwo.Initialize(gameObject, gameObject.GetComponent<PlayerController>().playerCamera);
+
     }
 
+    //the activate and release ability functions are called on the FixedUpdateNetwork function in Character.cs
+    //this makes it so the update functions for the abilities happen on the network, avoiding any issues with moving the character locally getting translated to the network
     public void ActivateOne()
     {
+        //check if the player is able to use abilities
         if(abilitiesEnabled)
         {
+            //if it hasnt been activated, it is able to be activated
             if (!abilityOne.activated)
             {
+                //last check to see if the ability is on cooldown
                 if (!abilityOne.onCooldown)
                 {
                     abilityOne.ActivateAbility();
                     hasResetOne = false;
                 }
             }
-
+            //if the ability should update, call it so it updates along with the FixedUpdateNetwork function
             if (abilityOne.shouldUpdate)
             {
                 abilityOne.Update();
@@ -344,11 +325,13 @@ public class PlayerAbilities : MonoBehaviour
             abilityOne.Released();
         }
 
+        //ability may still need to update even when the button is released, so check if it should
         if(abilityOne.shouldUpdate)
         {
             abilityOne.Update();
         }
 
+        //reset the ability after the cooldown period and set the ui values
         if(abilityOne.onCooldown && !hasResetOne)
         {
             Invoke("ResetOne", abilityOne.cooldown);
@@ -431,6 +414,8 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
+    //reset the cooldowns on the abilities
+    //set as functions so they can be called using Invoke()
     private void ResetOne()
     {
         abilityOne.ResetCooldown();

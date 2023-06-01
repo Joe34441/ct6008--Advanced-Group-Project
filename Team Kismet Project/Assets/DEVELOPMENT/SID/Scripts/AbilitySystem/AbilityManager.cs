@@ -22,6 +22,8 @@ public enum AbilityTypes
 
 public class AbilityManager : MonoBehaviour
 {
+    //a reference to each ability type.
+    //these types will have the default settings which will need to be copied over when the scriptable object is instantiated
     public GrappleHook grapple;
     public SmokeBomb smokeBomb;
     public Teleport teleport;
@@ -39,6 +41,7 @@ public class AbilityManager : MonoBehaviour
 
     public void Setup(PlayerAbilities pa, int playerID, HUDHandler hudHandler, bool hasInput)
     {
+        //on setup, ensure the list is clear before repopulating it
         abilities.Clear();
         PopulateList();
         pa.CreateAbilityInstance(abilities, playerID, hudHandler, hasInput);
@@ -46,6 +49,7 @@ public class AbilityManager : MonoBehaviour
 
     private void PopulateList()
     {
+        //add all the abilities to the list so they can be assigned when the player calls for them
         abilities.Add(doubleJump);
         abilities.Add(teleport);
         abilities.Add(superJump);
@@ -57,7 +61,5 @@ public class AbilityManager : MonoBehaviour
         abilities.Add(dash);
         abilities.Add(slide);
         abilities.Add(icePillar);
-        //abilities.Add(shuriken);
-
     }
 }

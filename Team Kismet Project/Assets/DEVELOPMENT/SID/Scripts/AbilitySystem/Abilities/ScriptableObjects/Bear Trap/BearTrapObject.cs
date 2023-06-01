@@ -29,31 +29,29 @@ public class BearTrapObject : MonoBehaviour
         trapCollider.radius = trapRadius;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
+        //if a player steps in an un-activated bear trap
         if(other.gameObject.tag == "Player" && !activated)
         {
+            //close the trap
             leftTrap.transform.localRotation = new Quaternion(-40, 0, 0, 1);
             rightTrap.transform.localRotation = new Quaternion(-140, 0, 0, 1);
+            //disable movement and abilities
             other.gameObject.GetComponent<PlayerCharacterController>().movementDisabled = true;
             other.gameObject.GetComponent<PlayerAbilities>().abilitiesEnabled = false;
             activated = true;
             EffectManager.current.CreateEffect("TrapClosed", transform.position);
 
             trappedPlayer = other.gameObject;
-
+            //reset the trap and release the player after a short period
             Invoke("ResetTrap", trapDuration);
         }
     }
 
     private void ResetTrap()
     {
+        //re-enable movement and abilities
         trappedPlayer.GetComponent<PlayerCharacterController>().movementDisabled = false;
         trappedPlayer.GetComponent<PlayerAbilities>().abilitiesEnabled = true;
         Destroy(gameObject);

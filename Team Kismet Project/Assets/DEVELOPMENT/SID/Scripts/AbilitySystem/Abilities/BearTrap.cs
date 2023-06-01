@@ -53,17 +53,8 @@ public class BearTrap : Ability
     private void PerformRaycast()
     {
         RaycastHit hit;
-
-        //create camera raycast reference empty game object on character
-        //get reference to the camera raycast reference
-        //create new TRANSFORM, at player camera location
-        //new transform.LookAt raycast reference
-        //get forward on new trasform
-        //happy days
         obj.transform.position = cameraReference.position;
         obj.transform.LookAt(raycastRef.transform);
-
-        //Vector3 direction = playerCamera.transform.position - raycastRef.transform.position;
 
         bool hitSomething = Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position), hitList);
 
@@ -84,6 +75,7 @@ public class BearTrap : Ability
         }
     }
 
+    //old initialize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         playerRef = _playerRef;
@@ -101,13 +93,10 @@ public class BearTrap : Ability
         trapPrefab = _trapPrefab;
         playerCharacter = playerRef.GetComponent<Character>();
         raycastRef = playerCharacter.camRaycastReference;
-        
     }
 
     public override void Released()
     {
-        //Instantiate(trapPrefab, trapLocation, Quaternion.identity);
-        //playerRef.GetComponent<Character>().GetPlayer().Runner.Spawn(trapPrefab, trapLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
         playerRef.GetComponent<Character>().GetRunner().Spawn(trapPrefab, trapLocation, Quaternion.identity, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority);
         onCooldown = true;
         EffectManager.current.CreateEffect("TrapOpen", trapLocation);
@@ -116,9 +105,11 @@ public class BearTrap : Ability
 
     public override void Update()
     {
+        //dont want to raycast every frame, so set it on a timer
         if (Time.time - timeRef >= timer)
         {
             PerformRaycast();
+            //get a new timeref to reset the timer
             timeRef = Time.time;
         }
     }

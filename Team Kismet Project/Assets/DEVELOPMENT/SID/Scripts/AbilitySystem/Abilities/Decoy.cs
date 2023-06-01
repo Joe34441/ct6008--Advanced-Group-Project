@@ -16,9 +16,10 @@ public class Decoy : Ability
 
     public override void ActivateAbility()
     {
-
+        //repeat for the number of desired decoys
         for (int i = 0; i < numOfDecoys; i++)
         {
+            //spawn through Runner.Spawn() so that it will get instantiated on all clients
             currentDecoy = playerRef.GetComponent<Character>().GetRunner().Spawn(decoyObj, spawnLocation.transform.position, playerRef.transform.rotation, playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority).gameObject;
 
             Vector3 randomPosition = Random.insideUnitSphere * 5;
@@ -39,6 +40,7 @@ public class Decoy : Ability
         onCooldown = true;
     }
 
+    //old initialize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         

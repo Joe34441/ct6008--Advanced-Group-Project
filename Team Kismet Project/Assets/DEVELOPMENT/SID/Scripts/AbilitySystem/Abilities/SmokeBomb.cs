@@ -24,14 +24,7 @@ public class SmokeBomb : Ability
 
     public override void Update()
     {
-        //if(matSet)
-        //{
-        //    currentTime += Time.deltaTime / renderTimeScale;
-        //    renderer.material.SetFloat("_Cutoff_Level", currentTime);
-        //    face.GetComponent<Renderer>().material.SetFloat("_Cutoff_Level", currentTime);
-            
-        //}
-
+        //after a few seconds, deactivate the ability
         if(Time.time - timeRef >= invisibleTimer)
         {
             DeactivateAbility();
@@ -41,11 +34,13 @@ public class SmokeBomb : Ability
 
     public override void ActivateAbility()
     {
+        //hide all the player components, and set invisible in the mat setter
         matSetter.SetInvisible();
         playerRef.GetComponent<Character>().HideName();
         currentTime = 0;
-        GameObject smoke = Instantiate(smokePrefab, new Vector3(playerRef.transform.position.x, playerRef.transform.position.y + 1f, playerRef.transform.position.z),
-            playerRef.transform.rotation);
+        GameObject smoke = Instantiate(smokePrefab, new Vector3(playerRef.transform.position.x, playerRef.transform.position.y + 1f, 
+            playerRef.transform.position.z), playerRef.transform.rotation);
+        //create the effects
         Destroy(smoke, 0.5f);
         EffectManager.current.CreateEffect("SmokePoof", playerRef.transform.position);
         timeRef = Time.time;
@@ -57,6 +52,7 @@ public class SmokeBomb : Ability
 
     public override void DeactivateAbility()
     {
+        //unhide all the player components
         playerRef.GetComponent<Character>().ShowName();
         matSetter.SetVisible();
         matSet = false;
@@ -69,6 +65,7 @@ public class SmokeBomb : Ability
         
     }
 
+    //old initialize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         playerRef = _playerRef;

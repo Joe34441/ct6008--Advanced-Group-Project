@@ -24,16 +24,20 @@ public class IcePillar : Ability
 
     public override void ActivateAbility()
     {
+        //get the game time when the ability was pressed
         timeRef = Time.time;
+        //if there is already an indicator, destroy it and make a new one
         if (currentIndicator)
         {
             Destroy(currentIndicator);
         }
+        //initialize the pillar location
         pillarLocation = Vector3.zero;
         currentIndicator = Instantiate(placementIndicator, pillarLocation, Quaternion.identity);
         shouldUpdate = true;
         activated = true;
 
+        //create a game object to perform the raycasts properly
         obj = new GameObject();
     }
 
@@ -43,7 +47,7 @@ public class IcePillar : Ability
 
         obj.transform.position = cameraReference.position;
         obj.transform.LookAt(raycastRef.transform);
-
+        //perform a raycast to see if it hits anywhere
         bool hitSomething = Physics.Raycast(raycastRef.transform.position, obj.transform.forward, out hit, placementRange + Vector3.Distance(raycastRef.transform.position, playerCamera.transform.position), hitList);
 
         if (hitSomething)
@@ -74,6 +78,7 @@ public class IcePillar : Ability
         activated = false;
     }
 
+    //old initialize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         
@@ -94,20 +99,25 @@ public class IcePillar : Ability
 
     public override void Released()
     {
+        //when the button is released, then spawn the pillar
         GameObject pillar = playerRef.GetComponent<Character>().GetRunner().Spawn(pillarPrefab, pillarLocation, new Quaternion(0, playerRef.transform.rotation.y, 0, 1), playerRef.GetComponent<Character>().GetPlayer().Object.InputAuthority).gameObject;
+        //rotate the pillar so that it faces the player
         pillar.transform.LookAt(playerRef.transform);
         pillar.transform.rotation = new Quaternion(0, pillar.transform.rotation.y, 0, 1);
+        //pillar by default will be rotated 90 degrees away from the player, so rotate it back
         pillar.transform.Rotate(new Vector3(0, 90, 0));
-        //pillar.transform.rotation.Set(pillar.transform.rotation.x, pillar.transform.rotation.y, , pillar.transform.rotation.w);
+        
         onCooldown = true;
         DeactivateAbility();
     }
 
     public override void Update()
     {
+        //dont want to perform raycasts every frame, so do it every .02 seconds
         if (Time.time - timeRef >= timer)
         {
             PerformRaycast();
+            //get a new time ref so the calculations can be done again
             timeRef = Time.time;
         }
     }

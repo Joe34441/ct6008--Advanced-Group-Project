@@ -41,6 +41,7 @@ public class Slide : Ability
         onCooldown = true;
     }
 
+    //old initialize
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         

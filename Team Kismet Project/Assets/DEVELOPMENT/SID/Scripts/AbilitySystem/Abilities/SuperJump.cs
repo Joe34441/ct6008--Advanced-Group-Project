@@ -15,14 +15,13 @@ public class SuperJump : Ability
     private bool startedFalling = false;
 
     private PlayerCharacterController playerController;
-    private float returnJumpPower;
 
     public override void ActivateAbility()
     {
+        //check if the player is able to jump normally
         if(playerController.IsGrounded())
         {
-            //returnJumpPower = playerController.jumpPower;
-            //playerController.jumpPower = jumpPower;
+            //set the player to super jump mode and then try to jump in PlayerCharacterController.cs
             playerController.superJump = true;
             playerController.TryJump();
             shouldUpdate = true;
@@ -38,23 +37,22 @@ public class SuperJump : Ability
 
     public override void DeactivateAbility()
     {
+        //reset gravity scale and jumping settings so player can move normally
         playerController.gravityScale = 1.0f;
-        //playerController.jumpPower = returnJumpPower;
         playerController.superJump = false;
-        //playerController.ResetVelocity();
         shouldUpdate = false;
         startedFalling = false;
         activated = false;
         onCooldown = true;
     }
 
+    //old initialize, ignore
     public override void Initialize(GameObject _playerRef, Camera _camera)
     {
         shouldUpdate = false;
         startedFalling = false;
         playerRef = _playerRef;
         playerCamera = _camera;
-        //playerController = playerRef.GetComponent<PlayerController>();
     }
 
     public override void Released()
