@@ -21,7 +21,7 @@ public class Dash : Ability
         if (!playerController.moving || playerController.movementDisabled) return;
         timeRef = Time.time;
         playerController.moveSpeed = dashSpeed;
-        animator.SetBool("Rolling", false);
+        animator.SetBool("Rolling", true);
         activated = true;
         shouldUpdate = true;
     }
@@ -29,6 +29,7 @@ public class Dash : Ability
     public override void DeactivateAbility()
     {
         playerController.moveSpeed = returnSpeed;
+        animator.SetBool("Rolling", false);
         activated = false;
         shouldUpdate = false;
         onCooldown = true;
@@ -56,7 +57,6 @@ public class Dash : Ability
 
     public override void Update()
     {
-        animator.SetBool("Rolling",false);
         if (Time.time - timeRef >= dashTimer)
         {
             DeactivateAbility();

@@ -17,7 +17,7 @@ public class DoubleJump : Ability
             return;
         }
         playerController.SetVelocity(Mathf.Sqrt(4 * -2 * -9.81f));
-        animator.SetTrigger("DoubleJump");
+        animator.SetBool("DoubleJump",true);
         activated = true;
         onCooldown = true;
         DeactivateAbility();
@@ -48,6 +48,6 @@ public class DoubleJump : Ability
 
     public override void Update()
     {
-        
+        animator.SetBool("DoubleJump", false);
     }
 }
