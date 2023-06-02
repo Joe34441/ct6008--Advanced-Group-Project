@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class Staging : MonoBehaviour
 {
+	//references to objects in the scene
 	[SerializeField] private GridBuilder _playerGrid;
 	[SerializeField] private PlayerListItem _playerListItemPrefab;
 	[SerializeField] private Button _startButton;
@@ -40,6 +41,7 @@ public class Staging : MonoBehaviour
 		StringBuilder sb = new StringBuilder();
 		if (s != null)
 		{
+			//adding information to the string to display lobby information
 			sb.AppendLine($"Lobby Name: {s.Info.Name}");
 			sb.AppendLine($"Region: {s.Info.Region}");
 			sb.AppendLine($"Game Type: {s.Props.PlayMode}");
@@ -60,33 +62,33 @@ public class Staging : MonoBehaviour
             {
 				completedInitialPlayerSetp = true;
 
-				string playerID = App.Instance.GetPlayerID(ply);
-				if (playerID != null) NameList.AssignPlayerName(playerID);
+				string playerID = App.Instance.GetPlayerID(ply); //get player id
+				if (playerID != null) NameList.AssignPlayerName(playerID); //assign player name
 
 				_playerName.text = "Player Setup : " + NameList.GetName(playerID);
 
 				OnColorUpdated();
 			}
 
-			_playerGrid.AddRow(_playerListItemPrefab, item => item.Setup(ply));
+			_playerGrid.AddRow(_playerListItemPrefab, item => item.Setup(ply)); //add a row using the current player
 			count++;
 			if (ply.Ready) ready++;
 		}
 
 		string wait = null;
-		if (count < 4 && !Application.isEditor)
+		if (count < 4 && !Application.isEditor) //if there are less than 4 clients, game cannot start unless host is in the engine
 		{
 			int playersNeeded = 4 - count;
 			if (playersNeeded == 1) wait = $"Waiting for 1 player to join";
 			else wait = $"Waiting for {playersNeeded} players to join";
 		}
-		else if (ready < count)
+		else if (ready < count) //not all players have readied up
 		{
 			int playersNotReady = count - ready;
 			if (playersNotReady == 1) wait = $"1 player is not ready";
 			else wait = $"{playersNotReady} players are not ready";
 		}
-		else if (!App.Instance.IsMaster) wait = "Waiting for host to start";
+		else if (!App.Instance.IsMaster) wait = "Waiting for host to start"; //all players are ready and waiting for host to start
 
 		canStart = false;
 		if (ready == 4 || (Application.isEditor && count == ready)) canStart = true;
@@ -103,9 +105,10 @@ public class Staging : MonoBehaviour
 		}
 		_sessionRefresh -= Time.deltaTime;
 
-		bool playerReady = App.Instance.GetPlayer().Ready;
+		bool playerReady = App.Instance.GetPlayer().Ready; //get ready state
 		if (playerReady != _readyCheck.activeInHierarchy)
         {
+			//force update ready state to ensure that displayed text and icon hints are updated
 			if (playerReady)
             {
 				_readyCheck.SetActive(true);
@@ -127,14 +130,15 @@ public class Staging : MonoBehaviour
 	{
 		SessionProps props = App.Instance.Session.Props;
 		if (canStart) props.StartMap = MapIndex.Dojo;
-		App.Instance.Session.LoadMap(props.StartMap);
+		App.Instance.Session.LoadMap(props.StartMap); //load the selected start map
 	}
 
 	public void OnToggleIsReady()
 	{
-		Player ply = App.Instance.GetPlayer();
-		ply.RPC_SetIsReady(!ply.Ready);
+		Player ply = App.Instance.GetPlayer(); //get the player
+		ply.RPC_SetIsReady(!ply.Ready); //set the new ready state
 
+		//update ready state so that displayed text and icon hints are updated
 		if (ply.Ready)
 		{
 			_readyCheck.SetActive(true);
@@ -157,8 +161,8 @@ public class Staging : MonoBehaviour
 
 		Player ply = App.Instance.GetPlayer();
 
-		string playerID = App.Instance.GetPlayerID(ply);
-		if (playerID != null) NameList.CustomNameApplied(playerID);
+		string playerID = App.Instance.GetPlayerID(ply); //get player id
+		if (playerID != null) NameList.CustomNameApplied(playerID); //assign player their entered, custom name
 
 		ply.RPC_SetName(name);
 
@@ -172,21 +176,21 @@ public class Staging : MonoBehaviour
 	
 	public void OnColorUpdated()
 	{
-		Player ply = App.Instance.GetPlayer();
-		Color color = new Color(Random.Range(0.1f, 1.0f), Random.Range(0.1f, 1.0f), Random.Range(0.1f, 1.0f), 1.0f);
+		Player ply = App.Instance.GetPlayer(); //get the player
+		Color color = new Color(Random.Range(0.1f, 1.0f), Random.Range(0.1f, 1.0f), Random.Range(0.1f, 1.0f), 1.0f); //get a random colour value for this player
 		_color = color;
 		Debug.Log(color);
-		ply.RPC_SetColor(color);
+		ply.RPC_SetColor(color); //set the new colour value
 	}
 
 	public void OnDisconnect()
 	{
 		Player ply = App.Instance.GetPlayer();
 
-		string playerID = App.Instance.GetPlayerID(ply);
-		if (playerID != null) NameList.UnassignPlayerName(playerID);
+		string playerID = App.Instance.GetPlayerID(ply); //get player id
+		if (playerID != null) NameList.UnassignPlayerName(playerID); //unassign from the namelist
 
-		App.Instance.Disconnect();
+		App.Instance.Disconnect(); //disconnect the player from this room
 	}
 }
 
@@ -227,6 +231,7 @@ public class NameList
 
 				if (!newNumExists)
 				{
+					//assign the new name and set on the player
 					assignedPlayerNames.Add(playerRefValue, randomNum);
 					Player ply = App.Instance.GetPlayer();
 					ply.RPC_SetName(defaultNames[randomNum]);

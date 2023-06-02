@@ -24,16 +24,19 @@ public enum ConnectionStatus
 [RequireComponent(typeof(NetworkSceneManagerBase))]
 public class App : MonoBehaviour, INetworkRunnerCallbacks
 {
+	//references to objects in the scene
 	[SerializeField] private SceneReference _introScene;
 	[SerializeField] private Player _playerPrefab;
 	[SerializeField] private Session _sessionPrefab;
 	[SerializeField] private ErrorBox _errorBox;
+
 	[SerializeField] private bool _sharedMode;
 	
 	[Space(10)]
 	[SerializeField] private bool _autoConnect;
 	[SerializeField] private SessionProps _autoSession = new SessionProps();
 	
+	//private references to data
 	private NetworkRunner _runner;
 	private NetworkSceneManagerBase _loader;
 	private Action<List<SessionInfo>> _onSessionListUpdated;
@@ -48,8 +51,8 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		get
 		{
-			if (_instance == null) _instance = FindObjectOfType<App>();
-			return _instance;
+			if (_instance == null) _instance = FindObjectOfType<App>(); //if null, find the singleton instance
+			return _instance; //return the instance
 		}
 	}
 	
@@ -61,17 +64,18 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		Application.targetFrameRate = 144;
 
-		if (_instance == null) _instance = this;
+		if (_instance == null) _instance = this; //set the instance
 		
-		if(_instance!=this) Destroy(gameObject);
-		else if(_loader==null)
+		if(_instance != this) Destroy(gameObject);
+		else if(_loader == null)
 		{
 			_loader = GetComponent<NetworkSceneManagerBase>();
 		
 			DontDestroyOnLoad(gameObject);
 
-			if (_autoConnect) StartSession( _sharedMode ? GameMode.Shared : GameMode.AutoHostOrClient, _autoSession, false);
-			else SceneManager.LoadSceneAsync( _introScene );
+			//autoconnect is false for this project
+			if (_autoConnect) StartSession(_sharedMode ? GameMode.Shared : GameMode.AutoHostOrClient, _autoSession, false);
+			else SceneManager.LoadSceneAsync(_introScene); //load intro scene
 		}
 	}
 
@@ -79,7 +83,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		foreach (KeyValuePair<PlayerRef, Player> item in _players)
 		{
-			if (item.Value == ply) return item.Key.ToString();
+			if (item.Value == ply) return item.Key.ToString(); //return the player ID if found
 		}
 
 		return null;
@@ -89,6 +93,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		if (_runner == null)
 		{
+			//connection setup
 			SetConnectionStatus(ConnectionStatus.Connecting);
 			GameObject go = new GameObject("Session");
 			go.transform.SetParent(transform);
@@ -104,12 +109,13 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		if (_runner != null)
 		{
 			SetConnectionStatus(ConnectionStatus.Disconnected);
-			_runner.Shutdown();
+			_runner.Shutdown(); //shutdown the network runner
 		}
 	}
 
 	public void JoinSession(SessionInfo info)
 	{
+		//prepare session props for the session
 		SessionProps props = new SessionProps(info.Properties);
 		props.PlayerLimit = info.MaxPlayers;
 		props.RoomName = info.Name;
@@ -133,6 +139,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		Debug.Log($"Starting game with session {props.RoomName}, player limit {props.PlayerLimit}");
 
 		_runner.ProvideInput = mode != GameMode.Server;
+		//start the session using sessionprops
 		_runner.StartGame(new StartGameArgs
 		{
 			GameMode = mode,
@@ -152,10 +159,13 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		_lobbyId = lobbyId;
 		_onSessionListUpdated = onSessionListUpdated;
 
+		//try to join the lobby
 		SetConnectionStatus(ConnectionStatus.EnteringLobby);
 		var result = await _runner.JoinSessionLobby(SessionLobby.Custom, lobbyId);
 
-		if (!result.Ok) {
+		if (!result.Ok)
+		{
+			//error handling if joining failed
 			_onSessionListUpdated = null;
 			SetConnectionStatus(ConnectionStatus.Failed);
 			onSessionListUpdated(null);
@@ -170,6 +180,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 
 	public void SetPlayer(PlayerRef playerRef, Player player)
 	{
+		//prepare the player
 		_players[playerRef] = player;
 		player.transform.SetParent(_runner.transform);
 		if (Session.Map != null) Session.Map.SpawnAvatar(player, true);
@@ -181,7 +192,8 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 
 		if (ply == default) ply = _runner.LocalPlayer;
 
-		_players.TryGetValue(ply, out Player player);
+		_players.TryGetValue(ply, out Player player); //try to get a player using the playerref
+
 		return player;
 	}
 	
@@ -235,16 +247,17 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 	public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
 	{
 		Debug.Log($"{player.PlayerId} disconnected.");
-		if (_players.TryGetValue(player, out Player playerobj))
+		if (_players.TryGetValue(player, out Player playerobj)) //try to get the player
 		{
-			_session.Map.DespawnAvatar(playerobj);
+			_session.Map.DespawnAvatar(playerobj); //despawn the players avatar
 
 			if (playerobj.Object != null && playerobj.Object.HasStateAuthority)
 			{
 				Debug.Log("Despawning Player");
-				runner.Despawn(playerobj.Object);
+				runner.Despawn(playerobj.Object); //despawn the player's networkobject
 			}
-			_players.Remove(player);
+
+			_players.Remove(player); //remove the player from list of players
 		}
 	}
 
@@ -253,17 +266,18 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 		Debug.Log($"OnShutdown {reason}");
 		SetConnectionStatus(ConnectionStatus.Disconnected, reason.ToString());
 
-		if(_runner!=null && _runner.gameObject) Destroy(_runner.gameObject);
+		if(_runner != null && _runner.gameObject) Destroy(_runner.gameObject);
 
 		_players.Clear();
 		_runner = null;
 		_session = null;
 
-		if(Application.isPlaying) SceneManager.LoadSceneAsync(_introScene);
+		if(Application.isPlaying) SceneManager.LoadSceneAsync(_introScene); //return to intro scene
 	}
 
 	public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
 	{
+		//no validation is currently performed, should check if the player should be able to join the session
 		request.Accept();
 	}
 
@@ -294,7 +308,7 @@ public class App : MonoBehaviour, INetworkRunnerCallbacks
 
 		input.Set(_data);
 
-		//clear the flags so they don't spill over into the next tick unless they're still valid input.
+		//clear the flags so they don't spill over into the next tick unless they're still valid input
 		_data.ButtonFlags = 0;
 	}
 
